@@ -1,0 +1,32 @@
+<!-- 提交成功页 -->
+<view wx:if="{{success}}" class="page fb-success">
+  <view class="fb-success__icon">✓</view>
+  <view class="fb-success__title">反馈提交成功</view>
+  <view class="fb-success__desc">感谢您的宝贵意见，我们会尽快处理并持续改进。</view>
+  <button class="btn-primary fb-success__btn" bindtap="back">返回</button>
+</view>
+
+<!-- 表单 -->
+<view wx:else class="page">
+  <view class="card">
+    <view class="fb__label">反馈描述 <text class="text-primary">*</text></view>
+    <textarea class="fb__textarea" placeholder="请描述您遇到的问题或建议，我们将认真对待每一条反馈"
+      maxlength="500" value="{{content}}" bindinput="onInput" />
+    <view class="fb__count">{{content.length}}/500</view>
+  </view>
+
+  <view class="card">
+    <view class="fb__label">上传图片（选填，最多{{maxImages}}张）</view>
+    <view class="fb__images">
+      <view class="fb__img" wx:for="{{images}}" wx:key="*this">
+        <image class="fb__img-pic" src="{{item}}" mode="aspectFill" data-index="{{index}}" bindtap="previewImage" />
+        <view class="fb__img-del" data-index="{{index}}" catchtap="removeImage">×</view>
+      </view>
+      <view wx:if="{{images.length < maxImages}}" class="fb__img-add" bindtap="chooseImage">+</view>
+    </view>
+  </view>
+
+  <view class="container">
+    <button class="btn-primary" loading="{{submitting}}" bindtap="submit">提交反馈</button>
+  </view>
+</view>

@@ -1,0 +1,36 @@
+<view class="page">
+  <block wx:if="{{isLogin && archive}}">
+    <!-- 档案封面卡 -->
+    <view class="arch__card">
+      <view class="arch__banner">
+        <view class="arch__banner-cn">生涯成长档案</view>
+        <view class="arch__banner-en">CAREER GROWTH PROFILE</view>
+      </view>
+      <view class="arch__profile">
+        <view class="arch__avatar">{{archive.student.avatar ? '' : archive.student.name[0]}}</view>
+        <view class="arch__base">
+          <view class="arch__name">{{archive.student.name}}</view>
+          <view class="arch__sub">{{archive.student.gender}} · {{archive.school}}</view>
+          <view class="arch__sub">{{archive.student.grade}} {{archive.student.className}}</view>
+          <view class="arch__sub">学号：{{archive.student.studentNo}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 档案明细 -->
+    <view class="card">
+      <view class="arch__section-title">档案信息</view>
+      <view class="arch__row" wx:for="{{archive.items}}" wx:key="label">
+        <text class="arch__label">{{item.label}}</text>
+        <text class="arch__value">{{item.value}}</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- 未登录 -->
+  <view wx:elif="{{!isLogin}}" class="empty">
+    <view class="empty__icon-emoji">🌱</view>
+    <view class="empty__text">登录后查看孩子的成长档案</view>
+    <button class="btn-primary arch__login-btn" bindtap="goLogin">去登录</button>
+  </view>
+</view>

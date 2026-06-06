@@ -1,0 +1,66 @@
+.card { margin: 24rpx; }
+.fb__label { font-size: 30rpx; font-weight: 600; margin-bottom: 20rpx; }
+.fb__textarea {
+  width: 100%;
+  height: 240rpx;
+  font-size: 28rpx;
+  line-height: 44rpx;
+}
+.fb__count { text-align: right; font-size: 22rpx; color: var(--color-text-placeholder); }
+
+.fb__images { display: flex; flex-wrap: wrap; }
+.fb__img, .fb__img-add {
+  width: 160rpx; height: 160rpx;
+  margin-right: 18rpx;
+  margin-bottom: 18rpx;
+  border-radius: 16rpx;
+}
+.fb__img { position: relative; }
+.fb__img-pic { width: 100%; height: 100%; border-radius: 16rpx; }
+.fb__img-del {
+  position: absolute;
+  top: -12rpx; right: -12rpx;
+  width: 40rpx; height: 40rpx;
+  line-height: 36rpx;
+  text-align: center;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 32rpx;
+}
+.fb__img-add {
+  border: 2rpx dashed #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60rpx;
+  color: #ccc;
+  background: #FAFAFA;
+}
+
+/* 成功页 */
+.fb-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 180rpx;
+}
+.fb-success__icon {
+  width: 140rpx; height: 140rpx; line-height: 140rpx;
+  text-align: center;
+  font-size: 80rpx;
+  color: #fff;
+  background: var(--gradient-primary);
+  border-radius: 50%;
+  margin-bottom: 40rpx;
+}
+.fb-success__title { font-size: 36rpx; font-weight: 700; }
+.fb-success__desc {
+  font-size: 26rpx;
+  color: var(--color-text-placeholder);
+  margin-top: 20rpx;
+  text-align: center;
+  padding: 0 80rpx;
+  line-height: 42rpx;
+}
+.fb-success__btn { width: 360rpx; margin-top: 80rpx; }

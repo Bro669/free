@@ -1,0 +1,28 @@
+.mine__header {
+  background: var(--gradient-primary);
+  padding: 30rpx 40rpx 90rpx;
+}
+.mine__user { display: flex; align-items: center; }
+.mine__avatar {
+  width: 120rpx; height: 120rpx; line-height: 120rpx;
+  text-align: center;
+  font-size: 56rpx;
+  background: #fff;
+  border-radius: 50%;
+  color: var(--color-primary);
+}
+.mine__user-info { margin-left: 28rpx; color: #fff; }
+.mine__name { font-size: 38rpx; font-weight: 700; }
+.mine__phone { font-size: 26rpx; opacity: 0.9; margin-top: 10rpx; }
+
+.mine__menu { margin: -56rpx 24rpx 0; padding: 8rpx 28rpx; }
+.mine__menu-item {
+  display: flex;
+  align-items: center;
+  padding: 32rpx 0;
+  border-bottom: 1rpx solid var(--color-line);
+}
+.mine__menu-item:last-child { border-bottom: none; }
+.mine__menu-icon { font-size: 40rpx; margin-right: 24rpx; }
+.mine__menu-name { flex: 1; font-size: 30rpx; }
+.mine__menu-arrow { color: #ccc; font-size: 40rpx; }

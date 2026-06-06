@@ -1,0 +1,51 @@
+.set__group { margin: 24rpx; padding: 8rpx 28rpx; }
+.set__item {
+  display: flex;
+  align-items: center;
+  padding: 32rpx 0;
+  border-bottom: 1rpx solid var(--color-line);
+}
+.set__item:last-child { border-bottom: none; }
+.set__icon { font-size: 36rpx; margin-right: 20rpx; }
+.set__name { flex: 1; font-size: 30rpx; }
+.set__arrow { color: #ccc; font-size: 40rpx; }
+
+.set__logout {
+  background: #fff;
+  color: var(--color-danger);
+  border-radius: 16rpx;
+  line-height: 96rpx;
+  height: 96rpx;
+  font-size: 32rpx;
+}
+.set__logout::after { border: none; }
+
+/* 弹窗 */
+.dialog-mask {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dialog {
+  width: 560rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 48rpx 40rpx 0;
+  text-align: center;
+}
+.dialog__icon {
+  font-size: 60rpx;
+  color: var(--color-primary);
+}
+.dialog__title { font-size: 32rpx; font-weight: 600; margin: 24rpx 0 40rpx; }
+.dialog__btns { display: flex; border-top: 1rpx solid var(--color-line); }
+.dialog__btn {
+  flex: 1;
+  line-height: 100rpx;
+  font-size: 32rpx;
+}
+.dialog__btn--cancel { color: var(--color-text-secondary); border-right: 1rpx solid var(--color-line); }
+.dialog__btn--ok { color: var(--color-primary); font-weight: 600; }

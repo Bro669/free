@@ -1,0 +1,54 @@
+.arch__card {
+  margin: 24rpx;
+  border-radius: 24rpx;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: var(--shadow-card);
+}
+.arch__banner {
+  background: linear-gradient(135deg, #3B6EF5, #6A5CFF);
+  color: #fff;
+  padding: 48rpx 40rpx;
+}
+.arch__banner-cn { font-size: 40rpx; font-weight: 700; }
+.arch__banner-en { font-size: 22rpx; letter-spacing: 2rpx; opacity: 0.85; margin-top: 8rpx; }
+
+.arch__profile {
+  display: flex;
+  padding: 32rpx;
+  margin-top: -40rpx;
+}
+.arch__avatar {
+  width: 120rpx; height: 120rpx; line-height: 120rpx;
+  text-align: center;
+  font-size: 48rpx;
+  color: #fff;
+  background: var(--gradient-primary);
+  border-radius: 24rpx;
+  border: 6rpx solid #fff;
+  flex-shrink: 0;
+}
+.arch__base { margin-left: 24rpx; padding-top: 44rpx; }
+.arch__name { font-size: 34rpx; font-weight: 700; }
+.arch__sub { font-size: 24rpx; color: var(--color-text-placeholder); margin-top: 8rpx; }
+
+.card { margin: 0 24rpx 24rpx; }
+.arch__section-title {
+  font-size: 30rpx; font-weight: 600;
+  margin-bottom: 12rpx;
+  padding-left: 18rpx;
+  border-left: 6rpx solid var(--color-primary);
+}
+.arch__row {
+  display: flex;
+  justify-content: space-between;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid var(--color-line);
+  font-size: 28rpx;
+}
+.arch__row:last-child { border-bottom: none; }
+.arch__label { color: var(--color-text-placeholder); }
+.arch__value { color: var(--color-text); }
+
+.empty__icon-emoji { font-size: 120rpx; margin-bottom: 20rpx; opacity: 0.7; }
+.arch__login-btn { width: 320rpx; margin-top: 40rpx; }

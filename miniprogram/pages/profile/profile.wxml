@@ -1,0 +1,48 @@
+<view class="page" wx:if="{{form}}">
+  <view class="card profile">
+    <!-- 头像 -->
+    <view class="profile__row profile__row--avatar">
+      <text class="profile__label">头像</text>
+      <view class="profile__avatar">{{form.name[0]}}</view>
+    </view>
+
+    <view class="profile__row">
+      <text class="profile__label">姓名</text>
+      <input class="profile__input" data-field="name" value="{{form.name}}" bindinput="onInput" placeholder="请输入姓名" />
+    </view>
+
+    <picker class="profile__row" mode="selector" range="{{genders}}" bindchange="onGenderChange">
+      <text class="profile__label">性别</text>
+      <view class="profile__value">{{form.gender || '请选择'}} ›</view>
+    </picker>
+
+    <picker class="profile__row" mode="selector" range="{{relations}}" bindchange="onRelationChange">
+      <text class="profile__label">与孩子关系</text>
+      <view class="profile__value">{{form.relation || '请选择'}} ›</view>
+    </picker>
+
+    <view class="profile__row">
+      <text class="profile__label">手机号</text>
+      <view class="profile__value profile__value--readonly">{{form.phone}}</view>
+    </view>
+
+    <picker class="profile__row" mode="date" value="{{form.birthday}}" bindchange="onBirthdayChange">
+      <text class="profile__label">出生日期</text>
+      <view class="profile__value">{{form.birthday || '请选择'}} ›</view>
+    </picker>
+
+    <view class="profile__row">
+      <text class="profile__label">联系邮箱</text>
+      <input class="profile__input" data-field="email" value="{{form.email}}" bindinput="onInput" placeholder="选填" />
+    </view>
+
+    <view class="profile__row profile__row--last">
+      <text class="profile__label">所在地区</text>
+      <input class="profile__input" data-field="address" value="{{form.address}}" bindinput="onInput" placeholder="选填" />
+    </view>
+  </view>
+
+  <view class="container">
+    <button class="btn-primary" loading="{{saving}}" bindtap="save">保 存</button>
+  </view>
+</view>

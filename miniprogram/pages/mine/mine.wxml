@@ -1,0 +1,24 @@
+<view class="page mine">
+  <!-- 用户头部 -->
+  <view class="mine__header">
+    <view class="mine__user" bindtap="goProfile">
+      <view class="mine__avatar">{{isLogin ? (userInfo.name[0]) : '🍊'}}</view>
+      <view class="mine__user-info">
+        <block wx:if="{{isLogin}}">
+          <view class="mine__name">{{userInfo.name}}</view>
+          <view class="mine__phone">{{userInfo.phone}}</view>
+        </block>
+        <view wx:else class="mine__name">点击登录 ›</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 菜单 -->
+  <view class="card mine__menu">
+    <view class="mine__menu-item" wx:for="{{menus}}" wx:key="key" data-index="{{index}}" bindtap="onMenuTap">
+      <text class="mine__menu-icon">{{item.icon}}</text>
+      <text class="mine__menu-name">{{item.name}}</text>
+      <text class="mine__menu-arrow">›</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,23 @@
+<view class="page" wx:if="{{info}}">
+  <view class="card about__brand">
+    <view class="about__logo">🍊</view>
+    <view class="about__name">{{info.name}}</view>
+    <view class="about__intro">{{info.intro}}</view>
+  </view>
+
+  <view class="card">
+    <view class="about__section-title">联系方式</view>
+    <view class="about__row" bindtap="callPhone">
+      <text class="about__row-icon">📞</text>
+      <text class="about__row-label">联系电话</text>
+      <text class="about__row-value">{{info.phone}}</text>
+    </view>
+    <view class="about__row" bindtap="copyEmail">
+      <text class="about__row-icon">✉️</text>
+      <text class="about__row-label">联系邮箱</text>
+      <text class="about__row-value">{{info.email}}</text>
+    </view>
+  </view>
+
+  <view class="about__copyright">{{info.copyright}}</view>
+</view>
