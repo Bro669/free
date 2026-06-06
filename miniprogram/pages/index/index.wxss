@@ -1,0 +1,117 @@
+.index { padding-bottom: 40rpx; }
+
+/* Banner */
+.banner {
+  background: var(--gradient-primary);
+  padding: 30rpx 40rpx 90rpx;
+  color: #fff;
+}
+.banner__greet { font-size: 40rpx; font-weight: 700; }
+.banner__child {
+  display: flex;
+  align-items: baseline;
+  margin-top: 16rpx;
+}
+.banner__child-name { font-size: 30rpx; font-weight: 600; }
+.banner__child-class {
+  font-size: 24rpx;
+  margin-left: 16rpx;
+  opacity: 0.9;
+}
+.banner__child-arrow {
+  font-size: 24rpx;
+  margin-left: 16rpx;
+  background: rgba(255,255,255,0.25);
+  padding: 4rpx 16rpx;
+  border-radius: 999rpx;
+}
+.banner__login { font-size: 28rpx; margin-top: 16rpx; opacity: 0.95; }
+
+/* 卡片上移叠加 banner */
+.quick, .msg { margin: 0 24rpx 24rpx; }
+.quick { margin-top: -56rpx; }
+
+.quick__title, .msg__title { font-size: 30rpx; font-weight: 600; }
+.quick__grid {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 24rpx;
+}
+.quick__item {
+  width: 33.33%;
+  text-align: center;
+  margin-bottom: 36rpx;
+}
+.quick__icon {
+  width: 96rpx;
+  height: 96rpx;
+  line-height: 96rpx;
+  margin: 0 auto 14rpx;
+  font-size: 48rpx;
+  background: #FFF4E8;
+  border-radius: 28rpx;
+}
+.quick__name { font-size: 26rpx; color: var(--color-text-secondary); }
+
+/* 消息 */
+.msg__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.msg__more { font-size: 26rpx; color: var(--color-text-placeholder); }
+.msg__item {
+  display: flex;
+  align-items: flex-start;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid var(--color-line);
+}
+.msg__item:last-child { border-bottom: none; }
+.msg__dot {
+  width: 14rpx; height: 14rpx;
+  border-radius: 50%;
+  background: transparent;
+  margin: 10rpx 16rpx 0 0;
+  flex-shrink: 0;
+}
+.msg__dot.is-unread { background: var(--color-danger); }
+.msg__body { flex: 1; min-width: 0; }
+.msg__item-title { font-size: 28rpx; }
+.msg__item-desc { font-size: 24rpx; color: var(--color-text-placeholder); margin-top: 8rpx; }
+.msg__time { font-size: 22rpx; color: #bbb; margin-left: 16rpx; flex-shrink: 0; }
+.msg__empty {
+  text-align: center;
+  color: var(--color-text-placeholder);
+  font-size: 26rpx;
+  padding: 40rpx 0;
+}
+
+/* 多孩选择浮层 */
+.picker-mask {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+}
+.picker {
+  width: 100%;
+  background: #fff;
+  border-radius: 28rpx 28rpx 0 0;
+  padding: 32rpx;
+}
+.picker__title { font-size: 32rpx; font-weight: 600; text-align: center; margin-bottom: 20rpx; }
+.picker__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28rpx 24rpx;
+  border-radius: 16rpx;
+  margin-bottom: 12rpx;
+  background: #F7F8FA;
+}
+.picker__item.is-active {
+  background: #FFF4E8;
+  color: var(--color-primary);
+}
+.picker__class { font-size: 24rpx; color: var(--color-text-placeholder); }

@@ -1,0 +1,21 @@
+<view class="page">
+  <block wx:if="{{list.length}}">
+    <view class="container">
+      <view class="card report-item" wx:for="{{list}}" wx:key="id" data-index="{{index}}" bindtap="onTapItem">
+        <view class="report-item__cover">{{item.cover ? '' : '📋'}}</view>
+        <view class="report-item__body">
+          <view class="report-item__name text-ellipsis">{{item.name}}</view>
+          <view class="report-item__time">{{item.time}}</view>
+        </view>
+        <view class="report-item__status {{item.status==='generating'?'is-generating':'is-done'}}">
+          {{item.status === 'generating' ? '生成中' : '查看报告'}}
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <view wx:elif="{{!loading}}" class="empty">
+    <view class="empty__icon-emoji">🤖</view>
+    <view class="empty__text">暂无测评报告</view>
+  </view>
+</view>

@@ -1,0 +1,27 @@
+<view class="page" wx:if="{{report}}">
+  <view class="rd__header">
+    <view class="rd__name">{{report.name}}</view>
+    <view class="rd__time">测评时间：{{report.time}}</view>
+  </view>
+
+  <view class="card">
+    <view class="rd__section-title">结果摘要</view>
+    <view class="rd__summary">{{report.summary}}</view>
+  </view>
+
+  <view class="card">
+    <view class="rd__section-title">维度得分</view>
+    <view class="bar-chart">
+      <view class="bar-chart__col" wx:for="{{bars}}" wx:key="name">
+        <view class="bar-chart__value">{{item.value}}</view>
+        <view class="bar-chart__bar" style="height: {{item.height}}%"></view>
+        <view class="bar-chart__label">{{item.name}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="rd__section-title">发展建议</view>
+    <view class="rd__summary">{{report.suggestion}}</view>
+  </view>
+</view>

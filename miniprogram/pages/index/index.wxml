@@ -1,0 +1,64 @@
+<view class="page index">
+  <!-- 顶部问候 Banner -->
+  <view class="banner">
+    <block wx:if="{{isLogin}}">
+      <view class="banner__greet">
+        你好呀，{{userInfo.name || '家长'}}
+      </view>
+      <view class="banner__child" bindtap="toggleChildPicker">
+        <text class="banner__child-name">{{currentChild.name || '未绑定学生'}}</text>
+        <text wx:if="{{currentChild}}" class="banner__child-class">{{currentChild.className}}</text>
+        <text wx:if="{{childList.length > 1}}" class="banner__child-arrow">切换 ▾</text>
+      </view>
+    </block>
+    <block wx:else>
+      <view class="banner__greet">你好呀，家长</view>
+      <view class="banner__login" bindtap="goLogin">登录后查看孩子成长信息 ›</view>
+    </block>
+  </view>
+
+  <!-- 快捷入口宫格 -->
+  <view class="card quick">
+    <view class="quick__title">快捷入口</view>
+    <view class="quick__grid">
+      <view class="quick__item" wx:for="{{quickEntries}}" wx:key="key"
+        data-index="{{index}}" bindtap="onQuickTap">
+        <view class="quick__icon">{{item.icon}}</view>
+        <view class="quick__name">{{item.name}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 消息中心 -->
+  <view class="card msg">
+    <view class="msg__head" bindtap="goMessage">
+      <text class="msg__title">消息中心</text>
+      <text class="msg__more">查看全部 ›</text>
+    </view>
+
+    <block wx:if="{{isLogin && messages.length}}">
+      <view class="msg__item" wx:for="{{messages}}" wx:key="id" data-index="{{index}}" bindtap="goMessage">
+        <view class="msg__dot {{item.read?'':'is-unread'}}"></view>
+        <view class="msg__body">
+          <view class="msg__item-title text-ellipsis">{{item.title}}</view>
+          <view class="msg__item-desc text-ellipsis">{{item.desc}}</view>
+        </view>
+        <view class="msg__time">{{item.time}}</view>
+      </view>
+    </block>
+    <view wx:elif="{{isLogin}}" class="msg__empty">暂无消息</view>
+    <view wx:else class="msg__empty" bindtap="goLogin">登录后查看消息 ›</view>
+  </view>
+
+  <!-- 多孩切换浮层 -->
+  <view wx:if="{{showChildPicker}}" class="picker-mask" bindtap="toggleChildPicker">
+    <view class="picker" catchtap="">
+      <view class="picker__title">选择孩子</view>
+      <view class="picker__item {{currentChild.id===item.id?'is-active':''}}"
+        wx:for="{{childList}}" wx:key="id" data-index="{{index}}" bindtap="selectChild">
+        <text>{{item.name}}</text>
+        <text class="picker__class">{{item.className}}</text>
+      </view>
+    </view>
+  </view>
+</view>

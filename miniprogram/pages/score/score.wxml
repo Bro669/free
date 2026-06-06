@@ -1,0 +1,69 @@
+<view class="page" wx:if="{{data}}">
+  <!-- 品牌 Banner -->
+  <view class="score__banner">
+    <view class="score__banner-cn">学业总览</view>
+    <view class="score__banner-en">ACADEMIC ACHIEVEMENTS</view>
+    <picker class="score__term" range="{{data.terms}}" value="{{termIndex}}" bindchange="onTermChange">
+      {{data.terms[termIndex]}} ▾
+    </picker>
+  </view>
+
+  <!-- 总分卡片 -->
+  <view class="card score__summary">
+    <view class="score__summary-item">
+      <view class="score__summary-num">{{data.totalScore}}</view>
+      <view class="score__summary-label">总分</view>
+    </view>
+    <view class="score__summary-divider"></view>
+    <view class="score__summary-item">
+      <view class="score__summary-num">第{{data.totalRank}}名</view>
+      <view class="score__summary-label">班级排名</view>
+    </view>
+  </view>
+  <view class="score__exam">{{data.examName}}</view>
+
+  <!-- 图表切换 -->
+  <view class="card">
+    <view class="score__chart-tabs">
+      <view class="score__chart-tab {{chartView==='bar'?'is-active':''}}" data-view="bar" bindtap="switchChart">柱状图</view>
+      <view class="score__chart-tab {{chartView==='line'?'is-active':''}}" data-view="line" bindtap="switchChart">趋势图</view>
+    </view>
+
+    <!-- 柱状图 -->
+    <view wx:if="{{chartView==='bar'}}" class="bar-chart">
+      <view class="bar-chart__col" wx:for="{{bars}}" wx:key="name">
+        <view class="bar-chart__value">{{item.score}}</view>
+        <view class="bar-chart__bar" style="height: {{item.height}}%"></view>
+        <view class="bar-chart__label">{{item.name}}</view>
+      </view>
+    </view>
+
+    <!-- 趋势图（近4次得分率折线，简化为得分点） -->
+    <view wx:else class="line-chart">
+      <view class="line-chart__row" wx:for="{{bars}}" wx:key="name">
+        <view class="line-chart__name">{{item.name}}</view>
+        <view class="line-chart__track">
+          <view class="line-chart__fill" style="width: {{item.pct}}%"></view>
+        </view>
+        <view class="line-chart__pct">{{item.pct >= 100 ? 100 : item.pct}}%</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 各科明细 -->
+  <view class="card">
+    <view class="score__list-title">各科成绩明细</view>
+    <view class="score__row score__row--head">
+      <text class="score__c1">科目</text>
+      <text class="score__c2">得分</text>
+      <text class="score__c3">满分</text>
+      <text class="score__c4">排名</text>
+    </view>
+    <view class="score__row" wx:for="{{data.subjects}}" wx:key="name">
+      <text class="score__c1">{{item.name}}</text>
+      <text class="score__c2 text-primary text-bold">{{item.score}}</text>
+      <text class="score__c3">{{item.full}}</text>
+      <text class="score__c4">第{{item.rank}}名</text>
+    </view>
+  </view>
+</view>
