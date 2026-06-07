@@ -10,33 +10,53 @@
 
 ## 目录结构
 
+> 项目根目录下另有 `docs/`，存放原型 / UI 设计分析文档与原始原型图。
+
 ```
-miniprogram/
-├── app.js / app.json / app.wxss   # 全局逻辑 / 配置 / 设计 Token
-├── project.config.json            # 工程配置
+miniprogram/                            微信小程序工程（原生，无构建步骤）
+├── app.js                              全局逻辑（登录态 / 全局数据）
+├── app.json                            应用配置（页面注册 + tabBar + 窗口）
+├── app.wxss                            全局样式 & 设计 Token（暖橙主色）
+├── project.config.json                 工程配置
 ├── sitemap.json
-├── utils/
-│   ├── request.js                 # 统一请求封装（mock 开关在此）
-│   ├── mock.js                    # 占位数据中心（接真后端后可删）
-│   └── util.js                    # 通用工具
-└── pages/
+├── README.md
+│
+├── images/
+│   └── tabbar/                         tabBar 图标（未选中灰 / 选中橙）
+│       ├── home.png / home-active.png
+│       ├── archive.png / archive-active.png
+│       └── mine.png / mine-active.png
+│
+├── utils/                              公共能力
+│   ├── request.js                      统一请求封装（USE_MOCK 开关在此）
+│   ├── mock.js                         占位数据中心（接真后端后可删）
+│   ├── chart.js                        Canvas 2D 图表（柱状 / 折线 / 雷达）
+│   └── util.js                         通用工具（格式化 / 校验 / toast）
+│
+└── pages/                              18 个页面 / 17 个模块
     ├── login/        登录（微信一键 + 短信验证码）
     ├── index/        首页（多孩切换 / 快捷入口 / 消息预览）   [tab]
     ├── school/       校园简介（学校简介 / 学校文化）
     ├── message/      消息中心（全部 / 未读 / 空态）
-    ├── score/        成绩查询（柱状图 / 趋势图 / 明细）
-    ├── report/       测评报告（列表 + 详情 + 生成中 / 空态）
+    ├── score/        成绩查询（柱状图 / 趋势折线 + 明细）
+    ├── report/       测评报告
+    │                 ├── report.*  列表（生成中 / 空态）
+    │                 └── detail.*  详情（6 维度雷达图）
     ├── teacher/      教师信息（班主任 + 任课教师）
-    ├── classroom/    家长课堂（列表 + 详情）
+    ├── classroom/    家长课堂
+    │                 ├── classroom.*  文章列表
+    │                 └── detail.*     文章详情
     ├── archive/      成长档案（生涯档案卡）                 [tab]
     ├── mine/         我的                                  [tab]
     ├── profile/      个人信息（表单编辑）
     ├── advisor/      添加生涯顾问（企业微信活码）
     ├── about/        关于我们
     ├── feedback/     意见反馈（文字 + 9 图 + 成功页）
-    ├── settings/     账户设置（协议 + 退出）
+    ├── settings/     账户设置（协议 + 退出确认）
     └── agreement/    用户协议 / 隐私协议
 ```
+
+> 每个页面目录均为微信小程序标准四件套：`.js`（逻辑）/ `.json`（页面配置）/ `.wxml`（结构）/ `.wxss`（样式）。
 
 ## 接入真实后端
 
