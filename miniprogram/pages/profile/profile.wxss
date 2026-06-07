@@ -1,31 +1,42 @@
-.profile { margin: 24rpx; padding: 0 28rpx; }
-.profile__row {
-  display: flex;
-  align-items: center;
-  min-height: 100rpx;
-  border-bottom: 1rpx solid var(--color-line);
-}
-.profile__row--last { border-bottom: none; }
-.profile__label { width: 200rpx; font-size: 30rpx; color: var(--color-text); }
-.profile__input {
-  flex: 1;
-  font-size: 30rpx;
-  text-align: right;
-}
-.profile__value {
-  flex: 1;
-  text-align: right;
-  font-size: 30rpx;
-  color: var(--color-text-secondary);
-}
-.profile__value--readonly { color: var(--color-text-placeholder); }
+.page { padding-bottom: 40rpx; }
 
-.profile__row--avatar { justify-content: space-between; }
-.profile__avatar {
-  width: 88rpx; height: 88rpx; line-height: 88rpx;
-  text-align: center;
+.pf-avatar { text-align: center; padding: 40rpx 0 10rpx; }
+.pf-avatar__wrap { position: relative; display: inline-block; }
+.pf-avatar__img, .pf-avatar__ph {
+  width: 140rpx; height: 140rpx;
   border-radius: 50%;
-  background: var(--gradient-primary);
-  color: #fff;
-  font-size: 36rpx;
 }
+.pf-avatar__ph {
+  line-height: 140rpx; text-align: center;
+  background: var(--gradient-primary); color: #fff; font-size: 56rpx;
+}
+.pf-avatar__cam {
+  position: absolute; right: -4rpx; bottom: 0;
+  width: 44rpx; height: 44rpx; line-height: 44rpx; text-align: center;
+  background: #fff; border-radius: 50%; font-size: 22rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.15);
+}
+
+.card { margin: 0 24rpx 12rpx; }
+.pf-base { margin-top: 16rpx; padding: 0 28rpx; }
+.pf-row { display: flex; justify-content: space-between; align-items: center; min-height: 96rpx; border-bottom: 1rpx solid var(--color-line); }
+.pf-row--last { border-bottom: none; }
+.pf-label { font-size: 28rpx; color: var(--color-text-placeholder); }
+.pf-value { font-size: 30rpx; }
+
+.pf-sec-head {
+  display: flex; align-items: center;
+  font-size: 28rpx; font-weight: 600;
+  margin: 28rpx 36rpx 14rpx;
+}
+.pf-dot { width: 16rpx; height: 16rpx; border-radius: 50%; margin-right: 14rpx; }
+.pf-edit { margin-left: auto; color: var(--color-text-placeholder); font-size: 32rpx; }
+
+.pf-line { font-size: 28rpx; color: var(--color-text-secondary); padding: 8rpx 0; }
+.pf-field { display: flex; flex-direction: column; padding: 16rpx 0; border-bottom: 1rpx solid var(--color-line); }
+.pf-field:last-child { border-bottom: none; }
+.pf-field-label { font-size: 24rpx; color: var(--color-text-placeholder); margin-bottom: 8rpx; }
+.pf-field-value { font-size: 30rpx; }
+
+.pf-share-item { font-size: 26rpx; color: var(--color-text-placeholder); margin-top: 16rpx; line-height: 42rpx; }
+.pf-share-item .text-bold { color: var(--color-text); }

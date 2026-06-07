@@ -13,6 +13,7 @@
     "pages/archive/archive",
     "pages/mine/mine",
     "pages/profile/profile",
+    "pages/profile/edit",
     "pages/advisor/advisor",
     "pages/about/about",
     "pages/feedback/feedback",

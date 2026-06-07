@@ -1,0 +1,37 @@
+<view class="page">
+  <view class="card edit">
+    <block wx:for="{{fields}}" wx:key="field">
+      <!-- 输入框 -->
+      <view wx:if="{{item.type==='input'}}" class="edit__row">
+        <text class="edit__label">{{item.label}}</text>
+        <input class="edit__input" data-field="{{item.field}}" value="{{form[item.field]}}"
+          placeholder="{{item.placeholder}}" bindinput="onInput" />
+      </view>
+
+      <!-- 选择器 -->
+      <picker wx:elif="{{item.type==='picker'}}" class="edit__row" range="{{item.options}}"
+        data-field="{{item.field}}" bindchange="onPicker">
+        <text class="edit__label">{{item.label}}</text>
+        <view class="edit__value">{{form[item.field] || '请选择'}} ›</view>
+      </picker>
+
+      <!-- 地区 -->
+      <picker wx:elif="{{item.type==='region'}}" class="edit__row" mode="region"
+        data-field="{{item.field}}" bindchange="onRegion">
+        <text class="edit__label">{{item.label}}</text>
+        <view class="edit__value">{{form[item.field] || '请选择'}} ›</view>
+      </picker>
+
+      <!-- 多行文本 -->
+      <view wx:elif="{{item.type==='textarea'}}" class="edit__block">
+        <text class="edit__label">{{item.label}}</text>
+        <textarea class="edit__textarea" data-field="{{item.field}}" value="{{form[item.field]}}"
+          placeholder="{{item.placeholder}}" maxlength="200" bindinput="onInput" />
+      </view>
+    </block>
+  </view>
+
+  <view class="container">
+    <button class="btn-primary" loading="{{saving}}" bindtap="save">保 存</button>
+  </view>
+</view>

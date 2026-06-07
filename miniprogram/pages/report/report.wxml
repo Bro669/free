@@ -1,14 +1,22 @@
 <view class="page">
+  <!-- 顶部筛选 + 解读 -->
+  <view class="rp-bar">
+    <picker class="rp-filter" range="{{filters}}" value="{{filterIndex}}" bindchange="onFilterChange">
+      {{filters[filterIndex]}} ▾
+    </picker>
+    <view class="rp-interpret" bindtap="openInterpret">📄 测评报告解读</view>
+  </view>
+
   <block wx:if="{{list.length}}">
     <view class="container">
-      <view class="card report-item" wx:for="{{list}}" wx:key="id" data-index="{{index}}" bindtap="onTapItem">
-        <view class="report-item__cover">{{item.cover ? '' : '📋'}}</view>
-        <view class="report-item__body">
-          <view class="report-item__name text-ellipsis">{{item.name}}</view>
-          <view class="report-item__time">{{item.time}}</view>
+      <view class="card rp-item" wx:for="{{list}}" wx:key="id" data-index="{{index}}" bindtap="onTapItem">
+        <view class="rp-item__cover">测评</view>
+        <view class="rp-item__body">
+          <view class="rp-item__name text-ellipsis">{{item.name}}</view>
+          <view class="rp-item__time">🕐 {{item.time}}</view>
         </view>
-        <view class="report-item__status {{item.status==='generating'?'is-generating':'is-done'}}">
-          {{item.status === 'generating' ? '生成中' : '查看报告'}}
+        <view class="rp-item__btn {{item.status==='generating'?'is-gen':''}}">
+          {{item.status === 'generating' ? '生成中' : '查看 ›'}}
         </view>
       </view>
     </view>

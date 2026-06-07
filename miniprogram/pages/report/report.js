@@ -3,7 +3,9 @@ const api = require('../../utils/request');
 Page({
   data: {
     list: [],
-    loading: true
+    loading: true,
+    filters: ['全部测评', '已完成', '生成中'],
+    filterIndex: 0
   },
 
   onShow() {
@@ -14,6 +16,15 @@ Page({
     this.setData({ loading: true });
     const { list } = await api.get('/report/list');
     this.setData({ list, loading: false });
+  },
+
+  onFilterChange(e) {
+    this.setData({ filterIndex: e.detail.value });
+    // TODO: 按筛选条件重新拉取报告列表
+  },
+
+  openInterpret() {
+    wx.showToast({ title: '测评报告解读（待接入）', icon: 'none' });
   },
 
   onTapItem(e) {

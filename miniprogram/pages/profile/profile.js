@@ -1,52 +1,39 @@
 const api = require('../../utils/request');
-const { toast } = require('../../utils/util');
 
 Page({
   data: {
     form: null,
-    genders: ['男', '女'],
-    relations: ['父亲', '母亲', '其他监护人'],
-    saving: false
+    sections: [
+      { key: 'relation', title: '关系信息', dot: '#FF5A8A' },
+      { key: 'address', title: '地址信息', dot: '#2FB344' },
+      { key: 'occupation', title: '职业信息', dot: '#3B6EF5' },
+      { key: 'school', title: '毕业院校', dot: '#8B5CF6' },
+      { key: 'share', title: '分享意愿', dot: '#FF8A00' }
+    ]
   },
 
-  async onLoad() {
+  onShow() {
+    this.loadData();
+  },
+
+  async loadData() {
     const form = await api.get('/profile/detail');
     this.setData({ form });
   },
 
-  onInput(e) {
-    this.setData({ ['form.' + e.currentTarget.dataset.field]: e.detail.value });
+  editSection(e) {
+    const key = e.currentTarget.dataset.key;
+    wx.navigateTo({ url: '/pages/profile/edit?section=' + key });
   },
 
-  onGenderChange(e) {
-    this.setData({ 'form.gender': this.data.genders[e.detail.value] });
-  },
-
-  onRelationChange(e) {
-    this.setData({ 'form.relation': this.data.relations[e.detail.value] });
-  },
-
-  onBirthdayChange(e) {
-    this.setData({ 'form.birthday': e.detail.value });
-  },
-
-  async save() {
-    if (this.data.saving) return;
-    this.setData({ saving: true });
-    try {
-      await api.post('/profile/update', this.data.form);
-      // 同步全局昵称
-      const app = getApp();
-      if (app.globalData.userInfo) {
-        app.globalData.userInfo.name = this.data.form.name;
-        wx.setStorageSync('userInfo', app.globalData.userInfo);
+  changeAvatar() {
+    wx.chooseMedia({
+      count: 1,
+      mediaType: ['image'],
+      success: (res) => {
+        this.setData({ 'form.avatar': res.tempFiles[0].tempFilePath });
+        // TODO: 上传头像到后端
       }
-      toast('保存成功', 'success');
-      setTimeout(() => wx.navigateBack(), 600);
-    } catch (e) {
-      toast('保存失败，请重试');
-    } finally {
-      this.setData({ saving: false });
-    }
+    });
   }
 });
