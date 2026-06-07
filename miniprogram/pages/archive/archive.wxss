@@ -1,0 +1,125 @@
+.archive { padding-bottom: 40rpx; }
+
+/* 章节导航 */
+.nav { background: #fff; padding: 24rpx; }
+.nav__head { display: flex; justify-content: space-between; align-items: center; }
+.nav__title { display: flex; align-items: center; font-size: 30rpx; font-weight: 700; }
+.nav__bar { width: 8rpx; height: 30rpx; border-radius: 4rpx; background: var(--color-primary); margin-right: 14rpx; }
+.nav__interpret { font-size: 24rpx; color: #3B6EF5; }
+.nav__chips { display: flex; flex-wrap: wrap; margin-top: 20rpx; }
+.nav__chip {
+  font-size: 26rpx; color: var(--color-text-secondary);
+  background: #F2F3F5; border-radius: 12rpx;
+  padding: 12rpx 24rpx; margin: 0 16rpx 16rpx 0;
+}
+.nav__chip.is-active { color: #fff; background: var(--gradient-primary); }
+
+.content { padding: 24rpx; }
+.card.doc { padding: 32rpx; }
+.doc__title {
+  font-size: 32rpx; font-weight: 700; margin-bottom: 24rpx;
+  padding-left: 18rpx; border-left: 6rpx solid var(--color-primary);
+}
+.doc__text { font-size: 28rpx; line-height: 52rpx; color: var(--color-text-secondary); white-space: pre-wrap; }
+
+/* 封面 */
+.cover {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 60rpx 48rpx 80rpx;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  min-height: 760rpx;
+}
+.cover::before {
+  content: '';
+  position: absolute; top: -60rpx; right: -120rpx;
+  width: 420rpx; height: 420rpx;
+  background: linear-gradient(135deg, #FFB347, #FF7A00);
+  transform: rotate(28deg);
+}
+.cover::after {
+  content: '';
+  position: absolute; bottom: 120rpx; left: -80rpx;
+  width: 360rpx; height: 200rpx;
+  background: #3B6EF5; opacity: 0.9;
+  transform: rotate(-18deg);
+}
+.cover__brand {
+  position: relative; z-index: 2;
+  font-size: 36rpx; font-weight: 800; color: #FF7A00;
+}
+.cover__school {
+  position: relative; z-index: 2;
+  font-size: 48rpx; font-weight: 800; color: #222;
+  margin-top: 220rpx; text-align: right;
+}
+.cover__cn {
+  position: relative; z-index: 2;
+  font-size: 40rpx; font-weight: 800; color: #FF7A00; text-align: right;
+}
+.cover__en {
+  position: relative; z-index: 2;
+  font-size: 24rpx; letter-spacing: 3rpx; color: #3B6EF5; text-align: right; margin-top: 8rpx;
+}
+.cover__info {
+  position: relative; z-index: 2;
+  margin-top: 120rpx; text-align: right;
+  font-size: 28rpx; color: #333; line-height: 48rpx;
+}
+
+/* 目录 */
+.catalog__item { display: flex; align-items: center; padding: 22rpx 0; border-bottom: 1rpx solid var(--color-line); }
+.catalog__item:last-child { border-bottom: none; }
+.catalog__no { font-size: 30rpx; font-weight: 700; color: var(--color-primary); width: 70rpx; }
+.catalog__name { font-size: 28rpx; }
+
+/* 键值 */
+.kv { display: flex; padding: 22rpx 0; border-bottom: 1rpx solid var(--color-line); font-size: 28rpx; }
+.kv:last-child { border-bottom: none; }
+.kv__label { width: 200rpx; color: var(--color-text-placeholder); }
+.kv__value { flex: 1; }
+
+/* 梦想 */
+.dream__item { font-size: 28rpx; color: var(--color-text-secondary); line-height: 56rpx; }
+.dream__check { color: var(--color-success); font-weight: 700; margin-right: 14rpx; }
+
+/* 学业战绩 */
+.score-banner {
+  background: linear-gradient(135deg, #FF8A00, #FF6A00);
+  border-radius: 16rpx 16rpx 0 0;
+  padding: 32rpx;
+  color: #fff;
+}
+.score-banner__cn { font-size: 36rpx; font-weight: 800; }
+.score-banner__en { font-size: 22rpx; letter-spacing: 2rpx; opacity: 0.9; margin-top: 6rpx; }
+.score-list { margin-top: 0; border-radius: 0 0 16rpx 16rpx; }
+.score-list__title {
+  display: inline-block;
+  font-size: 26rpx; color: #fff; font-weight: 600;
+  background: var(--color-primary);
+  padding: 8rpx 24rpx; border-radius: 8rpx; margin-bottom: 20rpx;
+}
+.exam { margin-bottom: 32rpx; }
+.exam:last-child { margin-bottom: 0; }
+.exam__meta { font-size: 22rpx; color: var(--color-text-placeholder); margin-bottom: 12rpx; }
+.exam__scroll { width: 100%; }
+.tbl { display: inline-block; min-width: 100%; }
+.tbl__row { display: flex; }
+.tbl__row--head { background: #EAF1FF; }
+.tbl__cell {
+  min-width: 96rpx; flex-shrink: 0;
+  text-align: center;
+  font-size: 22rpx;
+  padding: 16rpx 8rpx;
+  border: 1rpx solid #E3E8F0;
+  color: var(--color-text-secondary);
+}
+.tbl__row--head .tbl__cell { color: #3B6EF5; font-weight: 600; }
+.tbl__cell--first { min-width: 80rpx; background: #F5F8FF; }
+.tbl__cell--total { color: var(--color-primary); font-weight: 700; }
+
+/* 未登录 */
+.empty__icon-emoji { font-size: 120rpx; margin-bottom: 20rpx; opacity: 0.7; }
+.archive__login-btn { width: 320rpx; margin-top: 40rpx; }

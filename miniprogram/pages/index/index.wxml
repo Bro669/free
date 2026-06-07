@@ -1,0 +1,75 @@
+<view class="page index">
+  <!-- 欢迎卡 -->
+  <view class="welcome">
+    <block wx:if="{{isLogin}}">
+      <view class="welcome__badge">{{student.school || '育才中学'}}</view>
+      <view class="welcome__greet">欢迎登录，家长{{userInfo.name || '家长'}}</view>
+    </block>
+    <view wx:else class="welcome__greet" bindtap="goLogin">点击登录，查看孩子成长信息 ›</view>
+  </view>
+
+  <!-- 通知条 -->
+  <view wx:if="{{notice}}" class="notice">
+    <image class="notice__icon" src="/images/icons/horn.png" />
+    <text class="notice__text text-ellipsis">消息中心：{{notice}}</text>
+  </view>
+
+  <!-- 快捷入口 -->
+  <view class="card section">
+    <view class="section__title"><text class="section__bar"></text>快捷入口</view>
+    <view class="quick">
+      <view class="quick__item" wx:for="{{quickEntries}}" wx:key="key" data-index="{{index}}" bindtap="onQuickTap">
+        <image class="quick__icon" src="/images/icons/{{item.icon}}.png" />
+        <text class="quick__name">{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 成长档案 -->
+  <view class="card section" wx:if="{{isLogin && student}}">
+    <view class="section__head">
+      <view class="section__title"><text class="section__bar"></text>成长档案</view>
+    </view>
+    <view class="arch-progress" bindtap="goArchive">
+      <text class="arch-progress__label">成长档案完整度：</text>
+      <text class="arch-progress__value">{{archiveProgress}}%</text>
+      <text class="arch-progress__more">详情 ›</text>
+    </view>
+    <view class="stu" bindtap="goArchive">
+      <view class="stu__avatar">{{student.name[0]}}</view>
+      <view class="stu__body">
+        <view class="stu__name">{{student.name}}</view>
+        <view class="stu__tags">
+          <text class="stu__tag stu__tag--pink">{{student.gender}}</text>
+          <text class="stu__tag">{{student.city}} {{student.school}}</text>
+        </view>
+        <view class="stu__tags">
+          <text class="stu__tag">{{student.grade}}</text>
+          <text class="stu__tag stu__tag--blue">学号：{{student.studentNo}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="stu__time">更新时间：{{student.updateTime}}</view>
+  </view>
+
+  <!-- 家长课堂 -->
+  <view class="card section">
+    <view class="section__head">
+      <view class="section__title"><text class="section__bar"></text>家长课堂</view>
+      <text class="section__more" bindtap="goClassroomMore">更多 ›</text>
+    </view>
+    <view class="ctab">
+      <view class="ctab__item {{classroomTab===item.key?'is-active':''}}"
+        wx:for="{{classroomTabs}}" wx:key="key" data-key="{{item.key}}" bindtap="switchClassroomTab">
+        {{item.name}}
+      </view>
+    </view>
+    <view class="art" wx:for="{{articles}}" wx:key="id" data-index="{{index}}" bindtap="goClassroomDetail">
+      <view class="art__cover">图</view>
+      <view class="art__body">
+        <view class="art__title text-ellipsis-2">{{item.title}}</view>
+        <view class="art__time">{{item.time}}</view>
+      </view>
+    </view>
+  </view>
+</view>

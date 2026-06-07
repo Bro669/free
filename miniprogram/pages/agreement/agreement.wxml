@@ -1,0 +1,4 @@
+<view class="page container" wx:if="{{detail}}">
+  <view class="agree__title">{{detail.title}}</view>
+  <view class="agree__content">{{detail.content}}</view>
+</view>

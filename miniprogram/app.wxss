@@ -1,0 +1,132 @@
+/**
+ * 全局样式 & 设计 Token
+ * 视觉风格：暖橙主色 + 卡片化 + 大留白
+ */
+page {
+  /* ===== 设计 Token ===== */
+  --color-primary: #FF8C28;
+  --color-primary-light: #FFB347;
+  --color-primary-dark: #FF7A00;
+  --gradient-primary: linear-gradient(135deg, #FFB347 0%, #FF8A00 100%);
+
+  --color-bg: #F5F6F8;
+  --color-card: #FFFFFF;
+  --color-text: #333333;
+  --color-text-secondary: #666666;
+  --color-text-placeholder: #999999;
+  --color-line: #EEEEEE;
+  --color-success: #34C759;
+  --color-danger: #FF4D4F;
+
+  --radius-sm: 12rpx;
+  --radius-md: 20rpx;
+  --radius-lg: 28rpx;
+
+  --shadow-card: 0 8rpx 30rpx rgba(0, 0, 0, 0.05);
+
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 28rpx;
+}
+
+view, text, button, input, textarea, scroll-view {
+  box-sizing: border-box;
+}
+
+/* ===== 通用容器 ===== */
+.page {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+.container {
+  padding: 24rpx;
+}
+
+/* ===== 卡片 ===== */
+.card {
+  background: var(--color-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+}
+
+/* ===== 主按钮 ===== */
+.btn-primary {
+  background: var(--gradient-primary);
+  color: #fff;
+  border-radius: 999rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  text-align: center;
+  line-height: 88rpx;
+  height: 88rpx;
+  border: none;
+}
+.btn-primary::after { border: none; }
+.btn-primary[disabled] {
+  opacity: 0.5;
+  color: #fff;
+}
+
+.btn-ghost {
+  background: #fff;
+  color: var(--color-primary);
+  border: 2rpx solid var(--color-primary);
+  border-radius: 999rpx;
+  line-height: 84rpx;
+  height: 88rpx;
+  text-align: center;
+  font-size: 30rpx;
+}
+.btn-ghost::after { border: none; }
+
+/* ===== 文本工具类 ===== */
+.text-primary { color: var(--color-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-muted { color: var(--color-text-placeholder); }
+.text-bold { font-weight: 600; }
+.text-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.text-ellipsis-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+/* ===== 空态 ===== */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 160rpx 0;
+  color: var(--color-text-placeholder);
+}
+.empty__icon {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 24rpx;
+  opacity: 0.6;
+}
+.empty__text {
+  font-size: 28rpx;
+}
+
+/* ===== 分割 ===== */
+.divider {
+  height: 1rpx;
+  background: var(--color-line);
+  margin: 24rpx 0;
+}
+
+.flex { display: flex; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.flex-1 { flex: 1; }

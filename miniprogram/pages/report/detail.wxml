@@ -1,0 +1,27 @@
+<view class="page" wx:if="{{report}}">
+  <view class="rd__header">
+    <view class="rd__name">{{report.name}}</view>
+    <view class="rd__time">测评时间：{{report.time}}</view>
+  </view>
+
+  <view class="card">
+    <view class="rd__section-title">结果摘要</view>
+    <view class="rd__summary">{{report.summary}}</view>
+  </view>
+
+  <view class="card">
+    <view class="rd__section-title">维度得分</view>
+    <canvas type="2d" id="radarChart" class="rd__radar"></canvas>
+    <view class="rd__dims">
+      <view class="rd__dim" wx:for="{{report.dimensions}}" wx:key="name">
+        <text class="rd__dim-name">{{item.name}}</text>
+        <text class="rd__dim-value text-primary text-bold">{{item.value}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="rd__section-title">发展建议</view>
+    <view class="rd__summary">{{report.suggestion}}</view>
+  </view>
+</view>
