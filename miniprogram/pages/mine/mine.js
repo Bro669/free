@@ -1,3 +1,4 @@
+const track = require('../../utils/track');
 const { gotoLogin } = require('../../utils/util');
 
 Page({
@@ -33,6 +34,7 @@ Page({
 
   onMenuTap(e) {
     const { url, key } = e.currentTarget.dataset;
+    track.track('mine_menu_click', { key });
     const needLogin = ['advisor', 'feedback'].includes(key);
     if (needLogin && !this.data.isLogin) return gotoLogin();
     wx.navigateTo({ url });

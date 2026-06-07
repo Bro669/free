@@ -1,4 +1,5 @@
 const api = require('../../utils/request');
+const track = require('../../utils/track');
 const { toast } = require('../../utils/util');
 
 // 各分区的字段配置（驱动表单渲染）
@@ -83,6 +84,7 @@ Page({
     this.setData({ saving: true });
     try {
       await api.post('/profile/update', this.data.form);
+      track.track('profile_save', { section: this.data.section, success: true });
       toast('保存成功', 'success');
       setTimeout(() => wx.navigateBack(), 600);
     } catch (e) {

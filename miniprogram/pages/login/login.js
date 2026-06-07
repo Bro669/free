@@ -1,4 +1,5 @@
 const api = require('../../utils/request');
+const track = require('../../utils/track');
 const { toast, isPhone } = require('../../utils/util');
 
 Page({
@@ -63,9 +64,12 @@ Page({
   async doLogin(url, payload) {
     if (this.data.submitting) return;
     this.setData({ submitting: true });
+    const method = url === '/login/wechat' ? 'wechat' : 'sms';
+    track.track('login_submit', { method });
     try {
       const res = await api.post(url, payload);
       getApp().setLogin(res.token, res.userInfo);
+      track.track('login_result', { method, success: true });
       toast('登录成功', 'success');
       setTimeout(() => {
         const pages = getCurrentPages();
@@ -73,6 +77,7 @@ Page({
         else wx.switchTab({ url: '/pages/index/index' });
       }, 600);
     } catch (e) {
+      track.track('login_result', { method, success: false });
       toast('登录失败，请重试');
     } finally {
       this.setData({ submitting: false });

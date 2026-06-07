@@ -1,4 +1,5 @@
 const api = require('../../utils/request');
+const track = require('../../utils/track');
 const { toast } = require('../../utils/util');
 
 Page({
@@ -50,6 +51,7 @@ Page({
         content: this.data.content,
         images: this.data.images
       });
+      track.track('feedback_submit', { img_count: this.data.images.length, success: true });
       this.setData({ success: true });
     } catch (e) {
       toast('提交失败，请重试');

@@ -1,4 +1,5 @@
 const api = require('../../utils/request');
+const track = require('../../utils/track');
 
 Page({
   data: {
@@ -23,6 +24,7 @@ Page({
 
   editSection(e) {
     const key = e.currentTarget.dataset.key;
+    track.track('profile_edit_open', { section: key });
     wx.navigateTo({ url: '/pages/profile/edit?section=' + key });
   },
 

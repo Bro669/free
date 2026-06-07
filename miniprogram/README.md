@@ -64,6 +64,24 @@ miniprogram/                            微信小程序工程（原生，无构�
 2. 按后端实际返回结构调整 `request()` 中的解包逻辑（已标 `TODO`）。
 3. 业务页面调用方式（`api.get` / `api.post`）无需改动；确认无误后可删除 `utils/mock.js`。
 
+## 埋点（数据上报）
+
+统一封装于 `utils/track.js`，与 mock 同风格：当前 `USE_MOCK=true` 仅 `console` 输出，接后端只需置为 `false` 并填 `REPORT_URL`（`POST /track/report`）。
+
+- **页面 PV / 停留时长**：由 `app.js` 全局注入（重写 `Page`），无需逐页埋点 → `page_view` / `page_leave(duration)`。
+- **公共属性自动附加**：`session_id / user_id / role / student_id / scene / 设备信息 / network`。
+- **手动事件**：页面内调用 `track.track(event, params)`，已接入关键点（登录、首页快捷入口/课堂、测评详情、档案章节、我的菜单、个人信息编辑/保存、反馈提交、顾问扫码等）。
+- **可靠性**：批量上报（满 10 条或每 5s），失败写本地缓存下次启动补传。
+
+上报契约：
+```
+POST /track/report
+{ common:{session_id,user_id,role,student_id,scene,brand,model,app_version,network},
+  events:[ {event, ts, page, params}, ... ] }
+```
+
+> 合规：采集前需用户同意隐私协议；仅传 id，不传明文手机号 / 姓名等 PII。
+
 ## 待确认项（来自原型分析，提审 / 上线前必须处理）
 
 - [ ] **品牌 / 小程序名称统一**（原型中「和铖」「一支橙」并存，当前 UI 暂用「一支橙家长端」占位）
