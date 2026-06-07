@@ -11,11 +11,11 @@
 
   <view class="card">
     <view class="rd__section-title">维度得分</view>
-    <view class="bar-chart">
-      <view class="bar-chart__col" wx:for="{{bars}}" wx:key="name">
-        <view class="bar-chart__value">{{item.value}}</view>
-        <view class="bar-chart__bar" style="height: {{item.height}}%"></view>
-        <view class="bar-chart__label">{{item.name}}</view>
+    <canvas type="2d" id="radarChart" class="rd__radar"></canvas>
+    <view class="rd__dims">
+      <view class="rd__dim" wx:for="{{report.dimensions}}" wx:key="name">
+        <text class="rd__dim-name">{{item.name}}</text>
+        <text class="rd__dim-value text-primary text-bold">{{item.value}}</text>
       </view>
     </view>
   </view>

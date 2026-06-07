@@ -39,47 +39,31 @@
   border-bottom: 4rpx solid var(--color-primary);
 }
 
-/* 柱状图 */
-.bar-chart {
-  display: flex;
-  align-items: flex-end;
-  height: 320rpx;
-  padding-top: 20rpx;
+/* Canvas 图表 */
+.score__canvas {
+  width: 100%;
+  height: 340rpx;
 }
-.bar-chart__col {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  height: 100%;
-}
-.bar-chart__value { font-size: 22rpx; color: var(--color-text-secondary); margin-bottom: 8rpx; }
-.bar-chart__bar {
-  width: 40rpx;
-  background: linear-gradient(180deg, #FFB347, #FF8A00);
-  border-radius: 8rpx 8rpx 0 0;
-  min-height: 8rpx;
-}
-.bar-chart__label { font-size: 22rpx; color: var(--color-text-placeholder); margin-top: 12rpx; }
 
-/* 趋势/得分率条 */
-.line-chart__row { display: flex; align-items: center; margin-bottom: 26rpx; }
-.line-chart__name { width: 80rpx; font-size: 26rpx; }
-.line-chart__track {
-  flex: 1;
-  height: 16rpx;
-  background: #F2F3F5;
-  border-radius: 999rpx;
-  overflow: hidden;
-  margin: 0 16rpx;
+/* 图例 */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 16rpx;
 }
-.line-chart__fill {
-  height: 100%;
-  background: linear-gradient(90deg, #FFB347, #FF8A00);
-  border-radius: 999rpx;
+.legend__item {
+  display: flex;
+  align-items: center;
+  margin: 6rpx 18rpx;
 }
-.line-chart__pct { width: 70rpx; text-align: right; font-size: 24rpx; color: var(--color-text-secondary); }
+.legend__dot {
+  width: 18rpx;
+  height: 18rpx;
+  border-radius: 50%;
+  margin-right: 10rpx;
+}
+.legend__name { font-size: 24rpx; color: var(--color-text-secondary); }
 
 /* 明细表 */
 .score__list-title { font-size: 30rpx; font-weight: 600; margin-bottom: 20rpx; }

@@ -29,23 +29,13 @@
       <view class="score__chart-tab {{chartView==='line'?'is-active':''}}" data-view="line" bindtap="switchChart">趋势图</view>
     </view>
 
-    <!-- 柱状图 -->
-    <view wx:if="{{chartView==='bar'}}" class="bar-chart">
-      <view class="bar-chart__col" wx:for="{{bars}}" wx:key="name">
-        <view class="bar-chart__value">{{item.score}}</view>
-        <view class="bar-chart__bar" style="height: {{item.height}}%"></view>
-        <view class="bar-chart__label">{{item.name}}</view>
-      </view>
-    </view>
+    <canvas type="2d" id="scoreChart" class="score__canvas"></canvas>
 
-    <!-- 趋势图（近4次得分率折线，简化为得分点） -->
-    <view wx:else class="line-chart">
-      <view class="line-chart__row" wx:for="{{bars}}" wx:key="name">
-        <view class="line-chart__name">{{item.name}}</view>
-        <view class="line-chart__track">
-          <view class="line-chart__fill" style="width: {{item.pct}}%"></view>
-        </view>
-        <view class="line-chart__pct">{{item.pct >= 100 ? 100 : item.pct}}%</view>
+    <!-- 趋势图图例 -->
+    <view wx:if="{{chartView==='line'}}" class="legend">
+      <view class="legend__item" wx:for="{{data.subjects}}" wx:key="name">
+        <view class="legend__dot" style="background: {{item.color}}"></view>
+        <text class="legend__name">{{item.name}}</text>
       </view>
     </view>
   </view>
