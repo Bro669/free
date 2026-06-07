@@ -1,63 +1,74 @@
 <view class="page index">
-  <!-- 顶部问候 Banner -->
-  <view class="banner">
+  <!-- 欢迎卡 -->
+  <view class="welcome">
     <block wx:if="{{isLogin}}">
-      <view class="banner__greet">
-        你好呀，{{userInfo.name || '家长'}}
-      </view>
-      <view class="banner__child" bindtap="toggleChildPicker">
-        <text class="banner__child-name">{{currentChild.name || '未绑定学生'}}</text>
-        <text wx:if="{{currentChild}}" class="banner__child-class">{{currentChild.className}}</text>
-        <text wx:if="{{childList.length > 1}}" class="banner__child-arrow">切换 ▾</text>
-      </view>
+      <view class="welcome__badge">{{student.school || '育才中学'}}</view>
+      <view class="welcome__greet">欢迎登录，家长{{userInfo.name || '家长'}}</view>
     </block>
-    <block wx:else>
-      <view class="banner__greet">你好呀，家长</view>
-      <view class="banner__login" bindtap="goLogin">登录后查看孩子成长信息 ›</view>
-    </block>
+    <view wx:else class="welcome__greet" bindtap="goLogin">点击登录，查看孩子成长信息 ›</view>
   </view>
 
-  <!-- 快捷入口宫格 -->
-  <view class="card quick">
-    <view class="quick__title">快捷入口</view>
-    <view class="quick__grid">
-      <view class="quick__item" wx:for="{{quickEntries}}" wx:key="key"
-        data-index="{{index}}" bindtap="onQuickTap">
-        <view class="quick__icon">{{item.icon}}</view>
-        <view class="quick__name">{{item.name}}</view>
+  <!-- 通知条 -->
+  <view wx:if="{{notice}}" class="notice">
+    <image class="notice__icon" src="/images/icons/horn.png" />
+    <text class="notice__text text-ellipsis">消息中心：{{notice}}</text>
+  </view>
+
+  <!-- 快捷入口 -->
+  <view class="card section">
+    <view class="section__title"><text class="section__bar"></text>快捷入口</view>
+    <view class="quick">
+      <view class="quick__item" wx:for="{{quickEntries}}" wx:key="key" data-index="{{index}}" bindtap="onQuickTap">
+        <image class="quick__icon" src="/images/icons/{{item.icon}}.png" />
+        <text class="quick__name">{{item.name}}</text>
       </view>
     </view>
   </view>
 
-  <!-- 消息中心 -->
-  <view class="card msg">
-    <view class="msg__head" bindtap="goMessage">
-      <text class="msg__title">消息中心</text>
-      <text class="msg__more">查看全部 ›</text>
+  <!-- 成长档案 -->
+  <view class="card section" wx:if="{{isLogin && student}}">
+    <view class="section__head">
+      <view class="section__title"><text class="section__bar"></text>成长档案</view>
     </view>
-
-    <block wx:if="{{isLogin && messages.length}}">
-      <view class="msg__item" wx:for="{{messages}}" wx:key="id" data-index="{{index}}" bindtap="goMessage">
-        <view class="msg__dot {{item.read?'':'is-unread'}}"></view>
-        <view class="msg__body">
-          <view class="msg__item-title text-ellipsis">{{item.title}}</view>
-          <view class="msg__item-desc text-ellipsis">{{item.desc}}</view>
+    <view class="arch-progress" bindtap="goArchive">
+      <text class="arch-progress__label">成长档案完整度：</text>
+      <text class="arch-progress__value">{{archiveProgress}}%</text>
+      <text class="arch-progress__more">详情 ›</text>
+    </view>
+    <view class="stu" bindtap="goArchive">
+      <view class="stu__avatar">{{student.name[0]}}</view>
+      <view class="stu__body">
+        <view class="stu__name">{{student.name}}</view>
+        <view class="stu__tags">
+          <text class="stu__tag stu__tag--pink">{{student.gender}}</text>
+          <text class="stu__tag">{{student.city}} {{student.school}}</text>
         </view>
-        <view class="msg__time">{{item.time}}</view>
+        <view class="stu__tags">
+          <text class="stu__tag">{{student.grade}}</text>
+          <text class="stu__tag stu__tag--blue">学号：{{student.studentNo}}</text>
+        </view>
       </view>
-    </block>
-    <view wx:elif="{{isLogin}}" class="msg__empty">暂无消息</view>
-    <view wx:else class="msg__empty" bindtap="goLogin">登录后查看消息 ›</view>
+    </view>
+    <view class="stu__time">更新时间：{{student.updateTime}}</view>
   </view>
 
-  <!-- 多孩切换浮层 -->
-  <view wx:if="{{showChildPicker}}" class="picker-mask" bindtap="toggleChildPicker">
-    <view class="picker" catchtap="">
-      <view class="picker__title">选择孩子</view>
-      <view class="picker__item {{currentChild.id===item.id?'is-active':''}}"
-        wx:for="{{childList}}" wx:key="id" data-index="{{index}}" bindtap="selectChild">
-        <text>{{item.name}}</text>
-        <text class="picker__class">{{item.className}}</text>
+  <!-- 家长课堂 -->
+  <view class="card section">
+    <view class="section__head">
+      <view class="section__title"><text class="section__bar"></text>家长课堂</view>
+      <text class="section__more" bindtap="goClassroomMore">更多 ›</text>
+    </view>
+    <view class="ctab">
+      <view class="ctab__item {{classroomTab===item.key?'is-active':''}}"
+        wx:for="{{classroomTabs}}" wx:key="key" data-key="{{item.key}}" bindtap="switchClassroomTab">
+        {{item.name}}
+      </view>
+    </view>
+    <view class="art" wx:for="{{articles}}" wx:key="id" data-index="{{index}}" bindtap="goClassroomDetail">
+      <view class="art__cover">图</view>
+      <view class="art__body">
+        <view class="art__title text-ellipsis-2">{{item.title}}</view>
+        <view class="art__time">{{item.time}}</view>
       </view>
     </view>
   </view>

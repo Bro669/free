@@ -1,28 +1,60 @@
-.mine__header {
-  background: var(--gradient-primary);
-  padding: 30rpx 40rpx 90rpx;
-}
-.mine__user { display: flex; align-items: center; }
-.mine__avatar {
-  width: 120rpx; height: 120rpx; line-height: 120rpx;
-  text-align: center;
-  font-size: 56rpx;
-  background: #fff;
-  border-radius: 50%;
-  color: var(--color-primary);
-}
-.mine__user-info { margin-left: 28rpx; color: #fff; }
-.mine__name { font-size: 38rpx; font-weight: 700; }
-.mine__phone { font-size: 26rpx; opacity: 0.9; margin-top: 10rpx; }
+.mine { min-height: 100vh; }
 
-.mine__menu { margin: -56rpx 24rpx 0; padding: 8rpx 28rpx; }
-.mine__menu-item {
+/* 渐变头部 */
+.mine__hero {
+  background: linear-gradient(180deg, #FFE6C8 0%, #FFF3E6 50%, #F5F6F8 100%);
+  padding: 200rpx 40rpx 60rpx;
+  text-align: center;
+}
+.mine__avatar {
+  width: 160rpx; height: 160rpx;
+  margin: 0 auto;
+  border-radius: 50%;
+  padding: 6rpx;
+  background: linear-gradient(135deg, #FFB347, #FF8A00);
+}
+.mine__avatar-inner {
+  width: 100%; height: 100%;
+  line-height: 148rpx;
+  text-align: center;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--color-primary);
+  font-size: 64rpx;
+  font-weight: 700;
+}
+.mine__name {
+  font-size: 38rpx;
+  font-weight: 700;
+  margin-top: 20rpx;
+}
+.mine__name-arrow { color: var(--color-text-placeholder); font-weight: 400; }
+.mine__sub { margin-top: 16rpx; display: flex; align-items: center; justify-content: center; }
+.mine__badge {
+  font-size: 22rpx;
+  color: #FF7A00;
+  background: #FFEAD2;
+  padding: 4rpx 18rpx;
+  border-radius: 999rpx;
+  margin-right: 16rpx;
+}
+.mine__phone { font-size: 26rpx; color: var(--color-text-secondary); }
+
+/* 分组菜单 */
+.mine__menu {
+  background: #fff;
+  border-radius: 20rpx;
+  margin: 0 24rpx 24rpx;
+  padding: 8rpx 28rpx;
+  box-shadow: var(--shadow-card);
+}
+.mine__item {
   display: flex;
   align-items: center;
-  padding: 32rpx 0;
+  padding: 28rpx 0;
   border-bottom: 1rpx solid var(--color-line);
 }
-.mine__menu-item:last-child { border-bottom: none; }
-.mine__menu-icon { font-size: 40rpx; margin-right: 24rpx; }
-.mine__menu-name { flex: 1; font-size: 30rpx; }
-.mine__menu-arrow { color: #ccc; font-size: 40rpx; }
+.mine__item:last-child { border-bottom: none; }
+.mine__item-icon { width: 64rpx; height: 64rpx; margin-right: 24rpx; }
+.mine__item-name { flex: 1; font-size: 30rpx; }
+.mine__item-arrow { color: #ccc; font-size: 40rpx; }

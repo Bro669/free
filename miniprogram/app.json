@@ -35,20 +35,20 @@
       {
         "pagePath": "pages/index/index",
         "text": "首页",
-        "iconPath": "images/tabbar/home.png",
-        "selectedIconPath": "images/tabbar/home-active.png"
+        "iconPath": "images/icons/tab_home.png",
+        "selectedIconPath": "images/icons/tab_home_on.png"
       },
       {
         "pagePath": "pages/archive/archive",
         "text": "成长档案",
-        "iconPath": "images/tabbar/archive.png",
-        "selectedIconPath": "images/tabbar/archive-active.png"
+        "iconPath": "images/icons/tab_archive.png",
+        "selectedIconPath": "images/icons/tab_archive_on.png"
       },
       {
         "pagePath": "pages/mine/mine",
         "text": "我的",
-        "iconPath": "images/tabbar/mine.png",
-        "selectedIconPath": "images/tabbar/mine-active.png"
+        "iconPath": "images/icons/tab_mine.png",
+        "selectedIconPath": "images/icons/tab_mine_on.png"
       }
     ]
   },

@@ -5,74 +5,47 @@ Page({
   data: {
     isLogin: false,
     userInfo: null,
-    currentChild: null,
-    childList: [],
-    showChildPicker: false,
+    notice: '',
     quickEntries: [],
-    messages: []
+    archiveProgress: 0,
+    student: null,
+    classroomTab: 'all',
+    classroomTabs: [
+      { key: 'all', name: '全部' },
+      { key: 'career', name: '生涯实践' },
+      { key: 'activity', name: '活动纪实' }
+    ],
+    articles: []
   },
 
   onShow() {
     const app = getApp();
-    this.setData({
-      isLogin: app.globalData.isLogin,
-      userInfo: app.globalData.userInfo
-    });
+    this.setData({ isLogin: app.globalData.isLogin, userInfo: app.globalData.userInfo });
     this.loadData();
   },
 
   async loadData() {
     const home = await api.get('/home/index');
-    this.setData({ quickEntries: home.quickEntries });
-
-    if (this.data.isLogin) {
-      const [{ list }, msg] = await Promise.all([
-        api.get('/child/list'),
-        api.get('/message/list', { filter: 'all' })
-      ]);
-      const app = getApp();
-      let current = app.globalData.currentChild || list[0];
-      app.globalData.childList = list;
-      app.globalData.currentChild = current;
-      this.setData({
-        childList: list,
-        currentChild: current,
-        messages: msg.list.slice(0, 3)
-      });
-    } else {
-      this.setData({ childList: [], currentChild: null, messages: [] });
-    }
+    this.setData({
+      notice: home.notice,
+      quickEntries: home.quickEntries,
+      archiveProgress: home.archiveProgress,
+      student: this.data.isLogin ? home.student : null
+    });
+    this.loadArticles();
   },
 
-  toggleChildPicker() {
-    if (this.data.childList.length <= 1) return;
-    this.setData({ showChildPicker: !this.data.showChildPicker });
+  async loadArticles() {
+    const { list } = await api.get('/classroom/list', { category: this.data.classroomTab });
+    this.setData({ articles: list });
   },
 
-  selectChild(e) {
-    const child = this.data.childList[e.currentTarget.dataset.index];
-    getApp().globalData.currentChild = child;
-    this.setData({ currentChild: child, showChildPicker: false });
+  switchClassroomTab(e) {
+    this.setData({ classroomTab: e.currentTarget.dataset.key }, () => this.loadArticles());
   },
 
   goLogin() {
     gotoLogin();
-  },
-
-  onQuickTap(e) {
-    const item = this.data.quickEntries[e.currentTarget.dataset.index];
-    if (!this.requireLogin()) return;
-    // tab 页用 switchTab，其余用 navigateTo
-    if (item.url === '/pages/archive/archive') {
-      wx.switchTab({ url: item.url });
-    } else {
-      wx.navigateTo({ url: item.url });
-    }
-  },
-
-  goMessage() {
-    if (!this.requireLogin()) return;
-    wx.navigateTo({ url: '/pages/message/message' });
   },
 
   requireLogin() {
@@ -81,5 +54,25 @@ Page({
       return false;
     }
     return true;
+  },
+
+  onQuickTap(e) {
+    if (!this.requireLogin()) return;
+    const item = this.data.quickEntries[e.currentTarget.dataset.index];
+    wx.navigateTo({ url: item.url });
+  },
+
+  goArchive() {
+    if (!this.requireLogin()) return;
+    wx.switchTab({ url: '/pages/archive/archive' });
+  },
+
+  goClassroomDetail(e) {
+    const item = this.data.articles[e.currentTarget.dataset.index];
+    wx.navigateTo({ url: '/pages/classroom/detail?id=' + item.id });
+  },
+
+  goClassroomMore() {
+    wx.navigateTo({ url: '/pages/classroom/classroom' });
   }
 });

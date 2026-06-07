@@ -1,6 +1,6 @@
 {
-  "navigationBarTitleText": "首页",
-  "navigationBarBackgroundColor": "#FF8C28",
-  "navigationBarTextStyle": "white",
-  "enablePullDownRefresh": false
+  "navigationBarTitleText": "一支橙家长端",
+  "navigationBarBackgroundColor": "#ffffff",
+  "navigationBarTextStyle": "black",
+  "backgroundColor": "#F5F6F8"
 }

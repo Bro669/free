@@ -25,15 +25,23 @@ module.exports = {
 
   // ===== 首页 =====
   '/home/index': () => ({
-    notice: '欢迎使用家长端小程序',
+    notice: '王小明的期中考试成绩报告已更新',
     quickEntries: [
-      { key: 'score', name: '成绩查询', icon: '📊', url: '/pages/score/score' },
-      { key: 'report', name: '测评报告', icon: '📋', url: '/pages/report/report' },
-      { key: 'archive', name: '成长档案', icon: '🌱', url: '/pages/archive/archive' },
-      { key: 'teacher', name: '教师信息', icon: '👨‍🏫', url: '/pages/teacher/teacher' },
-      { key: 'classroom', name: '家长课堂', icon: '📚', url: '/pages/classroom/classroom' },
-      { key: 'school', name: '校园简介', icon: '🏫', url: '/pages/school/school' }
-    ]
+      { key: 'score', name: '成绩查询', icon: 'q_score', url: '/pages/score/score' },
+      { key: 'report', name: '测评报告', icon: 'q_report', url: '/pages/report/report' },
+      { key: 'teacher', name: '教师信息', icon: 'q_teacher', url: '/pages/teacher/teacher' }
+    ],
+    archiveProgress: 100,
+    student: {
+      name: '王小明',
+      gender: '女',
+      city: '陕西省西安市',
+      school: '育才中学',
+      grade: '2024届',
+      studentNo: 'S00001',
+      avatar: '',
+      updateTime: '2026-01-01 10:01:00'
+    }
   }),
   '/child/list': () => ({ list: childList }),
 
@@ -121,13 +129,17 @@ module.exports = {
   }),
 
   // ===== 家长课堂 =====
-  '/classroom/list': () => ({
-    list: [
-      { id: 'a1', title: '如何陪伴孩子度过中考冲刺期', cover: '', time: '2025-11-01', summary: '中考冲刺阶段，家长的陪伴方式至关重要……' },
-      { id: 'a2', title: '青春期亲子沟通的5个技巧', cover: '', time: '2025-10-25', summary: '了解青春期孩子的心理变化，建立有效沟通……' },
-      { id: 'a3', title: '临近高考，考生需要这份心理小妙招', cover: '', time: '2025-10-18', summary: '考前焦虑、压力大、易怒……这些都是正常现象。' }
-    ]
-  }),
+  '/classroom/list': (p) => {
+    const all = [
+      { id: 'a1', title: '如何帮助孩子做好高中生涯规划', cover: '', time: '2025-11-17 13:11', summary: '生涯规划不仅关乎大学专业的选择……', category: 'career' },
+      { id: 'a2', title: '寒假社会实践活动指南', cover: '', time: '2025-11-15 09:30', summary: '丰富的社会实践活动能帮助孩子开阔视野……', category: 'activity' },
+      { id: 'a3', title: '青春期亲子沟通的5个技巧', cover: '', time: '2025-10-25 10:00', summary: '了解青春期孩子的心理变化，建立有效沟通……', category: 'career' },
+      { id: 'a4', title: '临近高考，考生需要这份心理小妙招', cover: '', time: '2025-10-18 16:45', summary: '考前焦虑、压力大、易怒……这些都是正常现象。', category: 'activity' }
+    ];
+    const cat = p && p.category;
+    const list = !cat || cat === 'all' ? all : all.filter((i) => i.category === cat);
+    return { list };
+  },
   '/classroom/detail': (p) => ({
     id: p.id,
     title: '临近高考，考生需要这份心理小妙招',
@@ -137,29 +149,80 @@ module.exports = {
       '考前焦虑、压力大、易怒、失眠……临近高考，很多考生和家长都会感到紧张。其实，适度的紧张有助于发挥，但过度焦虑则会影响状态。\n\n一、接纳情绪。告诉孩子，紧张是正常的，不必为“紧张”而紧张。\n\n二、规律作息。保证充足睡眠，避免熬夜刷题打乱生物钟。\n\n三、适度运动。每天进行30分钟左右的有氧运动，有助于缓解压力。\n\n四、家长支持。多倾听、少说教，给孩子营造轻松的家庭氛围。'
   }),
 
-  // ===== 成长档案 =====
+  // ===== 成长档案（章节式文档）=====
   '/archive/detail': () => ({
-    student: { name: '李小红', gender: '女', grade: '普通初中2025级', className: '2025级5班', studentNo: '20250501', avatar: '' },
-    school: '育才中学',
-    items: [
-      { label: '身高', value: '162 cm' },
-      { label: '体重', value: '50 kg' },
+    student: { name: '王小明', className: '2024级 初一（4）班', school: 'XXX中学' },
+    chapters: [
+      { key: 'cover', title: '封面' },
+      { key: 'preface', title: '前言' },
+      { key: 'catalog', title: '目录' },
+      { key: 'portrait', title: '我的画像' },
+      { key: 'cognition', title: '自我认知篇' },
+      { key: 'explore', title: '环境探索篇' },
+      { key: 'dream', title: '我的梦想清单' },
+      { key: 'score', title: '学业战绩' }
+    ],
+    // 各章节内容
+    preface:
+      '这是一本属于王小明的生涯成长档案。它记录着你在求学路上的点滴成长——从自我认知到环境探索，从梦想清单到学业战绩。愿你以此为镜，认识自己、规划未来，从迷茫走向清晰。',
+    catalog: ['前言', '我的画像', '自我认知篇', '环境探索篇', '我的梦想清单', '学业战绩'],
+    portrait: [
+      { label: '姓名', value: '王小明' },
+      { label: '性别', value: '女' },
+      { label: '班级', value: '2024级 初一（4）班' },
       { label: '兴趣特长', value: '绘画、钢琴' },
-      { label: '担任职务', value: '学习委员' },
-      { label: '获奖情况', value: '校级三好学生（2024-2025）' }
-    ]
+      { label: '座右铭', value: '心之所向，素履以往' }
+    ],
+    cognition:
+      '通过霍兰德职业兴趣测评与 MBTI 性格测评，你展现出较强的研究型与艺术型特质，思维活跃、富有创造力，善于独立思考。建议在学习中发挥探究优势，多参与科创与艺术类活动。',
+    explore:
+      '环境探索帮助你了解不同的专业与职业世界。结合你的兴趣与能力，理工科、设计类相关方向较为契合。建议主动了解目标院校与专业，参加开放日与职业体验活动。',
+    dream: ['考入理想的高中', '系统学习一门乐器', '参加一次科创比赛并获奖', '未来从事与设计相关的工作'],
+    // 学业战绩：成绩表格
+    scoreTable: {
+      subjects: ['语文', '数学', '英语', '政治', '历史', '物理'],
+      records: [
+        {
+          examName: '期中考试', examType: '全校', grade: '普通高中2023级', term: '2024-2025-下学期', date: '2024-06-06',
+          scores: [150, 143, 121, 88, 67, 98], total: 888, classRank: 1, gradeRank: 22
+        },
+        {
+          examName: '月考', examType: '全校', grade: '普通高中2023级', term: '2024-2025-下学期', date: '2024-05-06',
+          scores: [148, 140, 119, 86, 65, 95], total: 870, classRank: 2, gradeRank: 25
+        },
+        {
+          examName: '期初考试', examType: '全校', grade: '普通高中2023级', term: '2024-2025-下学期', date: '2024-03-06',
+          scores: [145, 138, 120, 85, 66, 92], total: 860, classRank: 3, gradeRank: 28
+        }
+      ]
+    }
   }),
 
   // ===== 我的 / 个人信息 =====
   '/profile/detail': () => ({
     name: '张三',
     avatar: '',
-    gender: '女',
-    phone: '138****8888',
-    relation: '母亲',
-    birthday: '1985-06-01',
-    address: '四川省成都市武侯区',
-    email: ''
+    phone: '13988888888',
+    // 关系信息
+    relation: '父亲',
+    // 地址信息
+    province: '广东省 深圳市 福田区',
+    addressDetail: '平安大厦',
+    // 职业信息
+    company: '哇哈哈有限责任公司',
+    companyType: '私企',
+    industry: '制造业 服务业',
+    jobCategory: '市场与销售类',
+    jobTitle: '销售总监',
+    workYears: '10-20年',
+    income: '50-100万',
+    // 毕业院校
+    graduateSchool: '北京大学',
+    graduateMajor: '人力资源管理',
+    // 分享意愿
+    willShare: '愿意',
+    viewMajor: '专业非终身，能力随心长，兴趣是最关键的。',
+    viewJob: '职业是价值舞台，热爱加坚持，便能行稳致远。'
   }),
   '/profile/update': () => ({ success: true }),
 

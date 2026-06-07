@@ -1,24 +1,25 @@
 <view class="page mine">
-  <!-- 用户头部 -->
-  <view class="mine__header">
-    <view class="mine__user" bindtap="goProfile">
-      <view class="mine__avatar">{{isLogin ? (userInfo.name[0]) : '🍊'}}</view>
-      <view class="mine__user-info">
-        <block wx:if="{{isLogin}}">
-          <view class="mine__name">{{userInfo.name}}</view>
-          <view class="mine__phone">{{userInfo.phone}}</view>
-        </block>
-        <view wx:else class="mine__name">点击登录 ›</view>
-      </view>
+  <!-- 渐变头部 -->
+  <view class="mine__hero">
+    <view class="mine__avatar" bindtap="goProfile">
+      <view class="mine__avatar-inner">{{isLogin ? userInfo.name[0] : '橙'}}</view>
+    </view>
+    <view class="mine__name" bindtap="goProfile">
+      {{isLogin ? userInfo.name : '点击登录'}}<text class="mine__name-arrow"> ›</text>
+    </view>
+    <view wx:if="{{isLogin}}" class="mine__sub">
+      <text class="mine__badge">学生家长</text>
+      <text class="mine__phone">{{userInfo.phone}}</text>
     </view>
   </view>
 
-  <!-- 菜单 -->
-  <view class="card mine__menu">
-    <view class="mine__menu-item" wx:for="{{menus}}" wx:key="key" data-index="{{index}}" bindtap="onMenuTap">
-      <text class="mine__menu-icon">{{item.icon}}</text>
-      <text class="mine__menu-name">{{item.name}}</text>
-      <text class="mine__menu-arrow">›</text>
+  <!-- 分组菜单 -->
+  <view class="mine__menu" wx:for="{{groups}}" wx:for-item="group" wx:key="*this">
+    <view class="mine__item" wx:for="{{group}}" wx:for-item="item" wx:key="key"
+      data-url="{{item.url}}" data-key="{{item.key}}" bindtap="onMenuTap">
+      <image class="mine__item-icon" src="/images/icons/{{item.icon}}.png" />
+      <text class="mine__item-name">{{item.name}}</text>
+      <text class="mine__item-arrow">›</text>
     </view>
   </view>
 </view>
