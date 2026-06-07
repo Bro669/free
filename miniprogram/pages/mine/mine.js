@@ -28,6 +28,7 @@ Page({
   },
 
   goProfile() {
+    track.track('mine_profile_click', {});
     if (!this.data.isLogin) return gotoLogin();
     wx.navigateTo({ url: '/pages/profile/profile' });
   },

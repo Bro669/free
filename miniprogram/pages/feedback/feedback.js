@@ -23,6 +23,7 @@ Page({
       mediaType: ['image'],
       success: (res) => {
         const paths = res.tempFiles.map((f) => f.tempFilePath);
+        track.track('feedback_add_image', { count: paths.length });
         this.setData({ images: this.data.images.concat(paths) });
       }
     });
@@ -46,14 +47,19 @@ Page({
     if (this.data.submitting) return;
     this.setData({ submitting: true });
     try {
-      // TODO: 真实环境需先上传图片获取 url，再随表单提交
+      // 先逐张上传图片获取 url（mock 下直接回传本地路径），再随表单提交
+      const urls = [];
+      for (const path of this.data.images) {
+        urls.push(await api.uploadFile(path));
+      }
       await api.post('/feedback/submit', {
         content: this.data.content,
-        images: this.data.images
+        images: urls
       });
-      track.track('feedback_submit', { img_count: this.data.images.length, success: true });
+      track.track('feedback_submit', { img_count: urls.length, success: true });
       this.setData({ success: true });
     } catch (e) {
+      track.track('feedback_submit', { img_count: this.data.images.length, success: false });
       toast('提交失败，请重试');
     } finally {
       this.setData({ submitting: false });

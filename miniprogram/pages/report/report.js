@@ -1,4 +1,5 @@
 const api = require('../../utils/request');
+const track = require('../../utils/track');
 
 Page({
   data: {
@@ -19,11 +20,14 @@ Page({
   },
 
   onFilterChange(e) {
+    const filter = this.data.filters[e.detail.value];
+    track.track('report_filter_change', { filter });
     this.setData({ filterIndex: e.detail.value });
     // TODO: 按筛选条件重新拉取报告列表
   },
 
   openInterpret() {
+    track.track('report_interpret_click', {});
     wx.showToast({ title: '测评报告解读（待接入）', icon: 'none' });
   },
 

@@ -71,7 +71,14 @@ Page({
 
   goArchive() {
     if (!this.requireLogin()) return;
+    track.track('home_archive_click', {});
     wx.switchTab({ url: '/pages/archive/archive' });
+  },
+
+  goNotice() {
+    track.track('home_notice_click', {});
+    if (!this.requireLogin()) return;
+    wx.navigateTo({ url: '/pages/message/message' });
   },
 
   goClassroomDetail(e) {
@@ -81,6 +88,7 @@ Page({
   },
 
   goClassroomMore() {
+    track.track('home_more_classroom', {});
     wx.navigateTo({ url: '/pages/classroom/classroom' });
   }
 });

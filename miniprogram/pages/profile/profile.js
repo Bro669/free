@@ -32,9 +32,14 @@ Page({
     wx.chooseMedia({
       count: 1,
       mediaType: ['image'],
-      success: (res) => {
-        this.setData({ 'form.avatar': res.tempFiles[0].tempFilePath });
-        // TODO: 上传头像到后端
+      success: async (res) => {
+        const filePath = res.tempFiles[0].tempFilePath;
+        track.track('profile_avatar_change', {});
+        // 上传获取 URL（mock 下直接返回本地路径）
+        const url = await api.uploadFile(filePath);
+        this.setData({ 'form.avatar': url });
+        // 同步保存头像
+        api.post('/profile/update', { avatar: url });
       }
     });
   }

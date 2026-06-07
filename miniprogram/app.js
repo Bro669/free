@@ -20,6 +20,13 @@ Page = function (opts) {
     track.trackPageLeave('/' + this.route, Date.now() - (this.__enterTs || Date.now()));
     if (userOnUnload) return userOnUnload.apply(this, arguments);
   };
+  // 未自定义分享时注入默认分享，统一采集 share 事件并开启转发菜单
+  if (!opts.onShareAppMessage) {
+    opts.onShareAppMessage = function () {
+      track.track('share', { from: 'menu' });
+      return { title: '一支橙家长端' };
+    };
+  }
   return originalPage(opts);
 };
 
@@ -52,6 +59,10 @@ App({
 
   onHide() {
     track.flush();
+  },
+
+  onError(msg) {
+    track.track('page_error', { msg: ('' + msg).slice(0, 200) });
   },
 
   // 统一设置登录态

@@ -27,6 +27,7 @@ Page({
   },
 
   openInterpret() {
+    track.track('archive_interpret_click', {});
     wx.showToast({ title: '成长档案解读（待接入）', icon: 'none' });
   },
 
