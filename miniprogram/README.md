@@ -28,35 +28,36 @@ miniprogram/                            微信小程序工程（原生，无构�
 │       └── mine.png / mine-active.png
 │
 ├── utils/                              公共能力
-│   ├── request.js                      统一请求封装（USE_MOCK 开关在此）
+│   ├── request.js                      统一请求封装（USE_MOCK 开关 + 适配层 + 上传 + 401）
 │   ├── mock.js                         占位数据中心（接真后端后可删）
 │   ├── chart.js                        Canvas 2D 图表（柱状 / 折线 / 雷达）
+│   ├── track.js                        埋点 SDK（自动 PV + 批量上报）
+│   ├── auth.js                         登录辅助（wx.login code / 手机号脱敏）
 │   └── util.js                         通用工具（格式化 / 校验 / toast）
 │
-└── pages/                              18 个页面 / 17 个模块
-    ├── login/        登录（微信一键 + 短信验证码）
-    ├── index/        首页（多孩切换 / 快捷入口 / 消息预览）   [tab]
-    ├── school/       校园简介（学校简介 / 学校文化）
-    ├── message/      消息中心（全部 / 未读 / 空态）
-    ├── score/        成绩查询（柱状图 / 趋势折线 + 明细）
-    ├── report/       测评报告
-    │                 ├── report.*  列表（生成中 / 空态）
-    │                 └── detail.*  详情（6 维度雷达图）
-    ├── teacher/      教师信息（班主任 + 任课教师）
-    ├── classroom/    家长课堂
-    │                 ├── classroom.*  文章列表
-    │                 └── detail.*     文章详情
-    ├── archive/      成长档案（生涯档案卡）                 [tab]
-    ├── mine/         我的                                  [tab]
-    ├── profile/      个人信息（表单编辑）
-    ├── advisor/      添加生涯顾问（企业微信活码）
-    ├── about/        关于我们
-    ├── feedback/     意见反馈（文字 + 9 图 + 成功页）
-    ├── settings/     账户设置（协议 + 退出确认）
-    └── agreement/    用户协议 / 隐私协议
+└── pages/                              一页一目录，四件套同名（共 19 个页面）
+    ├── login/             登录（微信一键 + 短信验证码）
+    ├── index/             首页（快捷入口 / 成长档案 / 家长课堂）   [tab]
+    ├── school/            校园简介（学校简介 / 学校文化）
+    ├── message/           消息中心（全部 / 未读 / 空态）
+    ├── score/             成绩查询（柱状图 / 趋势折线 + 明细）
+    ├── report/            测评报告列表（生成中 / 空态）
+    ├── reportDetail/      测评报告详情（6 维度雷达图）
+    ├── teacher/           教师信息（班主任 + 任课教师）
+    ├── classroom/         家长课堂文章列表
+    ├── classroomDetail/   家长课堂文章详情
+    ├── archive/           成长档案（章节文档 + 学业战绩表）       [tab]
+    ├── mine/              我的                                  [tab]
+    ├── profile/           个人信息（分区展示）
+    ├── profileEdit/       个人信息编辑子页（按 section 驱动）
+    ├── advisor/           添加生涯顾问（企业微信活码）
+    ├── about/             关于我们
+    ├── feedback/          意见反馈（文字 + 9 图 + 成功页）
+    ├── settings/          账户设置（协议 + 退出确认）
+    └── agreement/         用户协议 / 隐私协议
 ```
 
-> 每个页面目录均为微信小程序标准四件套：`.js`（逻辑）/ `.json`（页面配置）/ `.wxml`（结构）/ `.wxss`（样式）。
+> 遵循微信「项目结构」规范：app 三件套置于根目录；**每个页面独立目录，目录内 `.js`/`.json`/`.wxml`/`.wxss` 四件套同名**。
 
 ## 接入真实后端
 

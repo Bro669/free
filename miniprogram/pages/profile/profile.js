@@ -25,7 +25,7 @@ Page({
   editSection(e) {
     const key = e.currentTarget.dataset.key;
     track.track('profile_edit_open', { section: key });
-    wx.navigateTo({ url: '/pages/profile/edit?section=' + key });
+    wx.navigateTo({ url: '/pages/profileEdit/profileEdit?section=' + key });
   },
 
   changeAvatar() {

@@ -84,7 +84,7 @@ Page({
   goClassroomDetail(e) {
     const item = this.data.articles[e.currentTarget.dataset.index];
     track.track('home_article_click', { article_id: item.id });
-    wx.navigateTo({ url: '/pages/classroom/detail?id=' + item.id });
+    wx.navigateTo({ url: '/pages/classroomDetail/classroomDetail?id=' + item.id });
   },
 
   goClassroomMore() {

@@ -37,6 +37,6 @@ Page({
       wx.showToast({ title: '报告生成中，请稍后查看', icon: 'none' });
       return;
     }
-    wx.navigateTo({ url: '/pages/report/detail?id=' + item.id });
+    wx.navigateTo({ url: '/pages/reportDetail/reportDetail?id=' + item.id });
   }
 });
