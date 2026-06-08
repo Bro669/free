@@ -22,10 +22,11 @@ miniprogram/                            微信小程序工程（原生，无构�
 ├── README.md
 │
 ├── images/
-│   └── tabbar/                         tabBar 图标（未选中灰 / 选中橙）
-│       ├── home.png / home-active.png
-│       ├── archive.png / archive-active.png
-│       └── mine.png / mine-active.png
+│   └── icons/                         全套 UI 图标（PNG）
+│       ├── tab_home / tab_archive / tab_mine（含 _on 选中态）
+│       ├── q_score / q_report / q_teacher        快捷入口
+│       ├── m_school / m_advisor / m_about / m_feedback / m_settings  我的菜单
+│       └── horn                                   通知喇叭
 │
 ├── utils/                              公共能力
 │   ├── request.js                      统一请求封装（USE_MOCK 开关 + 适配层 + 上传 + 401）
@@ -61,9 +62,14 @@ miniprogram/                            微信小程序工程（原生，无构�
 
 ## 接入真实后端
 
-1. 打开 `utils/request.js`，将 `USE_MOCK` 改为 `false`，填写 `BASE_URL`。
-2. 按后端实际返回结构调整 `request()` 中的解包逻辑（已标 `TODO`）。
-3. 业务页面调用方式（`api.get` / `api.post`）无需改动；确认无误后可删除 `utils/mock.js`。
+请求层已按「一处切换、页面零改」设计（`utils/request.js`：可配置响应结构 / token / 401 / 字段适配层 / 文件上传 / api_error 上报）。
+
+1. `utils/request.js`：`USE_MOCK=false`、填 `BASE_URL` / `UPLOAD_PATH`，按后端核对响应结构常量与鉴权配置。
+2. 字段名不一致时，在 `adapters` 里集中映射（**业务页面无需改动**）。
+3. `utils/track.js`：`USE_MOCK=false`、填 `REPORT_URL`。
+4. 确认无误后删除 `utils/mock.js`。
+
+> 完整步骤、接口契约、联调清单见 **`docs/后端接入指南.md`**。
 
 ## 埋点（数据上报）
 
@@ -90,6 +96,13 @@ POST /track/report
 - [ ] **联系电话 / 邮箱** 替换为真实信息
 - [ ] **App 图标 / 教师默认头像** 切图补齐
 - [ ] **生涯顾问二维码** 替换为后端下发的企业微信活码
-- [x] **tabBar 图标**：已补充首页 / 成长档案 / 我的 的选中与未选中图标（`images/tabbar/`）
+- [x] **全套 UI 图标**：tabBar / 快捷入口 / 我的菜单 / 通知喇叭已按设计配色生成（`images/icons/`）
 
 > 视觉风格：暖橙主色 `#FF8C28`，卡片化布局，设计 Token 定义于 `app.wxss`。
+
+## 相关文档（`../docs/`）
+
+- `家长端小程序-原型与UI设计分析.md` — 原型与 UI 设计分析
+- `埋点字典.md` — 全量埋点事件清单与上报契约
+- `后端接入指南.md` — 后端接入步骤、接口契约、联调清单
+- `ui-design/` — 官方高保真设计图；`images/` — 原型图
