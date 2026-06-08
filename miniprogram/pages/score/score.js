@@ -1,5 +1,6 @@
 const api = require('../../utils/request');
 const chart = require('../../utils/chart');
+const track = require('../../utils/track');
 
 Page({
   data: {
@@ -17,6 +18,7 @@ Page({
       ...s,
       color: chart.COLORS[i % chart.COLORS.length]
     }));
+    track.track('score_view', { term: data.terms && data.terms[0] });
     this.setData({ data }, () => this.initChart());
   },
 
@@ -52,11 +54,15 @@ Page({
   },
 
   onTermChange(e) {
+    const term = this.data.data.terms[e.detail.value];
+    track.track('score_term_change', { term });
     this.setData({ termIndex: e.detail.value });
     // TODO: 切换学期后按 term 重新拉取成绩并 renderChart()
   },
 
   switchChart(e) {
-    this.setData({ chartView: e.currentTarget.dataset.view }, () => this.renderChart());
+    const view = e.currentTarget.dataset.view;
+    track.track('score_chart_switch', { chart: view });
+    this.setData({ chartView: view }, () => this.renderChart());
   }
 });

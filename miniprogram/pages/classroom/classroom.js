@@ -10,6 +10,6 @@ Page({
 
   onTapItem(e) {
     const item = this.data.list[e.currentTarget.dataset.index];
-    wx.navigateTo({ url: '/pages/classroom/detail?id=' + item.id });
+    wx.navigateTo({ url: '/pages/classroomDetail/classroomDetail?id=' + item.id });
   }
 });

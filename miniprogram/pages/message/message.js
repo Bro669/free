@@ -1,4 +1,5 @@
 const api = require('../../utils/request');
+const track = require('../../utils/track');
 
 Page({
   data: {
@@ -12,7 +13,9 @@ Page({
   },
 
   switchFilter(e) {
-    this.setData({ filter: e.currentTarget.dataset.filter }, () => this.loadList());
+    const filter = e.currentTarget.dataset.filter;
+    track.track('message_filter', { filter });
+    this.setData({ filter }, () => this.loadList());
   },
 
   async loadList() {
@@ -23,6 +26,7 @@ Page({
 
   onTapItem(e) {
     const item = this.data.list[e.currentTarget.dataset.index];
+    track.track('message_click', { message_id: item.id, type: item.type });
     // 标记已读
     const list = this.data.list.map((m) => (m.id === item.id ? { ...m, read: true } : m));
     this.setData({ list });

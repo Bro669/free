@@ -9,7 +9,7 @@
   </view>
 
   <!-- 通知条 -->
-  <view wx:if="{{notice}}" class="notice">
+  <view wx:if="{{notice}}" class="notice" bindtap="goNotice">
     <image class="notice__icon" src="/images/icons/horn.png" />
     <text class="notice__text text-ellipsis">消息中心：{{notice}}</text>
   </view>

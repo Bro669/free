@@ -1,5 +1,6 @@
 const api = require('../../utils/request');
 const chart = require('../../utils/chart');
+const track = require('../../utils/track');
 
 Page({
   data: {
@@ -9,6 +10,7 @@ Page({
   _canvas: null,
 
   async onLoad(query) {
+    track.track('report_detail_view', { report_id: query.id });
     const report = await api.get('/report/detail', { id: query.id });
     this.setData({ report }, () => this.initChart());
   },

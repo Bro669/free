@@ -1,4 +1,5 @@
 const api = require('../../utils/request');
+const track = require('../../utils/track');
 
 Page({
   data: {
@@ -12,6 +13,9 @@ Page({
   },
 
   switchTab(e) {
-    this.setData({ activeTab: e.currentTarget.dataset.index });
+    const index = e.currentTarget.dataset.index;
+    const tab = this.data.school && this.data.school.tabs[index];
+    track.track('school_tab_switch', { tab: tab && tab.key });
+    this.setData({ activeTab: index });
   }
 });

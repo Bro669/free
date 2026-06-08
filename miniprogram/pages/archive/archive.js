@@ -1,4 +1,5 @@
 const api = require('../../utils/request');
+const track = require('../../utils/track');
 const { gotoLogin } = require('../../utils/util');
 
 Page({
@@ -20,10 +21,13 @@ Page({
   },
 
   switchChapter(e) {
-    this.setData({ activeChapter: e.currentTarget.dataset.key });
+    const key = e.currentTarget.dataset.key;
+    track.track('archive_chapter_switch', { chapter: key });
+    this.setData({ activeChapter: key });
   },
 
   openInterpret() {
+    track.track('archive_interpret_click', {});
     wx.showToast({ title: '成长档案解读（待接入）', icon: 'none' });
   },
 

@@ -22,47 +22,72 @@ miniprogram/                            微信小程序工程（原生，无构�
 ├── README.md
 │
 ├── images/
-│   └── tabbar/                         tabBar 图标（未选中灰 / 选中橙）
-│       ├── home.png / home-active.png
-│       ├── archive.png / archive-active.png
-│       └── mine.png / mine-active.png
+│   └── icons/                         全套 UI 图标（PNG）
+│       ├── tab_home / tab_archive / tab_mine（含 _on 选中态）
+│       ├── q_score / q_report / q_teacher        快捷入口
+│       ├── m_school / m_advisor / m_about / m_feedback / m_settings  我的菜单
+│       └── horn                                   通知喇叭
 │
 ├── utils/                              公共能力
-│   ├── request.js                      统一请求封装（USE_MOCK 开关在此）
+│   ├── request.js                      统一请求封装（USE_MOCK 开关 + 适配层 + 上传 + 401）
 │   ├── mock.js                         占位数据中心（接真后端后可删）
 │   ├── chart.js                        Canvas 2D 图表（柱状 / 折线 / 雷达）
+│   ├── track.js                        埋点 SDK（自动 PV + 批量上报）
+│   ├── auth.js                         登录辅助（wx.login code / 手机号脱敏）
 │   └── util.js                         通用工具（格式化 / 校验 / toast）
 │
-└── pages/                              18 个页面 / 17 个模块
-    ├── login/        登录（微信一键 + 短信验证码）
-    ├── index/        首页（多孩切换 / 快捷入口 / 消息预览）   [tab]
-    ├── school/       校园简介（学校简介 / 学校文化）
-    ├── message/      消息中心（全部 / 未读 / 空态）
-    ├── score/        成绩查询（柱状图 / 趋势折线 + 明细）
-    ├── report/       测评报告
-    │                 ├── report.*  列表（生成中 / 空态）
-    │                 └── detail.*  详情（6 维度雷达图）
-    ├── teacher/      教师信息（班主任 + 任课教师）
-    ├── classroom/    家长课堂
-    │                 ├── classroom.*  文章列表
-    │                 └── detail.*     文章详情
-    ├── archive/      成长档案（生涯档案卡）                 [tab]
-    ├── mine/         我的                                  [tab]
-    ├── profile/      个人信息（表单编辑）
-    ├── advisor/      添加生涯顾问（企业微信活码）
-    ├── about/        关于我们
-    ├── feedback/     意见反馈（文字 + 9 图 + 成功页）
-    ├── settings/     账户设置（协议 + 退出确认）
-    └── agreement/    用户协议 / 隐私协议
+└── pages/                              一页一目录，四件套同名（共 19 个页面）
+    ├── login/             登录（微信一键 + 短信验证码）
+    ├── index/             首页（快捷入口 / 成长档案 / 家长课堂）   [tab]
+    ├── school/            校园简介（学校简介 / 学校文化）
+    ├── message/           消息中心（全部 / 未读 / 空态）
+    ├── score/             成绩查询（柱状图 / 趋势折线 + 明细）
+    ├── report/            测评报告列表（生成中 / 空态）
+    ├── reportDetail/      测评报告详情（6 维度雷达图）
+    ├── teacher/           教师信息（班主任 + 任课教师）
+    ├── classroom/         家长课堂文章列表
+    ├── classroomDetail/   家长课堂文章详情
+    ├── archive/           成长档案（章节文档 + 学业战绩表）       [tab]
+    ├── mine/              我的                                  [tab]
+    ├── profile/           个人信息（分区展示）
+    ├── profileEdit/       个人信息编辑子页（按 section 驱动）
+    ├── advisor/           添加生涯顾问（企业微信活码）
+    ├── about/             关于我们
+    ├── feedback/          意见反馈（文字 + 9 图 + 成功页）
+    ├── settings/          账户设置（协议 + 退出确认）
+    └── agreement/         用户协议 / 隐私协议
 ```
 
-> 每个页面目录均为微信小程序标准四件套：`.js`（逻辑）/ `.json`（页面配置）/ `.wxml`（结构）/ `.wxss`（样式）。
+> 遵循微信「项目结构」规范：app 三件套置于根目录；**每个页面独立目录，目录内 `.js`/`.json`/`.wxml`/`.wxss` 四件套同名**。
 
 ## 接入真实后端
 
-1. 打开 `utils/request.js`，将 `USE_MOCK` 改为 `false`，填写 `BASE_URL`。
-2. 按后端实际返回结构调整 `request()` 中的解包逻辑（已标 `TODO`）。
-3. 业务页面调用方式（`api.get` / `api.post`）无需改动；确认无误后可删除 `utils/mock.js`。
+请求层已按「一处切换、页面零改」设计（`utils/request.js`：可配置响应结构 / token / 401 / 字段适配层 / 文件上传 / api_error 上报）。
+
+1. `utils/request.js`：`USE_MOCK=false`、填 `BASE_URL` / `UPLOAD_PATH`，按后端核对响应结构常量与鉴权配置。
+2. 字段名不一致时，在 `adapters` 里集中映射（**业务页面无需改动**）。
+3. `utils/track.js`：`USE_MOCK=false`、填 `REPORT_URL`。
+4. 确认无误后删除 `utils/mock.js`。
+
+> 完整步骤、接口契约、联调清单见 **`docs/后端接入指南.md`**。
+
+## 埋点（数据上报）
+
+统一封装于 `utils/track.js`，与 mock 同风格：当前 `USE_MOCK=true` 仅 `console` 输出，接后端只需置为 `false` 并填 `REPORT_URL`（`POST /track/report`）。
+
+- **页面 PV / 停留时长**：由 `app.js` 全局注入（重写 `Page`），无需逐页埋点 → `page_view` / `page_leave(duration)`。
+- **公共属性自动附加**：`session_id / user_id / role / student_id / scene / 设备信息 / network`。
+- **手动事件**：页面内调用 `track.track(event, params)`，**已全量接入**（登录/首页/成绩/测评/档案/校园/消息/我的/个人信息/反馈/顾问/设置 + 分享/接口失败/页面异常）。完整清单见 `docs/埋点字典.md`。
+- **可靠性**：批量上报（满 10 条或每 5s），失败写本地缓存下次启动补传。
+
+上报契约：
+```
+POST /track/report
+{ common:{session_id,user_id,role,student_id,scene,brand,model,app_version,network},
+  events:[ {event, ts, page, params}, ... ] }
+```
+
+> 合规：采集前需用户同意隐私协议；仅传 id，不传明文手机号 / 姓名等 PII。
 
 ## 待确认项（来自原型分析，提审 / 上线前必须处理）
 
@@ -71,6 +96,13 @@ miniprogram/                            微信小程序工程（原生，无构�
 - [ ] **联系电话 / 邮箱** 替换为真实信息
 - [ ] **App 图标 / 教师默认头像** 切图补齐
 - [ ] **生涯顾问二维码** 替换为后端下发的企业微信活码
-- [x] **tabBar 图标**：已补充首页 / 成长档案 / 我的 的选中与未选中图标（`images/tabbar/`）
+- [x] **全套 UI 图标**：tabBar / 快捷入口 / 我的菜单 / 通知喇叭已按设计配色生成（`images/icons/`）
 
 > 视觉风格：暖橙主色 `#FF8C28`，卡片化布局，设计 Token 定义于 `app.wxss`。
+
+## 相关文档（`../docs/`）
+
+- `家长端小程序-原型与UI设计分析.md` — 原型与 UI 设计分析
+- `埋点字典.md` — 全量埋点事件清单与上报契约
+- `后端接入指南.md` — 后端接入步骤、接口契约、联调清单
+- `ui-design/` — 官方高保真设计图；`images/` — 原型图

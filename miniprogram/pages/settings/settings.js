@@ -1,3 +1,4 @@
+const track = require('../../utils/track');
 const { toast } = require('../../utils/util');
 
 Page({
@@ -11,6 +12,7 @@ Page({
   },
 
   openAgreement(e) {
+    track.track('settings_agreement_click', { type: e.currentTarget.dataset.type });
     wx.navigateTo({ url: '/pages/agreement/agreement?type=' + e.currentTarget.dataset.type });
   },
 
@@ -23,6 +25,7 @@ Page({
   },
 
   doLogout() {
+    track.track('logout', {});
     getApp().logout();
     this.setData({ showLogoutConfirm: false, isLogin: false });
     toast('已退出登录', 'success');
