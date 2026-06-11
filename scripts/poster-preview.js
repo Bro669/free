@@ -22,6 +22,14 @@ class SvgCtx {
     this.lineCap = 'butt'
     this.globalAlpha = 1
     this._path = []
+    this._circle = null
+  }
+  arc(x, y, r) { this._circle = { x, y, r } }
+  fill() {
+    if (!this._circle) return
+    const op = this.globalAlpha < 1 ? ` fill-opacity="${this.globalAlpha.toFixed(3)}"` : ''
+    this.els.push(`<circle cx="${this._circle.x.toFixed(1)}" cy="${this._circle.y.toFixed(1)}" r="${this._circle.r.toFixed(1)}" fill="${this._fill()}"${op}/>`)
+    this._circle = null
   }
   createLinearGradient(x0, y0, x1, y1) {
     const id = 'g' + this.defs.length

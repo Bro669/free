@@ -247,9 +247,10 @@ function near(a, b, eps) { return Math.abs(a - b) <= eps }
     { latitude: 31.005, longitude: 121.005 }
   ]]
   const themes = poster.themeList()
-  check('poster 主题包含沙画/多巴胺/蒸汽波/像素/国潮', ['sand', 'dopamine', 'vaporwave', 'pixel', 'guochao']
+  check('poster 关键主题齐全', ['sand', 'dopamine', 'vaporwave', 'pixel', 'guochao',
+    'rainbow', 'glitch', 'crayon', 'sakura', 'cream', 'sunset', 'aurora', 'ink', 'blackgold', 'morandi']
     .every(k => themes.some(t => t.key === k)))
-  check('poster 主题数量 ≥10', themes.length >= 10, 'got ' + themes.length)
+  check('poster 主题数量 ≥20', themes.length >= 20, 'got ' + themes.length)
   for (const t of themes) {
     drawn.length = 0
     rects.length = 0
