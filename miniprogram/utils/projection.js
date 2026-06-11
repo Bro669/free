@@ -5,21 +5,26 @@ const glyphs = require('./glyphs')
 const CHAR_GAP = 0.25       // 字间距（相对字高）
 const M_PER_DEG_LAT = 111320
 
+// 字符查表：内置 A-Z/0-9（大写归一）+ 动态扩展字形（如汉字，原字符为键）
+function lookupGlyph(c, extra) {
+  return glyphs[c.toUpperCase()] || (extra && extra[c]) || null
+}
+
 // 校验文本是否全部可渲染，返回不支持的字符数组
-function unsupportedChars(text) {
-  return [...text.toUpperCase()].filter(c => !glyphs[c])
+function unsupportedChars(text, extra) {
+  return [...text].filter(c => !lookupGlyph(c, extra))
 }
 
 // 把多字符文本排版成统一坐标系下的笔画列表。
 // 返回 { strokes: [{ points: [[x,y]...], ride }], width }
 // ride:false 的段是自动插入的「推行衔接段」（笔画间/字符间抬笔）。
-function layout(text) {
-  const chars = [...text.toUpperCase()]
+function layout(text, extra) {
+  const chars = [...text]
   const strokes = []
   let offsetX = 0
   let prevEnd = null
   for (const c of chars) {
-    const g = glyphs[c]
+    const g = lookupGlyph(c, extra)
     if (!g) throw new Error('不支持的字符: ' + c)
     for (const s of g.strokes) {
       const pts = s.points.map(([x, y]) => [x + offsetX, y])

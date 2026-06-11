@@ -76,7 +76,8 @@ themes.forEach((t, i) => {
     distanceKm: '21.5',
     durationText: '1:42:08',
     speedText: '12.6',
-    dateText: '2026.06.11'
+    dateText: '2026.06.11',
+    quote: '没有白骑的路，每一公里都算数'
   }, t.key)
   const { defs, body } = ctx.toSvg(W, H)
   combinedDefs += defs.replace(/id="g/g, `id="t${i}g`).replace(/url\(#g/g, `url(#t${i}g`)

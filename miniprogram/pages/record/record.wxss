@@ -27,9 +27,32 @@
   box-shadow: 0 12rpx 40rpx rgba(16, 36, 27, 0.25);
 }
 
+.quote-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24rpx;
+  padding: 18rpx 24rpx;
+  background: #fff;
+  border-radius: 16rpx;
+}
+
+.quote-text {
+  flex: 1;
+  font-size: 26rpx;
+  color: #1E2722;
+}
+
+.quote-refresh {
+  flex-shrink: 0;
+  font-size: 24rpx;
+  color: #19C37D;
+  margin-left: 16rpx;
+}
+
 .theme-bar {
   white-space: nowrap;
-  margin-top: 24rpx;
+  margin-top: 16rpx;
 }
 
 .theme-chip {

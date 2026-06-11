@@ -1,6 +1,7 @@
 // 骑行成果：读取骑行记录 → canvas 2d 生成轨迹海报 → 保存相册/分享
 const poster = require('../../utils/poster')
 const fmt = require('../../utils/format')
+const quotes = require('../../utils/quotes')
 
 const app = getApp()
 
@@ -14,7 +15,8 @@ Page({
     generating: false,
     statsText: '',
     themes: poster.themeList(),
-    themeKey: 'classic'
+    themeKey: 'classic',
+    quote: ''
   },
 
   onLoad(options) {
@@ -38,10 +40,19 @@ Page({
       return
     }
     this.ride = ride
+    this.quoteIdx = ride.startedAt || 0      // 以开始时间做种子，默认金句稳定
     this.setData({
       ride,
+      quote: quotes.pick(this.quoteIdx),
       statsText: `${fmt.formatDistance(ride.distance)} · ${fmt.formatDuration(ride.durationSec)}`
     })
+    this.generatePoster()
+  },
+
+  nextQuote() {
+    if (this.data.generating) return
+    this.quoteIdx++
+    this.setData({ quote: quotes.pick(this.quoteIdx) })
     this.generatePoster()
   },
 
@@ -70,7 +81,8 @@ Page({
         distanceKm: fmt.formatDistanceKm(ride.distance),
         durationText: fmt.formatDuration(ride.durationSec),
         speedText: fmt.formatSpeed(ride.avgSpeed),
-        dateText: fmt.formatDate(ride.startedAt)
+        dateText: fmt.formatDate(ride.startedAt),
+        quote: this.data.quote
       }, this.data.themeKey)
 
       wx.canvasToTempFilePath({

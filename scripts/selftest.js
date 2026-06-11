@@ -189,6 +189,44 @@ function near(a, b, eps) { return Math.abs(a - b) <= eps }
   check('guidance 推行段 ride=false', st4.ride === false)
 }
 
+// ---- hanzi：medians 转换 / RDP 拐点保留 / 动态字形排版 ----
+{
+  const hanzi = U('hanzi')
+  check('hanzi.isCJK', hanzi.isCJK('骑') && !hanzi.isCJK('A') && !hanzi.isCJK('8'))
+
+  // 横折笔画（hanzi-writer 坐标：1024 盒、y 向上）：水平 800,580→200,580 再竖直降到 200,120
+  // 中间加共线点验证 RDP 抽掉、拐点保留
+  const medians = [
+    [[800, 580], [600, 580], [400, 580], [200, 580], [200, 400], [200, 120]],
+    [[100, 800], [900, 800]]
+  ]
+  const g = hanzi.convertMedians(medians)
+  check('hanzi 转换笔画数', g.strokes.length === 2 && g.width === 1)
+  check('hanzi RDP 共线点被抽稀、拐点保留', g.strokes[0].points.length === 3,
+    'got ' + g.strokes[0].points.length)
+  const inBox = g.strokes.every(s => s.points.every(([x, y]) => x >= 0 && x <= 1 && y >= 0 && y <= 1))
+  check('hanzi 归一化在 [0,1] 盒内', inBox)
+  // y 翻转：hanzi y=800（高处）→ v 小（靠上）
+  check('hanzi y 轴翻转正确', g.strokes[1].points[0][1] < 0.2,
+    'got v=' + g.strokes[1].points[0][1].toFixed(3))
+
+  // 动态字形可参与排版，且与内置字形混排
+  const extra = { '骑': g }
+  check('unsupportedChars 识别动态字形', U('projection').unsupportedChars('骑A', extra).length === 0)
+  const lay = U('projection').layout('骑8', extra)
+  // 骑(2笔) + 8(1笔) = 3 骑行笔 + 2 衔接段
+  check('layout 汉字混排笔画数', lay.strokes.filter(s => s.ride).length === 3 &&
+    lay.strokes.filter(s => !s.ride).length === 2)
+}
+
+// ---- quotes ----
+{
+  const quotes = U('quotes')
+  check('quotes 数量充足', quotes.QUOTES.length >= 10)
+  check('quotes.pick 确定性', quotes.pick(7) === quotes.pick(7) && quotes.QUOTES.includes(quotes.pick(123456789)))
+  check('quotes.pick 越界安全', typeof quotes.pick(-3) === 'string' && typeof quotes.pick(0) === 'string')
+}
+
 // ---- poster：mock ctx 验证绘制不抛错且轨迹落在画布内 ----
 {
   const poster = U('poster')
@@ -215,7 +253,8 @@ function near(a, b, eps) { return Math.abs(a - b) <= eps }
     try {
       poster.drawPoster(mockCtx, 750, 1334, {
         segments, text: 'L', distanceKm: '1.1',
-        durationText: '5:00', speedText: '13.0', dateText: '2026.06.11'
+        durationText: '5:00', speedText: '13.0', dateText: '2026.06.11',
+        quote: '没有白骑的路，每一公里都算数'
       }, t.key)
     } catch (e) { threw = true; console.error(e) }
     check(`poster [${t.key}] 绘制不抛错`, !threw)

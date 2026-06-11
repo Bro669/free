@@ -11,13 +11,14 @@
 <path d="M60.0,907.1 L690.0,907.1" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
 <text x="375.0" y="1040.5" font-size="105" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#2BE08F">21.5</text>
 <text x="375.0" y="1083.2" font-size="23" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.55)">公里</text>
-<text x="150.0" y="1180.6" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#FFFFFF">1:42:08</text>
-<text x="150.0" y="1220.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.45)">时长</text>
-<text x="375.0" y="1180.6" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#FFFFFF">12.6 km/h</text>
-<text x="375.0" y="1220.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.45)">均速</text>
-<text x="600.0" y="1180.6" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#FFFFFF">2026.06.11</text>
-<text x="600.0" y="1220.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.45)">日期</text>
-<text x="375.0" y="1287.3" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.35)">骑字 · 在城市里骑出你的名字</text><text x="375" y="-10" font-size="36" font-family="sans-serif" text-anchor="middle" fill="#333">经典（classic）</text></g>
+<text x="150.0" y="1163.2" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#FFFFFF">1:42:08</text>
+<text x="150.0" y="1200.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.45)">时长</text>
+<text x="375.0" y="1163.2" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#FFFFFF">12.6 km/h</text>
+<text x="375.0" y="1200.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.45)">均速</text>
+<text x="600.0" y="1163.2" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#FFFFFF">2026.06.11</text>
+<text x="600.0" y="1200.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.45)">日期</text>
+<text x="375.0" y="1258.0" font-size="27" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="#2BE08F">「 没有白骑的路，每一公里都算数 」</text>
+<text x="375.0" y="1300.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.35)">骑字 · 在城市里骑出你的名字</text><text x="375" y="-10" font-size="36" font-family="sans-serif" text-anchor="middle" fill="#333">经典（classic）</text></g>
 <g transform="translate(790,40)"><rect x="0.0" y="0.0" width="750.0" height="1334.0" fill="url(#t1g0)"/>
 <rect x="666.9" y="7.1" width="2.4" height="2.4" fill="rgba(255,255,255,0.161)"/>
 <rect x="88.2" y="135.1" width="2.6" height="2.6" fill="rgba(104,74,38,0.091)"/>
@@ -3630,13 +3631,14 @@
 <path d="M60.0,907.1 L690.0,907.1" fill="none" stroke="rgba(90,62,30,0.22)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
 <text x="375.0" y="1040.5" font-size="105" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#7A5226">21.5</text>
 <text x="375.0" y="1083.2" font-size="23" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(90,62,30,0.65)">公里</text>
-<text x="150.0" y="1180.6" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#5A3E1E">1:42:08</text>
-<text x="150.0" y="1220.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(90,62,30,0.5)">时长</text>
-<text x="375.0" y="1180.6" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#5A3E1E">12.6 km/h</text>
-<text x="375.0" y="1220.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(90,62,30,0.5)">均速</text>
-<text x="600.0" y="1180.6" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#5A3E1E">2026.06.11</text>
-<text x="600.0" y="1220.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(90,62,30,0.5)">日期</text>
-<text x="375.0" y="1287.3" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(90,62,30,0.4)">骑字 · 在城市里骑出你的名字</text><text x="375" y="-10" font-size="36" font-family="sans-serif" text-anchor="middle" fill="#333">沙画（sand）</text></g>
+<text x="150.0" y="1163.2" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#5A3E1E">1:42:08</text>
+<text x="150.0" y="1200.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(90,62,30,0.5)">时长</text>
+<text x="375.0" y="1163.2" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#5A3E1E">12.6 km/h</text>
+<text x="375.0" y="1200.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(90,62,30,0.5)">均速</text>
+<text x="600.0" y="1163.2" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#5A3E1E">2026.06.11</text>
+<text x="600.0" y="1200.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(90,62,30,0.5)">日期</text>
+<text x="375.0" y="1258.0" font-size="27" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="#7A5226">「 没有白骑的路，每一公里都算数 」</text>
+<text x="375.0" y="1300.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(90,62,30,0.4)">骑字 · 在城市里骑出你的名字</text><text x="375" y="-10" font-size="36" font-family="sans-serif" text-anchor="middle" fill="#333">沙画（sand）</text></g>
 <g transform="translate(1580,40)"><rect x="0.0" y="0.0" width="750.0" height="1334.0" fill="url(#t2g0)"/>
 <rect x="666.9" y="7.1" width="2.7" height="2.7" fill="rgba(255,255,255,0.630)"/>
 <rect x="381.7" y="156.9" width="1.2" height="1.2" fill="rgba(255,255,255,0.848)"/>
@@ -3869,13 +3871,14 @@
 <path d="M60.0,907.1 L690.0,907.1" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
 <text x="375.0" y="1040.5" font-size="105" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#00F0C8">21.5</text>
 <text x="375.0" y="1083.2" font-size="23" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.5)">公里</text>
-<text x="150.0" y="1180.6" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#FFFFFF">1:42:08</text>
-<text x="150.0" y="1220.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.45)">时长</text>
-<text x="375.0" y="1180.6" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#FFFFFF">12.6 km/h</text>
-<text x="375.0" y="1220.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.45)">均速</text>
-<text x="600.0" y="1180.6" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#FFFFFF">2026.06.11</text>
-<text x="600.0" y="1220.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.45)">日期</text>
-<text x="375.0" y="1287.3" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.3)">骑字 · 在城市里骑出你的名字</text><text x="375" y="-10" font-size="36" font-family="sans-serif" text-anchor="middle" fill="#333">霓虹（neon）</text></g>
+<text x="150.0" y="1163.2" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#FFFFFF">1:42:08</text>
+<text x="150.0" y="1200.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.45)">时长</text>
+<text x="375.0" y="1163.2" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#FFFFFF">12.6 km/h</text>
+<text x="375.0" y="1200.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.45)">均速</text>
+<text x="600.0" y="1163.2" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#FFFFFF">2026.06.11</text>
+<text x="600.0" y="1200.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.45)">日期</text>
+<text x="375.0" y="1258.0" font-size="27" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="#00F0C8">「 没有白骑的路，每一公里都算数 」</text>
+<text x="375.0" y="1300.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.3)">骑字 · 在城市里骑出你的名字</text><text x="375" y="-10" font-size="36" font-family="sans-serif" text-anchor="middle" fill="#333">霓虹（neon）</text></g>
 <g transform="translate(2370,40)"><rect x="0.0" y="0.0" width="750.0" height="1334.0" fill="url(#t3g0)"/>
 <path d="M0.0,0.0 L0.0,1334.0" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter"/>
 <path d="M62.5,0.0 L62.5,1334.0" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter"/>
@@ -3921,13 +3924,14 @@
 <path d="M60.0,907.1 L690.0,907.1" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
 <text x="375.0" y="1040.5" font-size="105" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#9FD0FF">21.5</text>
 <text x="375.0" y="1083.2" font-size="23" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.55)">公里</text>
-<text x="150.0" y="1180.6" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#FFFFFF">1:42:08</text>
-<text x="150.0" y="1220.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.45)">时长</text>
-<text x="375.0" y="1180.6" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#FFFFFF">12.6 km/h</text>
-<text x="375.0" y="1220.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.45)">均速</text>
-<text x="600.0" y="1180.6" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#FFFFFF">2026.06.11</text>
-<text x="600.0" y="1220.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.45)">日期</text>
-<text x="375.0" y="1287.3" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.35)">骑字 · 在城市里骑出你的名字</text><text x="375" y="-10" font-size="36" font-family="sans-serif" text-anchor="middle" fill="#333">蓝图（blueprint）</text></g>
+<text x="150.0" y="1163.2" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#FFFFFF">1:42:08</text>
+<text x="150.0" y="1200.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.45)">时长</text>
+<text x="375.0" y="1163.2" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#FFFFFF">12.6 km/h</text>
+<text x="375.0" y="1200.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.45)">均速</text>
+<text x="600.0" y="1163.2" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#FFFFFF">2026.06.11</text>
+<text x="600.0" y="1200.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.45)">日期</text>
+<text x="375.0" y="1258.0" font-size="27" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="#9FD0FF">「 没有白骑的路，每一公里都算数 」</text>
+<text x="375.0" y="1300.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(255,255,255,0.35)">骑字 · 在城市里骑出你的名字</text><text x="375" y="-10" font-size="36" font-family="sans-serif" text-anchor="middle" fill="#333">蓝图（blueprint）</text></g>
 <g transform="translate(3160,40)"><rect x="0.0" y="0.0" width="750.0" height="1334.0" fill="url(#t4g0)"/>
 <text x="375.0" y="106.7" font-size="24" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(30,39,34,0.45)">我 在 城 市 里 骑 出 了</text>
 <text x="375.0" y="206.8" font-size="75" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#1E2722">R8</text>
@@ -3938,12 +3942,13 @@
 <path d="M60.0,907.1 L690.0,907.1" fill="none" stroke="rgba(30,39,34,0.12)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
 <text x="375.0" y="1040.5" font-size="105" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#19C37D">21.5</text>
 <text x="375.0" y="1083.2" font-size="23" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(30,39,34,0.5)">公里</text>
-<text x="150.0" y="1180.6" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#1E2722">1:42:08</text>
-<text x="150.0" y="1220.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(30,39,34,0.45)">时长</text>
-<text x="375.0" y="1180.6" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#1E2722">12.6 km/h</text>
-<text x="375.0" y="1220.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(30,39,34,0.45)">均速</text>
-<text x="600.0" y="1180.6" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#1E2722">2026.06.11</text>
-<text x="600.0" y="1220.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(30,39,34,0.45)">日期</text>
-<text x="375.0" y="1287.3" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(30,39,34,0.3)">骑字 · 在城市里骑出你的名字</text><text x="375" y="-10" font-size="36" font-family="sans-serif" text-anchor="middle" fill="#333">极简（minimal）</text></g>
+<text x="150.0" y="1163.2" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#1E2722">1:42:08</text>
+<text x="150.0" y="1200.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(30,39,34,0.45)">时长</text>
+<text x="375.0" y="1163.2" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#1E2722">12.6 km/h</text>
+<text x="375.0" y="1200.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(30,39,34,0.45)">均速</text>
+<text x="600.0" y="1163.2" font-size="32" font-weight="bold" font-family="sans-serif" text-anchor="middle" fill="#1E2722">2026.06.11</text>
+<text x="600.0" y="1200.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(30,39,34,0.45)">日期</text>
+<text x="375.0" y="1258.0" font-size="27" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="#19C37D">「 没有白骑的路，每一公里都算数 」</text>
+<text x="375.0" y="1300.6" font-size="20" font-weight="normal" font-family="sans-serif" text-anchor="middle" fill="rgba(30,39,34,0.3)">骑字 · 在城市里骑出你的名字</text><text x="375" y="-10" font-size="36" font-family="sans-serif" text-anchor="middle" fill="#333">极简（minimal）</text></g>
 
 </svg>

@@ -8,6 +8,11 @@
     <view wx:elif="{{!ride}}" class="empty">没有可展示的骑行记录</view>
   </view>
 
+  <view class="quote-row" wx:if="{{ride && quote}}" bindtap="nextQuote">
+    <text class="quote-text">「{{quote}}」</text>
+    <text class="quote-refresh">⟳ 换一句</text>
+  </view>
+
   <scroll-view class="theme-bar" scroll-x enhanced show-scrollbar="{{false}}" wx:if="{{ride}}">
     <view
       wx:for="{{themes}}"

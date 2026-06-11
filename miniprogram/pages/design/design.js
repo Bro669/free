@@ -3,6 +3,7 @@ const projection = require('../../utils/projection')
 const geo = require('../../utils/geo')
 const qqmap = require('../../utils/qqmap')
 const fmt = require('../../utils/format')
+const hanzi = require('../../utils/hanzi')
 
 const app = getApp()
 
@@ -79,18 +80,41 @@ Page({
     this.setData({ text: e.detail.value.toUpperCase() })
   },
 
-  generate() {
+  async generate() {
     const text = this.data.text.trim()
     if (!text) {
       wx.showToast({ title: '先输入要骑的字', icon: 'none' })
       return
     }
-    const bad = projection.unsupportedChars(text)
+    const bad = projection.unsupportedChars(text, hanzi.glyphMap())
     if (bad.length) {
-      wx.showToast({ title: '暂不支持: ' + bad.join(' ') + '（先支持 A-Z 0-9）', icon: 'none' })
-      return
+      const cjk = bad.filter(c => hanzi.isCJK(c))
+      const other = bad.filter(c => !hanzi.isCJK(c))
+      if (other.length) {
+        wx.showToast({ title: '暂不支持: ' + other.join(' ') + '（支持 A-Z 0-9 和汉字）', icon: 'none' })
+        return
+      }
+      // 汉字字形按需从云端拉取（getHanzi 云函数）
+      wx.showLoading({ title: '加载汉字字形…' })
+      try {
+        const failed = await hanzi.ensure(cjk)
+        wx.hideLoading()
+        if (failed.length) {
+          wx.showToast({ title: '字形加载失败: ' + failed.join(' '), icon: 'none' })
+          return
+        }
+      } catch (err) {
+        wx.hideLoading()
+        console.error('加载汉字字形失败', err)
+        wx.showToast({ title: '加载失败，请确认已部署 getHanzi 云函数', icon: 'none' })
+        return
+      }
     }
-    this.layoutResult = projection.layout(text)
+    this.layoutResult = projection.layout(text, hanzi.glyphMap())
+    const rideStrokes = this.layoutResult.strokes.filter(s => s.ride !== false).length
+    if (rideStrokes > 36) {
+      wx.showToast({ title: `共 ${rideStrokes} 笔，路线会很复杂，建议减少字数`, icon: 'none', duration: 3000 })
+    }
     this.clearSnap()
     this.setData({ mode: 'adjust', moveMode: false })
     this.reproject()

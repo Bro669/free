@@ -249,16 +249,23 @@ function drawPoster(ctx, w, h, data, themeKey) {
     const x = w * (0.2 + 0.3 * i)
     ctx.fillStyle = theme.textMain
     ctx.font = `bold ${Math.round(w * 0.042)}px sans-serif`
-    ctx.fillText(num, x, h * 0.885)
+    ctx.fillText(num, x, h * 0.872)
     ctx.fillStyle = theme.faint
     ctx.font = `${Math.round(w * 0.026)}px sans-serif`
-    ctx.fillText(label, x, h * 0.915)
+    ctx.fillText(label, x, h * 0.9)
   })
+
+  // 金句
+  if (data.quote) {
+    ctx.fillStyle = theme.accent
+    ctx.font = `${Math.round(w * 0.036)}px sans-serif`
+    ctx.fillText('「 ' + data.quote + ' 」', w / 2, h * 0.943)
+  }
 
   // 底部署名
   ctx.fillStyle = theme.footer
   ctx.font = `${Math.round(w * 0.026)}px sans-serif`
-  ctx.fillText('骑字 · 在城市里骑出你的名字', w / 2, h * 0.965)
+  ctx.fillText('骑字 · 在城市里骑出你的名字', w / 2, h * 0.975)
 }
 
 module.exports = { drawPoster, drawTrack, themeList, THEMES }
