@@ -50,9 +50,42 @@
   margin-left: 16rpx;
 }
 
+.cat-bar {
+  white-space: nowrap;
+  margin-top: 16rpx;
+}
+
+.cat-chip {
+  display: inline-block;
+  padding: 10rpx 28rpx;
+  margin-right: 12rpx;
+  border-radius: 32rpx;
+  font-size: 24rpx;
+  color: #5C665F;
+  background: #EDF1EE;
+}
+
+.cat-chip.active {
+  background: #10241B;
+  color: #fff;
+  font-weight: 600;
+}
+
 .theme-bar {
   white-space: nowrap;
   margin-top: 16rpx;
+}
+
+.theme-custom {
+  background: linear-gradient(160deg, #1A2520, #0E1714);
+  border-style: dashed;
+  border-color: #8A938E;
+}
+
+.theme-rechoose {
+  background: #fff;
+  color: #1E2722;
+  border-color: #E0E5E2;
 }
 
 .theme-chip {

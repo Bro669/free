@@ -273,11 +273,48 @@ const THEMES = {
       { color: 'rgba(30,39,34,0.1)', width: 18 },
       { color: '#1E2722', width: 8 }
     ]
+  },
+  custom: {
+    name: '我的照片',
+    customPhoto: true,
+    bg: ['#1A2520', '#0E1714'],     // 未选图时的兜底底色
+    title: 'rgba(255,255,255,0.75)', textMain: '#FFFFFF', accent: '#FFFFFF',
+    sub: 'rgba(255,255,255,0.7)', faint: 'rgba(255,255,255,0.6)',
+    divider: 'rgba(255,255,255,0.3)', footer: 'rgba(255,255,255,0.5)',
+    // 照片上保证可见：黑色投影 + 白色辉光 + 白色主线
+    passes: [
+      { color: 'rgba(0,0,0,0.4)', width: 16, dx: 2.5, dy: 2.5 },
+      { color: 'rgba(255,255,255,0.45)', width: 24 },
+      { color: '#FFFFFF', width: 10 }
+    ]
   }
 }
 
+// 主题分类（成果页按类切换）
+const CATEGORIES = [
+  { key: 'trend', name: '潮流', themes: ['dopamine', 'vaporwave', 'pixel', 'rainbow', 'glitch', 'acid', 'neon'] },
+  { key: 'cute', name: '可爱', themes: ['sakura', 'cream', 'crayon'] },
+  { key: 'nature', name: '风景', themes: ['sunset', 'aurora', 'sand'] },
+  { key: 'culture', name: '东方', themes: ['guochao', 'ink', 'blackgold'] },
+  { key: 'simple', name: '简约', themes: ['classic', 'minimal', 'morandi', 'blueprint'] },
+  { key: 'custom', name: '自定义', themes: ['custom'] }
+]
+
 function themeList() {
   return Object.keys(THEMES).map(key => ({ key, name: THEMES[key].name }))
+}
+
+function categories() {
+  return CATEGORIES.map(c => ({
+    key: c.key,
+    name: c.name,
+    themes: c.themes.map(k => ({ key: k, name: THEMES[k].name }))
+  }))
+}
+
+function categoryOf(themeKey) {
+  const c = CATEGORIES.find(c => c.themes.includes(themeKey))
+  return c ? c.key : CATEGORIES[0].key
 }
 
 // ===== 程序化纹理 =====
@@ -647,17 +684,32 @@ function drawPoster(ctx, w, h, data, themeKey) {
   const first = data.segments[0] && data.segments[0][0]
   const seed = first ? Math.round((first.latitude + first.longitude) * 1e6) : 42
 
-  // 背景（支持多停靠点渐变）
-  const bg = ctx.createLinearGradient(0, 0, 0, h)
-  theme.bg.forEach((c, i) => {
-    bg.addColorStop(theme.bg.length === 1 ? 0 : i / (theme.bg.length - 1), c)
-  })
-  ctx.fillStyle = bg
-  ctx.fillRect(0, 0, w, h)
-
-  // 纹理（用轨迹首点做随机种子，同一轨迹纹理稳定）
-  if (theme.texture && TEXTURES[theme.texture]) {
-    TEXTURES[theme.texture](ctx, w, h, lcg(seed))
+  // 背景：照片主题用用户图片 cover 裁剪铺满 + 暗化渐变保证可读性；
+  // 其余主题（或照片缺失时兜底）画多停靠点渐变 + 纹理
+  if (theme.customPhoto && data.bgImage && data.bgImage.width) {
+    const iw = data.bgImage.width
+    const ih = data.bgImage.height
+    const scale = Math.max(w / iw, h / ih)
+    const dw = iw * scale
+    const dh = ih * scale
+    ctx.drawImage(data.bgImage, (w - dw) / 2, (h - dh) / 2, dw, dh)
+    const ov = ctx.createLinearGradient(0, 0, 0, h)
+    ov.addColorStop(0, 'rgba(8,12,10,0.55)')
+    ov.addColorStop(0.45, 'rgba(8,12,10,0.22)')
+    ov.addColorStop(1, 'rgba(8,12,10,0.68)')
+    ctx.fillStyle = ov
+    ctx.fillRect(0, 0, w, h)
+  } else {
+    const bg = ctx.createLinearGradient(0, 0, 0, h)
+    theme.bg.forEach((c, i) => {
+      bg.addColorStop(theme.bg.length === 1 ? 0 : i / (theme.bg.length - 1), c)
+    })
+    ctx.fillStyle = bg
+    ctx.fillRect(0, 0, w, h)
+    // 纹理（用轨迹首点做随机种子，同一轨迹纹理稳定）
+    if (theme.texture && TEXTURES[theme.texture]) {
+      TEXTURES[theme.texture](ctx, w, h, lcg(seed))
+    }
   }
 
   // 顶部标语
@@ -730,4 +782,4 @@ function drawPoster(ctx, w, h, data, themeKey) {
   ctx.fillText('骑字 · 在城市里骑出你的名字', w / 2, h * 0.975)
 }
 
-module.exports = { drawPoster, drawTrack, themeList, THEMES }
+module.exports = { drawPoster, drawTrack, themeList, categories, categoryOf, THEMES }

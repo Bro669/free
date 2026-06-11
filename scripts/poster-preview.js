@@ -75,7 +75,7 @@ const strokes = project(lay, {
 const segments = strokes.filter(s => s.ride).map(s => s.points)
 
 const W = 750, H = 1334, GAP = 40
-const themes = poster.themeList()
+const themes = poster.themeList().filter(t => !poster.THEMES[t.key].customPhoto)
 let combinedDefs = ''
 let combinedBody = ''
 themes.forEach((t, i) => {

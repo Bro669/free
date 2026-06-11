@@ -14,14 +14,28 @@ Page({
     posterPath: '',
     generating: false,
     statsText: '',
-    themes: poster.themeList(),
+    categories: poster.categories(),
+    activeCategory: poster.categoryOf('classic'),
+    activeThemes: [],
     themeKey: 'classic',
+    hasBgImage: false,
     quote: ''
   },
 
   onLoad(options) {
     this.rideId = options.id || ''
+    this.bgImagePath = ''
+    this.syncActiveThemes(this.data.activeCategory)
     this.load()
+  },
+
+  syncActiveThemes(catKey) {
+    const cat = this.data.categories.find(c => c.key === catKey)
+    this.setData({ activeCategory: catKey, activeThemes: cat ? cat.themes : [] })
+  },
+
+  switchCategory(e) {
+    this.syncActiveThemes(e.currentTarget.dataset.key)
   },
 
   async load() {
@@ -75,33 +89,66 @@ Page({
       const ride = this.ride
       const segments = ride.track.map(seg =>
         seg.map(([lat, lng]) => ({ latitude: lat, longitude: lng })))
-      poster.drawPoster(ctx, POSTER_W, POSTER_H, {
-        segments,
-        text: ride.text || '',
-        distanceKm: fmt.formatDistanceKm(ride.distance),
-        durationText: fmt.formatDuration(ride.durationSec),
-        speedText: fmt.formatSpeed(ride.avgSpeed),
-        dateText: fmt.formatDate(ride.startedAt),
-        quote: this.data.quote
-      }, this.data.themeKey)
-
-      wx.canvasToTempFilePath({
-        canvas,
-        success: r => this.setData({ posterPath: r.tempFilePath, generating: false }),
-        fail: err => {
-          console.error('导出海报失败', err)
-          this.setData({ generating: false })
-          wx.showToast({ title: '生成海报失败', icon: 'none' })
+      const draw = bgImage => {
+        poster.drawPoster(ctx, POSTER_W, POSTER_H, {
+          segments,
+          text: ride.text || '',
+          distanceKm: fmt.formatDistanceKm(ride.distance),
+          durationText: fmt.formatDuration(ride.durationSec),
+          speedText: fmt.formatSpeed(ride.avgSpeed),
+          dateText: fmt.formatDate(ride.startedAt),
+          quote: this.data.quote,
+          bgImage
+        }, this.data.themeKey)
+        wx.canvasToTempFilePath({
+          canvas,
+          success: r => this.setData({ posterPath: r.tempFilePath, generating: false }),
+          fail: err => {
+            console.error('导出海报失败', err)
+            this.setData({ generating: false })
+            wx.showToast({ title: '生成海报失败', icon: 'none' })
+          }
+        })
+      }
+      // 照片主题先加载用户图片，失败则退回兜底底色
+      if (this.data.themeKey === 'custom' && this.bgImagePath) {
+        const img = canvas.createImage()
+        img.onload = () => draw(img)
+        img.onerror = () => {
+          wx.showToast({ title: '图片加载失败', icon: 'none' })
+          draw(null)
         }
-      })
+        img.src = this.bgImagePath
+      } else {
+        draw(null)
+      }
     })
   },
 
   selectTheme(e) {
     const key = e.currentTarget.dataset.key
-    if (key === this.data.themeKey || this.data.generating) return
+    if (this.data.generating) return
+    // 照片主题：首次点击先选图
+    if (key === 'custom' && !this.bgImagePath) {
+      this.chooseImage()
+      return
+    }
+    if (key === this.data.themeKey) return
     this.setData({ themeKey: key })
     this.generatePoster()
+  },
+
+  chooseImage() {
+    wx.chooseMedia({
+      count: 1,
+      mediaType: ['image'],
+      sourceType: ['album', 'camera'],
+      success: res => {
+        this.bgImagePath = res.tempFiles[0].tempFilePath
+        this.setData({ themeKey: 'custom', hasBgImage: true })
+        this.generatePoster()
+      }
+    })
   },
 
   previewPoster() {

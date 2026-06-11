@@ -13,14 +13,29 @@
     <text class="quote-refresh">⟳ 换一句</text>
   </view>
 
+  <scroll-view class="cat-bar" scroll-x enhanced show-scrollbar="{{false}}" wx:if="{{ride}}">
+    <view
+      wx:for="{{categories}}"
+      wx:key="key"
+      class="cat-chip {{activeCategory === item.key ? 'active' : ''}}"
+      data-key="{{item.key}}"
+      bindtap="switchCategory"
+    >{{item.name}}</view>
+  </scroll-view>
+
   <scroll-view class="theme-bar" scroll-x enhanced show-scrollbar="{{false}}" wx:if="{{ride}}">
     <view
-      wx:for="{{themes}}"
+      wx:for="{{activeThemes}}"
       wx:key="key"
       class="theme-chip theme-{{item.key}} {{themeKey === item.key ? 'active' : ''}}"
       data-key="{{item.key}}"
       bindtap="selectTheme"
-    >{{item.name}}</view>
+    >{{item.key === 'custom' ? '📷 ' : ''}}{{item.name}}</view>
+    <view
+      wx:if="{{activeCategory === 'custom' && hasBgImage}}"
+      class="theme-chip theme-rechoose"
+      bindtap="chooseImage"
+    >🔄 换张图</view>
   </scroll-view>
 
   <view class="actions" wx:if="{{posterPath}}">

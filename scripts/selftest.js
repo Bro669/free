@@ -248,9 +248,29 @@ function near(a, b, eps) { return Math.abs(a - b) <= eps }
   ]]
   const themes = poster.themeList()
   check('poster 关键主题齐全', ['sand', 'dopamine', 'vaporwave', 'pixel', 'guochao',
-    'rainbow', 'glitch', 'crayon', 'sakura', 'cream', 'sunset', 'aurora', 'ink', 'blackgold', 'morandi']
+    'rainbow', 'glitch', 'crayon', 'sakura', 'cream', 'sunset', 'aurora', 'ink', 'blackgold', 'morandi', 'custom']
     .every(k => themes.some(t => t.key === k)))
   check('poster 主题数量 ≥20', themes.length >= 20, 'got ' + themes.length)
+
+  // 分类：每个主题恰好属于一个分类
+  const cats = poster.categories()
+  const catThemes = cats.flatMap(c => c.themes.map(t => t.key))
+  check('poster 分类覆盖全部主题且不重复',
+    catThemes.length === themes.length && new Set(catThemes).size === catThemes.length &&
+    themes.every(t => catThemes.includes(t.key)),
+    `cat=${catThemes.length} themes=${themes.length}`)
+  check('poster categoryOf', poster.categoryOf('sakura') === 'cute' && poster.categoryOf('custom') === 'custom')
+
+  // 照片主题：带图（cover 裁剪 + 暗化层）与不带图（兜底渐变）都不抛错
+  let customOk = true
+  try {
+    poster.drawPoster(mockCtx, 750, 1334, {
+      segments, text: 'L', distanceKm: '1.1', durationText: '5:00',
+      speedText: '13.0', dateText: '2026.06.11', quote: 'q',
+      bgImage: { width: 1200, height: 900 }
+    }, 'custom')
+  } catch (e) { customOk = false; console.error(e) }
+  check('poster 照片主题带图绘制不抛错', customOk)
   for (const t of themes) {
     drawn.length = 0
     rects.length = 0
