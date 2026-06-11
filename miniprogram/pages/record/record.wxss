@@ -1,0 +1,47 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 24rpx 32rpx calc(32rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+
+.offscreen-canvas {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  width: 750px;
+  height: 1334px;
+}
+
+.poster-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.poster {
+  width: 100%;
+  border-radius: 24rpx;
+  box-shadow: 0 12rpx 40rpx rgba(16, 36, 27, 0.25);
+}
+
+.actions {
+  margin-top: 28rpx;
+}
+
+.btn-row {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 20rpx;
+}
+
+.flex1 { flex: 1; }
+
+.share-btn {
+  margin: 0;
+  line-height: inherit;
+}
+
+.share-btn::after { border: none; }

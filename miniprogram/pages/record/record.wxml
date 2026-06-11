@@ -1,1 +1,18 @@
-<view class="empty">骑行成果（建设中）</view>
+<view class="page">
+  <!-- 离屏绘制画布（固定逻辑尺寸 750x1334，物理尺寸由 js 按 dpr 设置） -->
+  <canvas type="2d" id="poster" class="offscreen-canvas" />
+
+  <view class="poster-wrap">
+    <image wx:if="{{posterPath}}" class="poster" src="{{posterPath}}" mode="widthFix" bindtap="previewPoster" />
+    <view wx:elif="{{generating}}" class="empty">正在生成海报…</view>
+    <view wx:elif="{{!ride}}" class="empty">没有可展示的骑行记录</view>
+  </view>
+
+  <view class="actions" wx:if="{{posterPath}}">
+    <view class="btn-primary" bindtap="saveToAlbum">保存到相册，发朋友圈</view>
+    <view class="btn-row">
+      <button class="btn-ghost flex1 share-btn" open-type="share">分享给朋友</button>
+      <view class="btn-ghost flex1" bindtap="goHome">回到广场</view>
+    </view>
+  </view>
+</view>
