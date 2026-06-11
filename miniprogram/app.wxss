@@ -1,0 +1,47 @@
+page {
+  background: #F4F6F5;
+  color: #1E2722;
+  font-size: 28rpx;
+  --green: #19C37D;
+  --green-dark: #10241B;
+  --gray: #8A938E;
+}
+
+.btn-primary {
+  background: #19C37D;
+  color: #fff;
+  border-radius: 48rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  padding: 20rpx 0;
+  text-align: center;
+}
+
+.btn-primary.disabled {
+  background: #A8E5CC;
+}
+
+.btn-ghost {
+  background: #fff;
+  color: #1E2722;
+  border: 2rpx solid #E0E5E2;
+  border-radius: 48rpx;
+  font-size: 32rpx;
+  padding: 18rpx 0;
+  text-align: center;
+}
+
+.card {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 24rpx;
+  margin: 16rpx 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(16, 36, 27, 0.05);
+}
+
+.empty {
+  text-align: center;
+  color: #8A938E;
+  padding: 120rpx 0;
+  font-size: 28rpx;
+}

@@ -1,0 +1,51 @@
+{
+  "pages": [
+    "pages/design/design",
+    "pages/square/square",
+    "pages/mine/mine",
+    "pages/routeDetail/routeDetail",
+    "pages/ride/ride",
+    "pages/record/record"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#10241B",
+    "navigationBarTitleText": "骑字",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F4F6F5"
+  },
+  "tabBar": {
+    "color": "#8A938E",
+    "selectedColor": "#19C37D",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/square/square",
+        "text": "广场"
+      },
+      {
+        "pagePath": "pages/design/design",
+        "text": "设计"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的"
+      }
+    ]
+  },
+  "requiredBackgroundModes": ["location"],
+  "requiredPrivateInfos": [
+    "getLocation",
+    "onLocationChange",
+    "startLocationUpdate",
+    "startLocationUpdateBackground"
+  ],
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于在地图上设计骑行路线并记录骑行轨迹"
+    }
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}
