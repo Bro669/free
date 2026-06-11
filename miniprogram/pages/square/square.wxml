@@ -1,1 +1,21 @@
-<view class="empty">路线广场（建设中）</view>
+<view class="hero">
+  <view class="hero-title">在城市里，骑出你的名字</view>
+  <view class="hero-sub">输入文字 → 投影到街道 → 沿真实道路骑行 → 轨迹海报发朋友圈</view>
+  <view class="btn-primary hero-btn" bindtap="goDesign">开始设计我的字</view>
+</view>
+
+<view class="section-title">大家骑的字</view>
+
+<view class="card route-card" wx:for="{{routes}}" wx:key="_id" data-id="{{item._id}}" bindtap="openRoute">
+  <view class="route-text">{{item.text}}</view>
+  <view class="route-info">
+    <view class="route-name">{{item.name}}</view>
+    <view class="route-meta">{{item.distanceText}} · {{item.dateText}}</view>
+  </view>
+  <view class="arrow">›</view>
+</view>
+
+<view class="empty" wx:if="{{!routes.length && !loading}}">
+  {{loadError ? '加载失败，请确认已创建云开发 routes 集合' : '还没有公开路线，去设计第一条吧'}}
+</view>
+<view class="list-footer" wx:if="{{routes.length && finished}}">没有更多了</view>

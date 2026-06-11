@@ -1,1 +1,23 @@
-<view class="empty">路线详情（建设中）</view>
+<view class="page">
+  <map wx:if="{{route}}" class="map" polyline="{{polylines}}" include-points="{{includePoints}}"
+       latitude="{{route.center.latitude}}" longitude="{{route.center.longitude}}" scale="12" />
+
+  <view class="card" wx:if="{{route}}">
+    <view class="name">{{route.name}}</view>
+    <view class="meta">
+      <view class="meta-item"><text class="meta-num">{{route.text}}</text><text class="meta-label">文字</text></view>
+      <view class="meta-item"><text class="meta-num">{{distanceText}}</text><text class="meta-label">骑行距离</text></view>
+      <view class="meta-item"><text class="meta-num">{{dateText}}</text><text class="meta-label">创建于</text></view>
+    </view>
+    <view class="btn-primary" bindtap="startRide">开始骑行</view>
+    <view class="btn-row">
+      <view class="btn-ghost flex1" bindtap="copyToDesign">复制去修改</view>
+      <block wx:if="{{isMine}}">
+        <view class="btn-ghost flex1" bindtap="togglePublic">{{route.isPublic ? '设为私密' : '公开到广场'}}</view>
+        <view class="btn-ghost flex1 danger" bindtap="remove">删除</view>
+      </block>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{!route && !loading}}">路线不存在或无权查看</view>
+</view>

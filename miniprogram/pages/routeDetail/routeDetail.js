@@ -1,3 +1,98 @@
+// 路线详情：预览完整路线，入口：开始骑行 / 复制去修改 / 删除 / 公开开关
+const fmt = require('../../utils/format')
+
+const app = getApp()
+
 Page({
-  data: {}
+  data: {
+    route: null,
+    polylines: [],
+    includePoints: [],
+    distanceText: '',
+    dateText: '',
+    isMine: false,
+    loading: true
+  },
+
+  onLoad(options) {
+    this.routeId = options.id
+    this.load()
+  },
+
+  async load() {
+    try {
+      const db = wx.cloud.database()
+      const res = await db.collection('routes').doc(this.routeId).get()
+      const route = res.data
+      const openid = app.globalData.openid || await app.login()
+      const polylines = []
+      const includePoints = []
+      route.polyline.forEach(line => {
+        const points = line.map(([lat, lng]) => ({ latitude: lat, longitude: lng }))
+        includePoints.push(...points)
+        polylines.push({ points, color: '#19C37D', width: 6 })
+      })
+      ;(route.connectors || []).forEach(line => {
+        polylines.push({
+          points: line.map(([lat, lng]) => ({ latitude: lat, longitude: lng })),
+          color: '#9AA39E',
+          width: 3,
+          dottedLine: true
+        })
+      })
+      this.setData({
+        route,
+        polylines,
+        includePoints,
+        distanceText: fmt.formatDistance(route.distance),
+        dateText: fmt.formatDate(route.createdAt),
+        isMine: route._openid === openid,
+        loading: false
+      })
+    } catch (err) {
+      console.error('加载路线失败', err)
+      this.setData({ loading: false })
+      wx.showToast({ title: '路线不存在或无权查看', icon: 'none' })
+    }
+  },
+
+  startRide() {
+    wx.navigateTo({ url: '/pages/ride/ride?routeId=' + this.routeId })
+  },
+
+  copyToDesign() {
+    app.globalData.pendingRoute = this.data.route
+    wx.switchTab({ url: '/pages/design/design' })
+  },
+
+  async togglePublic() {
+    const route = this.data.route
+    try {
+      await wx.cloud.database().collection('routes').doc(this.routeId)
+        .update({ data: { isPublic: !route.isPublic } })
+      this.setData({ 'route.isPublic': !route.isPublic })
+    } catch (err) {
+      wx.showToast({ title: '操作失败', icon: 'none' })
+    }
+  },
+
+  async remove() {
+    const confirm = await wx.showModal({ title: '删除路线', content: '删除后无法恢复，确定吗？' })
+    if (!confirm.confirm) return
+    try {
+      await wx.cloud.database().collection('routes').doc(this.routeId).remove()
+      wx.showToast({ title: '已删除' })
+      setTimeout(() => wx.navigateBack(), 600)
+    } catch (err) {
+      wx.showToast({ title: '删除失败', icon: 'none' })
+    }
+  },
+
+  onShareAppMessage() {
+    const route = this.data.route
+    return {
+      title: route ? `我设计了一条「${route.text}」骑行路线，约 ${this.data.distanceText}` : '骑字',
+      path: '/pages/routeDetail/routeDetail?id=' + this.routeId
+    }
+  }
 })

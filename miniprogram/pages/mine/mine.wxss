@@ -1,0 +1,79 @@
+.tabs {
+  display: flex;
+  background: #fff;
+  padding: 8rpx 24rpx;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 24rpx 0;
+  font-size: 30rpx;
+  color: #8A938E;
+  border-bottom: 4rpx solid transparent;
+}
+
+.tab.active {
+  color: #19C37D;
+  font-weight: 600;
+  border-bottom-color: #19C37D;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+}
+
+.item-badge {
+  min-width: 110rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  padding: 0 14rpx;
+  text-align: center;
+  background: #E9F9F1;
+  color: #0E9F66;
+  font-size: 34rpx;
+  font-weight: 700;
+  border-radius: 16rpx;
+}
+
+.item-badge.ride {
+  background: #FFF3E5;
+  color: #E08A2E;
+}
+
+.item-info {
+  flex: 1;
+  margin-left: 24rpx;
+}
+
+.item-name {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.private {
+  font-size: 20rpx;
+  color: #8A938E;
+  border: 2rpx solid #D8DEDA;
+  border-radius: 8rpx;
+  padding: 2rpx 10rpx;
+  margin-left: 12rpx;
+  font-weight: 400;
+}
+
+.item-meta {
+  font-size: 24rpx;
+  color: #8A938E;
+  margin-top: 8rpx;
+}
+
+.arrow {
+  color: #C2C9C5;
+  font-size: 44rpx;
+}
+
+.empty-btn {
+  width: 320rpx;
+  margin: 32rpx auto 0;
+}

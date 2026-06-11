@@ -1,0 +1,73 @@
+.hero {
+  background: linear-gradient(160deg, #10241B 0%, #1B5E43 100%);
+  color: #fff;
+  padding: 56rpx 40rpx 48rpx;
+  border-radius: 0 0 40rpx 40rpx;
+}
+
+.hero-title {
+  font-size: 44rpx;
+  font-weight: 700;
+}
+
+.hero-sub {
+  font-size: 24rpx;
+  opacity: 0.75;
+  margin: 16rpx 0 36rpx;
+  line-height: 1.6;
+}
+
+.hero-btn { width: 420rpx; }
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  margin: 36rpx 32rpx 8rpx;
+}
+
+.route-card {
+  display: flex;
+  align-items: center;
+}
+
+.route-text {
+  min-width: 120rpx;
+  height: 96rpx;
+  line-height: 96rpx;
+  padding: 0 16rpx;
+  text-align: center;
+  background: #E9F9F1;
+  color: #0E9F66;
+  font-size: 40rpx;
+  font-weight: 700;
+  border-radius: 16rpx;
+  letter-spacing: 2rpx;
+}
+
+.route-info {
+  flex: 1;
+  margin-left: 24rpx;
+}
+
+.route-name {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.route-meta {
+  font-size: 24rpx;
+  color: #8A938E;
+  margin-top: 8rpx;
+}
+
+.arrow {
+  color: #C2C9C5;
+  font-size: 44rpx;
+}
+
+.list-footer {
+  text-align: center;
+  color: #C2C9C5;
+  font-size: 24rpx;
+  padding: 24rpx 0 48rpx;
+}

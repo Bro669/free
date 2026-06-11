@@ -1,1 +1,31 @@
-<view class="empty">我的（建设中）</view>
+<view class="tabs">
+  <view class="tab {{tab === 'routes' ? 'active' : ''}}" data-tab="routes" bindtap="switchTab">我的路线</view>
+  <view class="tab {{tab === 'rides' ? 'active' : ''}}" data-tab="rides" bindtap="switchTab">我的骑行</view>
+</view>
+
+<block wx:if="{{tab === 'routes'}}">
+  <view class="card item" wx:for="{{routes}}" wx:key="_id" data-id="{{item._id}}" bindtap="openRoute">
+    <view class="item-badge">{{item.text}}</view>
+    <view class="item-info">
+      <view class="item-name">{{item.name}}<text class="private" wx:if="{{!item.isPublic}}">私密</text></view>
+      <view class="item-meta">{{item.distanceText}} · {{item.dateText}}</view>
+    </view>
+    <view class="arrow">›</view>
+  </view>
+  <view class="empty" wx:if="{{!routes.length && !loading}}">
+    <view>{{loadError ? '加载失败，请确认云环境配置' : '还没有路线'}}</view>
+    <view class="btn-primary empty-btn" bindtap="goDesign">去设计一条</view>
+  </view>
+</block>
+
+<block wx:else>
+  <view class="card item" wx:for="{{rides}}" wx:key="_id" data-id="{{item._id}}" bindtap="openRide">
+    <view class="item-badge ride">{{item.text}}</view>
+    <view class="item-info">
+      <view class="item-name">{{item.distanceText}}</view>
+      <view class="item-meta">{{item.durationText}} · {{item.dateText}}</view>
+    </view>
+    <view class="arrow">›</view>
+  </view>
+  <view class="empty" wx:if="{{!rides.length && !loading}}">还没有骑行记录</view>
+</block>
