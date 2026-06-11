@@ -10,7 +10,6 @@
     polyline="{{polylines}}"
     markers="{{markers}}"
     show-location="{{true}}"
-    bindregionchange="onRegionChange"
     bindmarkertap="onMarkerTap"
   >
     <cover-view wx:if="{{mode === 'editAnchor'}}" class="crosshair">✛</cover-view>

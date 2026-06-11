@@ -286,6 +286,16 @@ function near(a, b, eps) { return Math.abs(a - b) <= eps }
   check('gpx 坐标为 WGS84', xml.includes(wgs.latitude.toFixed(6)))
 }
 
+// ---- demoRoutes：示例模板必须能直接生成 ----
+{
+  const demos = U('demoRoutes')
+  const projection = U('projection')
+  check('demoRoutes 非空且字段齐全', demos.length >= 2 && demos.every(d =>
+    d.demo === true && d.text && d.name && d.heightMeters >= 500 && d.heightMeters <= 5000))
+  check('demoRoutes 文字全部可渲染（不依赖云端字形）',
+    demos.every(d => projection.unsupportedChars(d.text).length === 0))
+}
+
 // ---- quotes ----
 {
   const quotes = U('quotes')

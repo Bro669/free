@@ -1,11 +1,15 @@
 // 路线广场：浏览大家公开的字形路线
 const fmt = require('../../utils/format')
+const demoRoutes = require('../../utils/demoRoutes')
 
 const PAGE_SIZE = 20
+
+const app = getApp()
 
 Page({
   data: {
     routes: [],
+    demos: [],          // 云端无内容时的内置灵感示例
     loading: false,
     finished: false,
     loadError: false
@@ -50,15 +54,24 @@ Page({
         distanceText: fmt.formatDistance(r.distance),
         dateText: fmt.formatDate(r.createdAt)
       }))
+      const routes = this.data.routes.concat(items)
       this.setData({
-        routes: this.data.routes.concat(items),
+        routes,
+        demos: routes.length ? [] : demoRoutes,
         finished: items.length < PAGE_SIZE,
         loading: false
       })
     } catch (err) {
       console.error('加载广场失败', err)
-      this.setData({ loading: false, loadError: true, finished: true })
+      this.setData({ loading: false, loadError: true, finished: true, demos: demoRoutes })
     }
+  },
+
+  // 示例卡：带着设计参数直接进设计页，在用户自己的城市生成
+  useDemo(e) {
+    const demo = demoRoutes[e.currentTarget.dataset.idx]
+    app.globalData.pendingRoute = { ...demo, center: null }
+    wx.switchTab({ url: '/pages/design/design' })
   },
 
   openRoute(e) {

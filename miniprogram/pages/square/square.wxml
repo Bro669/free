@@ -19,7 +19,18 @@
   <view class="arrow">›</view>
 </view>
 
-<view class="empty" wx:if="{{!routes.length && !loading}}">
+<block wx:if="{{!routes.length && !loading && demos.length}}">
+  <view class="card route-card demo-card" wx:for="{{demos}}" wx:key="text" data-idx="{{index}}" bindtap="useDemo">
+    <view class="route-text">{{item.text}}</view>
+    <view class="route-info">
+      <view class="route-name">{{item.name}}<text class="demo-tag">灵感</text></view>
+      <view class="route-meta">{{item.distanceHint}} · 点击在你的城市生成</view>
+    </view>
+    <view class="arrow">›</view>
+  </view>
+</block>
+
+<view class="empty" wx:if="{{!routes.length && !loading && !demos.length}}">
   {{loadError ? '加载失败，请确认已创建云开发 routes 集合' : '还没有公开路线，去设计第一条吧'}}
 </view>
 <view class="list-footer" wx:if="{{routes.length && finished}}">没有更多了</view>

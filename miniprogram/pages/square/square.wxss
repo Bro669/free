@@ -44,6 +44,16 @@
   font-weight: 600;
 }
 
+.demo-tag {
+  font-size: 20rpx;
+  color: #19C37D;
+  border: 2rpx solid #A8E5CC;
+  border-radius: 8rpx;
+  padding: 2rpx 10rpx;
+  margin-left: 12rpx;
+  font-weight: 400;
+}
+
 .route-text {
   min-width: 120rpx;
   height: 96rpx;

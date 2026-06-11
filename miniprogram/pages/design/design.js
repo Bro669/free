@@ -78,14 +78,19 @@ Page({
       text: route.text,
       heightMeters: route.heightMeters,
       rotationDeg: route.rotationDeg,
-      center: { latitude: route.center.latitude, longitude: route.center.longitude },
-      routeName: route.name || ''
+      // 示例模板不带坐标（center:null），落在用户当前位置
+      center: route.center
+        ? { latitude: route.center.latitude, longitude: route.center.longitude }
+        : this.data.center,
+      routeName: route.demo ? '' : (route.name || '')
     })
     this.generate()
   },
 
   onTextInput(e) {
-    this.setData({ text: e.detail.value.toUpperCase() })
+    // 不做 toUpperCase 回写：中文输入法组词阶段被改值会打断输入；
+    // 字母查表时已统一大写（projection.lookupGlyph）
+    this.setData({ text: e.detail.value })
   },
 
   async generate() {
@@ -250,19 +255,6 @@ Page({
       this.snapshotGesture(e.touches)   // 双指→单指等情况，以剩余触点为新基准
     } else {
       this.gesture = null
-    }
-  },
-
-  onRegionChange(e) {
-    if (e.type !== 'end') return
-    // 「移动」模式：拖地图即拖字（地图中心 = 字形中心）
-    if (this.data.mode === 'adjust' && this.data.moveMode) {
-      this.mapCtx.getCenterLocation({
-        success: res => {
-          this.setData({ center: { latitude: res.latitude, longitude: res.longitude } })
-          this.reproject()
-        }
-      })
     }
   },
 

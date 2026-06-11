@@ -26,8 +26,19 @@ Page({
   onLoad(options) {
     this.rideId = options.id || ''
     this.bgImagePath = ''
+    this._ready = false
+    this._pendingDraw = false
     this.syncActiveThemes(this.data.activeCategory)
     this.load()
+  },
+
+  onReady() {
+    // canvas 节点要等首次渲染完成才能查询到；本地数据路径 load() 可能先到
+    this._ready = true
+    if (this._pendingDraw) {
+      this._pendingDraw = false
+      this.generatePoster()
+    }
   },
 
   syncActiveThemes(catKey) {
@@ -78,6 +89,10 @@ Page({
   },
 
   generatePoster() {
+    if (!this._ready) {
+      this._pendingDraw = true
+      return
+    }
     this.setData({ generating: true })
     const query = wx.createSelectorQuery()
     query.select('#poster').fields({ node: true, size: true }).exec(res => {

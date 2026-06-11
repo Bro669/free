@@ -144,7 +144,8 @@ Page({
         height: 32,
         callout: { content: '起点', display: 'ALWAYS', borderRadius: 6, padding: 4, fontSize: 12 }
       }] : []
-      this.setData({ polylines, includePoints, markers })
+      this.setData({ includePoints, markers })
+      this.renderTrack()   // 合并底图与已有轨迹（断点恢复时轨迹可能先于路线就绪）
       this.buildGuidance()
     } catch (err) {
       console.error('加载路线失败', err)
