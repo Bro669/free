@@ -1,9 +1,30 @@
 // 汉字字形支持：hanzi-writer-data 的笔画中线（medians）→ 本项目字形格式。
-// 数据通过 getHanzi 云函数代理拉取（云函数可自由访问外网，省去域名白名单配置），
+// 数据由小程序端直连 CDN 拉取（jsdelivr 失败切 unpkg），无需任何云函数；
+// 需在小程序后台把两个 CDN 加入 request 合法域名（见 README）。
 // 内存 + 本地存储两级缓存。convertMedians/rdp 为纯函数，selftest 可直接验证。
 
 const STORAGE_PREFIX = 'hanzi:'
 const cache = {}            // char -> glyph { width, strokes }
+
+const HOSTS = [
+  c => `https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0.1/${encodeURIComponent(c)}.json`,
+  c => `https://unpkg.com/hanzi-writer-data@2.0.1/${encodeURIComponent(c)}.json`
+]
+
+function fetchHanzi(c, hostIdx = 0) {
+  if (hostIdx >= HOSTS.length) return Promise.reject(new Error('字形数据源均不可用'))
+  return new Promise((resolve, reject) => {
+    wx.request({
+      url: HOSTS[hostIdx](c),
+      timeout: 8000,
+      success(r) {
+        if (r.statusCode === 200 && r.data && r.data.medians) resolve(r.data)
+        else fetchHanzi(c, hostIdx + 1).then(resolve, reject)
+      },
+      fail() { fetchHanzi(c, hostIdx + 1).then(resolve, reject) }
+    })
+  })
+}
 
 function isCJK(c) {
   return /[一-鿿]/.test(c)
@@ -57,7 +78,7 @@ function convertMedians(medians) {
   return { width: 1, strokes }
 }
 
-// 确保 chars 中的汉字字形已就绪（内存 → 本地存储 → 云函数），
+// 确保 chars 中的汉字字形已就绪（内存 → 本地存储 → CDN），
 // 返回加载失败的字符数组。
 async function ensure(chars) {
   const need = []
@@ -72,18 +93,16 @@ async function ensure(chars) {
   }
   if (!need.length) return chars.filter(c => !isCJK(c))
 
-  const res = await wx.cloud.callFunction({ name: 'getHanzi', data: { chars: need } })
-  const data = (res.result && res.result.glyphs) || {}
   const failed = []
-  for (const c of need) {
-    if (data[c] && data[c].medians) {
-      const glyph = convertMedians(data[c].medians)
-      cache[c] = glyph
-      try { wx.setStorageSync(STORAGE_PREFIX + c, glyph) } catch (e) { /* 存储满则只用内存缓存 */ }
-    } else {
-      failed.push(c)
-    }
-  }
+  await Promise.all(need.map(c =>
+    fetchHanzi(c)
+      .then(data => {
+        const glyph = convertMedians(data.medians)
+        cache[c] = glyph
+        try { wx.setStorageSync(STORAGE_PREFIX + c, glyph) } catch (e) { /* 存储满则只用内存缓存 */ }
+      })
+      .catch(() => failed.push(c))
+  ))
   return failed.concat(chars.filter(c => !isCJK(c)))
 }
 

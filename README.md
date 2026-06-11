@@ -26,16 +26,15 @@
 
 ```
 project.config.json        微信开发者工具项目配置
-cloudfunctions/login/      云函数：返回 openid
-cloudfunctions/getHanzi/   云函数：代理拉取 hanzi-writer-data 汉字笔画数据
 miniprogram/
   config.js                ⚠️ 需要填写的密钥配置
+  app.js                   云开发初始化 + 零云函数 openid 引导（users 集合写读删）
   app.json                 页面/tabBar/后台定位声明
   utils/
     glyphs.js              A-Z 0-9 ♥ ★ 单线「可骑」字形骨架（归一化坐标）
-    fidelity.js            还原度评分（折线集双向平均偏差 → 0-100 分）
+    fidelity.js            还原度评分（设计贴合分 + 骑行完成分=精度×覆盖率）
     gpx.js                 GPX 1.1 导出（含 GCJ-02→WGS-84 转换，见 geo.js）
-    hanzi.js               汉字字形：medians→可骑字形转换、两级缓存
+    hanzi.js               汉字字形：CDN 直连拉取、medians→可骑字形转换、两级缓存
     quotes.js              海报底部骑行金句库
     projection.js          多字符排版 + 字形→经纬度投影（缩放/旋转/纬度修正）
     geo.js                 haversine / 等距重采样 / DP 抽稀 / 轨迹点过滤
@@ -59,16 +58,13 @@ docs/glyphs-preview.svg    全部字形预览图
 docs/poster-preview.svg    五种海报风格预览图
 ```
 
-## 跑起来（必做配置）
+## 跑起来（必做配置，全程零部署——不需要上传任何云函数）
 
 1. **小程序账号**：注册小程序，把 AppID 填入 `project.config.json` 的 `appid`
    （类目建议选 **体育-运动健身**，后台定位审核需要）。
 2. **云开发**：微信开发者工具 → 云开发 → 创建环境，环境 ID 填入 `miniprogram/config.js`
-   的 `CLOUD_ENV`；右键 `cloudfunctions/login` 与 `cloudfunctions/getHanzi` →
-   上传并部署（云端安装依赖）。getHanzi 负责汉字笔画数据（来源 jsdelivr/unpkg 的
-   hanzi-writer-data），不部署则只支持 A-Z/0-9。
-3. **云数据库**：集合 `routes`/`rides` 会在首次调用 login 云函数时自动创建，
-   但**安全规则需手动配置**：
+   的 `CLOUD_ENV`。本项目只用云数据库 + 云存储，没有任何云函数需要部署。
+3. **云数据库**：控制台创建三个集合并配置权限：
    - `routes` → 自定义安全规则：
      ```json
      {
@@ -77,9 +73,13 @@ docs/poster-preview.svg    五种海报风格预览图
      }
      ```
    - `rides` → 「仅创建者可读写」
+   - `users` → 「仅创建者可读写」（只用于首次启动时引导取 openid：写一条读回
+     `_openid` 再删除，集合长期为空）
 4. **腾讯位置服务**：到 https://lbs.qq.com/ 创建应用与 Key（勾选 WebServiceAPI），
    填入 `miniprogram/config.js` 的 `TENCENT_MAP_KEY`；小程序后台「开发-服务器域名」
-   添加 request 合法域名 `https://apis.map.qq.com`。
+   添加 request 合法域名：
+   - `https://apis.map.qq.com`（贴路必需）
+   - `https://cdn.jsdelivr.net` 与 `https://unpkg.com`（汉字笔画数据，不加则只支持 A-Z/0-9/♥★）
    未配置 Key 时贴路自动降级为直线虚线，其余功能可用。
 5. **隐私设置**（上线必做）：小程序后台「设置-服务内容声明-用户隐私保护指引」
    声明收集 **位置信息**，否则定位接口直接报错。
@@ -124,7 +124,10 @@ docs/poster-preview.svg    五种海报风格预览图
 - 字形还原度取决于路网密度：方格路网城区效果最佳，水域/高架/单行道附近会变形，
   善用「旋转」把笔画对齐主干道方向
 - 个人开发者的路线规划 API 配额约 1 万次/日、5 QPS（已做限流+缓存+降级），
-  正式运营建议企业认证提额或加云函数代理
+  正式运营建议企业认证提额；Key 在前端明文（可在腾讯控制台绑定小程序 referer
+  白名单防盗用），流量大后再考虑加代理层
+- 汉字笔画数据依赖公共 CDN（jsdelivr/unpkg），若不稳可把 hanzi-writer-data
+  常用字打包上传到自己的云存储替换 HOSTS
 - 后台定位需用户在弹窗中主动选「使用小程序期间和离开后」；未选则降级前台记录（保持亮屏）
 - GPS 漂移在高楼区不可避免，已做精度/速度/抖动三重过滤，建议在开阔路段骑
 - 汉字已支持（hanzi-writer-data 覆盖 GB2312 常用字～9000 字）；汉字笔画多

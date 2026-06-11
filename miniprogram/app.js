@@ -5,7 +5,8 @@ App({
     openid: '',
     cloudReady: false,
     // design 页跳转传参用（小程序页面间传大对象不走 url）
-    pendingRoute: null
+    pendingRoute: null,
+    lastRide: null
   },
 
   onLaunch() {
@@ -21,15 +22,32 @@ App({
     this.login()
   },
 
+  // 零云函数取 openid：往 users 集合写一条记录，读回云端自动注入的 _openid，
+  // 缓存本地后删掉这条记录（删除失败也无妨，users 仅用作引导）。
   login() {
     if (this.loginPromise) return this.loginPromise
-    this.loginPromise = wx.cloud.callFunction({ name: 'login' })
+    const cached = wx.getStorageSync('openid')
+    if (cached) {
+      this.globalData.openid = cached
+      this.loginPromise = Promise.resolve(cached)
+      return this.loginPromise
+    }
+    const db = wx.cloud.database()
+    let docId = ''
+    this.loginPromise = db.collection('users').add({ data: { createdAt: Date.now() } })
       .then(res => {
-        this.globalData.openid = res.result.openid
-        return res.result.openid
+        docId = res._id
+        return db.collection('users').doc(docId).get()
+      })
+      .then(res => {
+        const openid = res.data._openid
+        this.globalData.openid = openid
+        wx.setStorageSync('openid', openid)
+        db.collection('users').doc(docId).remove().catch(() => {})
+        return openid
       })
       .catch(err => {
-        console.error('login 云函数调用失败（请确认已上传部署 cloudfunctions/login）', err)
+        console.error('获取 openid 失败（请确认云环境已开通且已创建 users 集合）', err)
         this.loginPromise = null
         return ''
       })

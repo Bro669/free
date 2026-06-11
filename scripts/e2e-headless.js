@@ -22,7 +22,7 @@ const advance = ms => { vOffset += ms }
 
 // ===== wx mock =====
 const storage = new Map()
-const cloudDB = { routes: [], rides: [] }
+const cloudDB = { routes: [], rides: [], users: [] }
 let docSeq = 1
 const calls = { toasts: [], navigations: [], shareFiles: [], loadings: 0 }
 let locationHandler = null
@@ -133,21 +133,23 @@ global.wx = {
   cloud: {
     init() {},
     database: () => ({ collection: makeCollection }),
-    async callFunction({ name, data }) {
-      if (name === 'login') return { result: { openid: 'test-openid' } }
-      if (name === 'getHanzi') {
-        const glyphs = {}
-        for (const c of data.chars) {
-          const p = '/tmp/svgrender/node_modules/hanzi-writer-data/' + c + '.json'
-          glyphs[c] = fs.existsSync(p) ? { medians: JSON.parse(fs.readFileSync(p)).medians } : null
-        }
-        return { result: { glyphs } }
-      }
-      throw new Error('unknown fn ' + name)
-    },
     uploadFile({ cloudPath, success }) { success({ fileID: 'cloud://test/' + cloudPath }) }
   },
-  request({ data, success }) { success({ data: fakeBicycling(data.from, data.to) }) },
+  // 按 URL 分发：腾讯路线规划 / hanzi-writer-data CDN
+  request({ url, data, success, fail }) {
+    if (url.includes('apis.map.qq.com')) {
+      return success({ statusCode: 200, data: fakeBicycling(data.from, data.to) })
+    }
+    if (url.includes('hanzi-writer-data')) {
+      const c = decodeURIComponent(url.split('/').pop().replace('.json', ''))
+      const p = '/tmp/svgrender/node_modules/hanzi-writer-data/' + c + '.json'
+      if (fs.existsSync(p)) {
+        return success({ statusCode: 200, data: JSON.parse(fs.readFileSync(p)) })
+      }
+      return success({ statusCode: 404, data: null })
+    }
+    fail && fail({ errMsg: 'request:fail unknown url' })
+  },
   getLocation({ success }) { success({ latitude: 31.2304, longitude: 121.4737, accuracy: 5 }) },
   getSetting({ success }) { success({ authSetting: { 'scope.userLocation': true } }) },
   authorize({ success }) { success && success() },
@@ -240,6 +242,21 @@ require(path.join(__dirname, '../miniprogram/config')).TENCENT_MAP_KEY = 'TEST_K
 for (const p of ['design', 'square', 'mine', 'routeDetail', 'ride', 'record']) loadPage(p)
 
 async function main() {
+  // ===== 0. 真实 app.js：零云函数 openid 引导 =====
+  {
+    let appCfg = null
+    global.App = cfg => { appCfg = cfg }
+    require(path.join(__dirname, '../miniprogram/app.js'))
+    const realApp = Object.create(appCfg)
+    realApp.globalData = JSON.parse(JSON.stringify(appCfg.globalData))
+    const openid = await realApp.login()
+    check('登录: users 集合引导取得 openid', openid === 'test-openid')
+    check('登录: openid 已缓存本地', storage.get('openid') === 'test-openid')
+    check('登录: 引导记录已清理', cloudDB.users.length === 0)
+    const again = await realApp.login()
+    check('登录: 二次登录走缓存', again === 'test-openid' && cloudDB.users.length === 0)
+  }
+
   // ===== 1. 广场冷启动：空库显示灵感示例 =====
   {
     const sq = createInstance('square')

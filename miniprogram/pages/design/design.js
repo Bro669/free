@@ -107,19 +107,19 @@ Page({
         wx.showToast({ title: '暂不支持: ' + other.join(' ') + '（支持 A-Z 0-9 和汉字）', icon: 'none' })
         return
       }
-      // 汉字字形按需从云端拉取（getHanzi 云函数）
+      // 汉字字形按需从 CDN 拉取（hanzi-writer-data）
       wx.showLoading({ title: '加载汉字字形…' })
       try {
         const failed = await hanzi.ensure(cjk)
         wx.hideLoading()
         if (failed.length) {
-          wx.showToast({ title: '字形加载失败: ' + failed.join(' '), icon: 'none' })
+          wx.showToast({ title: '字形加载失败: ' + failed.join(' ') + '（检查网络与域名白名单）', icon: 'none' })
           return
         }
       } catch (err) {
         wx.hideLoading()
         console.error('加载汉字字形失败', err)
-        wx.showToast({ title: '加载失败，请确认已部署 getHanzi 云函数', icon: 'none' })
+        wx.showToast({ title: '字形加载失败，请检查网络与域名白名单', icon: 'none' })
         return
       }
     }
