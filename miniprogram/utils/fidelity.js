@@ -20,19 +20,21 @@ function samplePoints(lines) {
   return pts
 }
 
+function minDistToLines(p, lines) {
+  let min = Infinity
+  for (const line of lines) {
+    for (let i = 1; i < line.length; i++) {
+      const d = geo.perpDistance(p, line[i - 1], line[i])
+      if (d < min) min = d
+    }
+  }
+  return min
+}
+
 function avgMinDist(pts, lines) {
   if (!pts.length) return Infinity
   let sum = 0
-  for (const p of pts) {
-    let min = Infinity
-    for (const line of lines) {
-      for (let i = 1; i < line.length; i++) {
-        const d = geo.perpDistance(p, line[i - 1], line[i])
-        if (d < min) min = d
-      }
-    }
-    sum += min
-  }
+  for (const p of pts) sum += minDistToLines(p, lines)
   return sum / pts.length
 }
 
@@ -79,4 +81,19 @@ function probeDeviation(a, b, snappedPoints) {
   return dev + detour * 120   // 绕路 100% 视同偏离 120m
 }
 
-module.exports = { score, meanDeviation, probePairs, probeDeviation }
+// 骑行完成度评分 = 贴线精度 × 覆盖率。
+// 与对称的 score 不同：只骑了一半的人不应得 0 分——轨迹偏差只看
+// 「轨迹离计划线多远」（单向），未骑到的计划段以覆盖率体现
+// （骑一半且贴得准 ≈ 50 分）。覆盖判定：计划采样点 60m 内有轨迹。
+function matchScore(plannedLines, trackLines) {
+  const trackPts = samplePoints(trackLines)
+  const plannedPts = samplePoints(plannedLines)
+  if (!trackPts.length || !plannedPts.length) return 0
+  const acc = avgMinDist(trackPts, plannedLines)
+  const accuracy = Math.exp(-acc / 120)
+  const covered = plannedPts.filter(p => minDistToLines(p, trackLines) < 60).length
+  const coverage = covered / plannedPts.length
+  return Math.round(100 * accuracy * coverage)
+}
+
+module.exports = { score, matchScore, meanDeviation, probePairs, probeDeviation }

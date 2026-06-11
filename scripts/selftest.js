@@ -235,6 +235,14 @@ function near(a, b, eps) { return Math.abs(a - b) <= eps }
   check('fidelity 偏 200m 得低分', s200 < 30, 'got ' + s200)
   check('fidelity 分数单调', s20 > s200)
   check('fidelity 空输入安全', fidelity.score([], lineA) === 0)
+
+  // matchScore = 贴线精度 × 覆盖率（半途而废不清零）
+  check('matchScore 全程重合 = 100', fidelity.matchScore(lineA, [[P(0, 0), P(1000, 0)]]) === 100)
+  const half = fidelity.matchScore(lineA, [[P(0, 5), P(500, 5)]])   // 只骑了一半，贴得准
+  check('matchScore 骑一半 ≈ 50', half >= 40 && half <= 60, 'got ' + half)
+  const far = fidelity.matchScore(lineA, [[P(0, 200), P(1000, 200)]])
+  check('matchScore 偏 200m 低分', far < 25, 'got ' + far)
+  check('matchScore 空轨迹 = 0', fidelity.matchScore(lineA, []) === 0)
 }
 
 // ---- fidelity 探针（自动寻位用） ----

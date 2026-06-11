@@ -70,7 +70,7 @@ Page({
     // 还原度：实际轨迹 vs 计划路线（自由骑无计划则不算）
     const toLines = arr => (arr || []).map(line => line.map(([lat, lng]) => ({ latitude: lat, longitude: lng })))
     this.matchScore = ride.planned && ride.planned.length
-      ? fidelity.score(toLines(ride.planned), toLines(ride.track))
+      ? fidelity.matchScore(toLines(ride.planned), toLines(ride.track))
       : null
     this.setData({
       ride,
