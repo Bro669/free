@@ -61,6 +61,31 @@
   margin-top: 16rpx;
 }
 
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14rpx;
+  margin-top: 20rpx;
+}
+
+.chip {
+  padding: 10rpx 30rpx;
+  background: #E9F9F1;
+  color: #0E9F66;
+  border-radius: 32rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.score {
+  font-size: 26rpx;
+  margin-left: 12rpx;
+  font-weight: 600;
+}
+.score.good { color: #19C37D; }
+.score.mid { color: #E0A23C; }
+.score.low { color: #FF5A5F; }
+
 .row {
   display: flex;
   align-items: center;

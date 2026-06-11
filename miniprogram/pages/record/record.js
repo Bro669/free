@@ -2,6 +2,7 @@
 const poster = require('../../utils/poster')
 const fmt = require('../../utils/format')
 const quotes = require('../../utils/quotes')
+const fidelity = require('../../utils/fidelity')
 
 const app = getApp()
 
@@ -55,8 +56,14 @@ Page({
     }
     this.ride = ride
     this.quoteIdx = ride.startedAt || 0      // 以开始时间做种子，默认金句稳定
+    // 还原度：实际轨迹 vs 计划路线（自由骑无计划则不算）
+    const toLines = arr => (arr || []).map(line => line.map(([lat, lng]) => ({ latitude: lat, longitude: lng })))
+    this.matchScore = ride.planned && ride.planned.length
+      ? fidelity.score(toLines(ride.planned), toLines(ride.track))
+      : null
     this.setData({
       ride,
+      matchScore: this.matchScore,
       quote: quotes.pick(this.quoteIdx),
       statsText: `${fmt.formatDistance(ride.distance)} · ${fmt.formatDuration(ride.durationSec)}`
     })
@@ -98,6 +105,7 @@ Page({
           speedText: fmt.formatSpeed(ride.avgSpeed),
           dateText: fmt.formatDate(ride.startedAt),
           quote: this.data.quote,
+          score: this.matchScore,
           bgImage
         }, this.data.themeKey)
         wx.canvasToTempFilePath({

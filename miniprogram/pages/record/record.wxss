@@ -27,6 +27,22 @@
   box-shadow: 0 12rpx 40rpx rgba(16, 36, 27, 0.25);
 }
 
+.score-banner {
+  margin-top: 24rpx;
+  padding: 20rpx 24rpx;
+  background: #10241B;
+  color: #fff;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  text-align: center;
+}
+
+.score-num {
+  color: #2BE08F;
+  font-weight: 700;
+  font-size: 34rpx;
+}
+
 .quote-row {
   display: flex;
   align-items: center;

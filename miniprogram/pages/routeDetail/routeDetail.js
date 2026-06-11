@@ -1,5 +1,6 @@
-// 路线详情：预览完整路线，入口：开始骑行 / 复制去修改 / 删除 / 公开开关
+// 路线详情：预览完整路线，入口：开始骑行 / 复制去修改 / 导出 GPX / 删除 / 公开开关
 const fmt = require('../../utils/format')
+const gpx = require('../../utils/gpx')
 
 const app = getApp()
 
@@ -63,6 +64,35 @@ Page({
   copyToDesign() {
     app.globalData.pendingRoute = this.data.route
     wx.switchTab({ url: '/pages/design/design' })
+  },
+
+  // 导出 GPX（WGS-84）给码表/骑行 App，按骑行顺序交错笔画与衔接段
+  exportGpx() {
+    const route = this.data.route
+    const toPts = line => line.map(([lat, lng]) => ({ latitude: lat, longitude: lng }))
+    const lines = []
+    const conns = route.connectors || []
+    route.polyline.forEach((line, i) => {
+      lines.push(toPts(line))
+      if (conns[i]) lines.push(toPts(conns[i]))
+    })
+    const xml = gpx.buildTrackGpx(route.name, lines)
+    const path = `${wx.env.USER_DATA_PATH}/route-${this.routeId}.gpx`
+    try {
+      wx.getFileSystemManager().writeFileSync(path, xml, 'utf8')
+      wx.shareFileMessage({
+        filePath: path,
+        fileName: `${route.name}.gpx`,
+        fail: err => {
+          if (!/cancel/.test(err.errMsg || '')) {
+            wx.showToast({ title: '分享失败', icon: 'none' })
+          }
+        }
+      })
+    } catch (err) {
+      console.error('导出 GPX 失败', err)
+      wx.showToast({ title: '导出失败', icon: 'none' })
+    }
   },
 
   async togglePublic() {

@@ -7,11 +7,13 @@
     <view class="meta">
       <view class="meta-item"><text class="meta-num">{{route.text}}</text><text class="meta-label">文字</text></view>
       <view class="meta-item"><text class="meta-num">{{distanceText}}</text><text class="meta-label">骑行距离</text></view>
+      <view class="meta-item" wx:if="{{route.fidelity}}"><text class="meta-num">{{route.fidelity}} 分</text><text class="meta-label">字形还原度</text></view>
       <view class="meta-item"><text class="meta-num">{{dateText}}</text><text class="meta-label">创建于</text></view>
     </view>
     <view class="btn-primary" bindtap="startRide">开始骑行</view>
     <view class="btn-row">
       <view class="btn-ghost flex1" bindtap="copyToDesign">复制去修改</view>
+      <view class="btn-ghost flex1" bindtap="exportGpx">导出 GPX</view>
       <block wx:if="{{isMine}}">
         <view class="btn-ghost flex1" bindtap="togglePublic">{{route.isPublic ? '设为私密' : '公开到广场'}}</view>
         <view class="btn-ghost flex1 danger" bindtap="remove">删除</view>

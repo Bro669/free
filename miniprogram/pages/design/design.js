@@ -4,6 +4,7 @@ const geo = require('../../utils/geo')
 const qqmap = require('../../utils/qqmap')
 const fmt = require('../../utils/format')
 const hanzi = require('../../utils/hanzi')
+const fidelity = require('../../utils/fidelity')
 
 const app = getApp()
 
@@ -31,7 +32,14 @@ Page({
     saveDialogVisible: false,
     routeName: '',
     isPublic: true,
-    saving: false
+    saving: false,
+    fidelityScore: null,
+    templates: ['♥', '★', 'LOVE', '520', '2026', '骑']
+  },
+
+  useTemplate(e) {
+    this.setData({ text: e.currentTarget.dataset.t })
+    this.generate()
   },
 
   onLoad() {
@@ -147,7 +155,7 @@ Page({
     this.anchorsByStroke = null
     this.segmentsByStroke = null
     this.editing = null
-    this.setData({ markers: [], failedCount: 0, snapProgress: '' })
+    this.setData({ markers: [], failedCount: 0, snapProgress: '', fidelityScore: null })
   },
 
   onHeightChange(e) {
@@ -244,16 +252,24 @@ Page({
         })
       })
     })
+    // 字形还原度：贴路结果 vs 理想字形投影
+    const plannedLines = this.projected.filter(s => s.ride).map(s => s.points)
+    const snappedLines = this.segmentsByStroke.map(segs => segs.flatMap(seg => seg.points))
+    const fidelityScore = fidelity.score(plannedLines, snappedLines)
+
     if (this.data.mode !== 'editAnchor') this.setData({ mode: 'snapped' })
     this.setData({
       polylines,
       markers,
       failedCount,
+      fidelityScore,
       snapProgress: '',
       distanceText: '骑行约 ' + fmt.formatDistance(rideDist)
     })
     if (failedCount > 0) {
       wx.showToast({ title: `${failedCount} 段未能贴路，以虚线直连`, icon: 'none' })
+    } else if (fidelityScore < 60) {
+      wx.showToast({ title: '还原度偏低，试试旋转字形对齐路网，或换个路网更密的位置', icon: 'none', duration: 3000 })
     }
   },
 
@@ -353,6 +369,7 @@ Page({
       polyline,
       connectors,
       distance: Math.round(distance),
+      fidelity: this.data.fidelityScore,
       isPublic: this.data.isPublic,
       createdAt: Date.now()
     }

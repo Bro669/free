@@ -8,6 +8,10 @@
     <view wx:elif="{{!ride}}" class="empty">没有可展示的骑行记录</view>
   </view>
 
+  <view class="score-banner" wx:if="{{matchScore !== null && matchScore !== undefined}}">
+    🏆 字形还原度 <text class="score-num">{{matchScore}}%</text>{{matchScore >= 85 ? '，神还原！' : (matchScore >= 70 ? '，相当不错' : '，下次再战')}}
+  </view>
+
   <view class="quote-row" wx:if="{{ride && quote}}" bindtap="nextQuote">
     <text class="quote-text">「{{quote}}」</text>
     <text class="quote-refresh">⟳ 换一句</text>

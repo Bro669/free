@@ -753,14 +753,15 @@ function drawPoster(ctx, w, h, data, themeKey) {
   ctx.font = `${Math.round(w * 0.03)}px sans-serif`
   ctx.fillText('公里', w / 2, h * 0.812)
 
-  // 数据行
+  // 数据行（有还原度得分时四列）
   const stats = [
     [data.durationText, '时长'],
     [data.speedText + ' km/h', '均速'],
     [data.dateText, '日期']
   ]
+  if (data.score != null) stats.push([data.score + '%', '还原度'])
   stats.forEach(([num, label], i) => {
-    const x = w * (0.2 + 0.3 * i)
+    const x = stats.length === 4 ? w * (0.125 + 0.25 * i) : w * (0.2 + 0.3 * i)
     ctx.fillStyle = theme.textMain
     ctx.font = `bold ${Math.round(w * 0.042)}px sans-serif`
     ctx.fillText(num, x, h * 0.872)

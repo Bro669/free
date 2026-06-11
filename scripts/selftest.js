@@ -21,7 +21,7 @@ function near(a, b, eps) { return Math.abs(a - b) <= eps }
 // ---- glyphs：坐标范围 / 笔画数 / 点数 ----
 {
   const keys = Object.keys(glyphs)
-  check('glyphs 覆盖 A-Z 0-9 与空格', keys.length === 37)
+  check('glyphs 覆盖 A-Z 0-9 空格与 ♥★', keys.length === 39 && glyphs['♥'] && glyphs['★'])
   for (const [c, g] of Object.entries(glyphs)) {
     if (c === ' ') continue
     check(`glyph ${c} width 合理`, g.width > 0 && g.width <= 1)
@@ -217,6 +217,47 @@ function near(a, b, eps) { return Math.abs(a - b) <= eps }
   // 骑(2笔) + 8(1笔) = 3 骑行笔 + 2 衔接段
   check('layout 汉字混排笔画数', lay.strokes.filter(s => s.ride).length === 3 &&
     lay.strokes.filter(s => !s.ride).length === 2)
+}
+
+// ---- fidelity：还原度评分 ----
+{
+  const fidelity = U('fidelity')
+  const LAT_M = 1 / 111320
+  const LNG_M = 1 / (111320 * Math.cos(31 * Math.PI / 180))
+  const P = (n, e) => ({ latitude: 31 + n * LAT_M, longitude: 121 + e * LNG_M })
+  const lineA = [[P(0, 0), P(1000, 0)]]                      // 南北 1km 直线
+  check('fidelity 完全重合 = 100 分', fidelity.score(lineA, [[P(0, 0), P(1000, 0)]]) === 100)
+  const off20 = [[P(0, 20), P(1000, 20)]]                    // 平移 20m（GPS 噪声量级）
+  const s20 = fidelity.score(lineA, off20)
+  check('fidelity 偏 20m 得高分', s20 >= 80 && s20 < 100, 'got ' + s20)
+  const off200 = [[P(0, 200), P(1000, 200)]]
+  const s200 = fidelity.score(lineA, off200)
+  check('fidelity 偏 200m 得低分', s200 < 30, 'got ' + s200)
+  check('fidelity 分数单调', s20 > s200)
+  check('fidelity 空输入安全', fidelity.score([], lineA) === 0)
+}
+
+// ---- gpx：坐标转换 + GPX 结构 ----
+{
+  const geo = U('geo')
+  const gpx = U('gpx')
+  // GCJ→WGS：国内点偏移应在 100-700m 量级，国外点不变
+  const sh = { latitude: 31.2304, longitude: 121.4737 }
+  const wgs = geo.gcj02ToWgs84(sh)
+  const shift = geo.haversine(sh, wgs)
+  check('gcj02→wgs84 偏移量级合理', shift > 50 && shift < 800, 'got ' + shift.toFixed(0) + 'm')
+  const abroad = { latitude: 48.8566, longitude: 2.3522 }
+  const same = geo.gcj02ToWgs84(abroad)
+  check('gcj02→wgs84 境外不转换', same.latitude === abroad.latitude && same.longitude === abroad.longitude)
+
+  const xml = gpx.buildTrackGpx('骑个 "L" & <test>', [
+    [sh, { latitude: 31.24, longitude: 121.4737 }],
+    [{ latitude: 31.24, longitude: 121.4737 }, { latitude: 31.24, longitude: 121.48 }]
+  ])
+  check('gpx 结构完整', xml.includes('<gpx') && xml.includes('</gpx>') &&
+    (xml.match(/<trkseg>/g) || []).length === 2 && (xml.match(/<trkpt /g) || []).length === 4)
+  check('gpx 名称转义', xml.includes('&quot;') && xml.includes('&lt;test&gt;') && xml.includes('&amp;'))
+  check('gpx 坐标为 WGS84', xml.includes(wgs.latitude.toFixed(6)))
 }
 
 // ---- quotes ----

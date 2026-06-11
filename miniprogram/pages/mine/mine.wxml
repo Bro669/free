@@ -1,3 +1,20 @@
+<view class="card stats-card" wx:if="{{stats}}">
+  <view class="stat-col"><text class="stat-num">{{stats.count}}</text><text class="stat-label">骑行次数</text></view>
+  <view class="stat-col"><text class="stat-num">{{stats.distanceText}}</text><text class="stat-label">总里程</text></view>
+  <view class="stat-col"><text class="stat-num">{{stats.durationText}}</text><text class="stat-label">总时长</text></view>
+</view>
+
+<view class="card" wx:if="{{letters.length}}">
+  <view class="collect-title">字母收集册 <text class="collect-sub">把 26 个字母骑亮</text></view>
+  <view class="letter-grid">
+    <view class="letter {{item.got ? 'got' : ''}}" wx:for="{{letters}}" wx:key="c">{{item.c}}</view>
+  </view>
+  <view class="extras" wx:if="{{extras.length}}">
+    <text class="collect-sub">特别收藏：</text>
+    <text class="extra-chip" wx:for="{{extras}}" wx:key="*this">{{item}}</text>
+  </view>
+</view>
+
 <view class="tabs">
   <view class="tab {{tab === 'routes' ? 'active' : ''}}" data-tab="routes" bindtap="switchTab">我的路线</view>
   <view class="tab {{tab === 'rides' ? 'active' : ''}}" data-tab="rides" bindtap="switchTab">我的骑行</view>

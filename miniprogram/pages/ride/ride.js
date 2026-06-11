@@ -320,9 +320,16 @@ Page({
     this.setData({ state: 'paused' })
 
     const durationSec = Math.round(this.movingMs / 1000)
+    // 计划路线一并存档，供成果页算「还原度」与对比展示
+    const planned = this.route
+      ? this.route.polyline.map(line =>
+          geo.simplify(line.map(([lat, lng]) => ({ latitude: lat, longitude: lng })), 15)
+            .map(p => [p.latitude, p.longitude]))
+      : []
     const ride = {
       routeId: this.routeId,
       text: this.route ? this.route.text : '',
+      planned,
       track: this.segments
         .filter(seg => seg.length >= 2)
         .map(seg => geo.simplify(seg, 10).map(p => [p.latitude, p.longitude])),

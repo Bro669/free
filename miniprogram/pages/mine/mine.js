@@ -3,11 +3,16 @@ const fmt = require('../../utils/format')
 
 const app = getApp()
 
+const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
+
 Page({
   data: {
     tab: 'routes',          // routes | rides
     routes: [],
     rides: [],
+    stats: null,            // { count, distanceText, durationText }
+    letters: [],            // [{ c, got }] 字母收集册
+    extras: [],             // 骑过的汉字/符号
     loading: false,
     loadError: false
   },
@@ -47,11 +52,35 @@ Page({
           durationText: fmt.formatDuration(r.durationSec),
           dateText: fmt.formatDate(r.startedAt)
         })),
+        ...this.buildStats(ridesRes.data),
         loading: false
       })
     } catch (err) {
       console.error('加载失败', err)
       this.setData({ loading: false, loadError: true })
+    }
+  },
+
+  // 累计统计 + 字母收集册（骑过的字符点亮）
+  buildStats(rides) {
+    const collected = new Set()
+    let dist = 0
+    let dur = 0
+    rides.forEach(r => {
+      dist += r.distance || 0
+      dur += r.durationSec || 0
+      ;[...(r.text || '').toUpperCase()].forEach(c => {
+        if (c !== ' ') collected.add(c)
+      })
+    })
+    return {
+      stats: rides.length ? {
+        count: rides.length,
+        distanceText: fmt.formatDistance(dist),
+        durationText: fmt.formatDuration(dur)
+      } : null,
+      letters: LETTERS.map(c => ({ c, got: collected.has(c) })),
+      extras: [...collected].filter(c => !/[A-Z]/.test(c))
     }
   },
 

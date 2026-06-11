@@ -22,7 +22,10 @@
       <input class="text-input" value="{{text}}" maxlength="6" placeholder="A-Z、0-9、汉字，最多 6 字符"
              bindinput="onTextInput" confirm-type="done" bindconfirm="generate" />
       <view class="btn-primary {{text ? '' : 'disabled'}}" bindtap="generate">生成路线轮廓</view>
-      <view class="tip">名字、年份、表白……都行；汉字笔画多，建议 1-2 个字</view>
+      <view class="chips">
+        <view class="chip" wx:for="{{templates}}" wx:key="*this" data-t="{{item}}" bindtap="useTemplate">{{item}}</view>
+      </view>
+      <view class="tip">名字、年份、表白、♥ 和 ★ ……都行；汉字笔画多，建议 1-2 个字</view>
     </block>
 
     <!-- 调整 -->
@@ -56,8 +59,12 @@
 
     <!-- 贴路完成 -->
     <block wx:elif="{{mode === 'snapped'}}">
-      <view class="panel-title">{{distanceText}}<text wx:if="{{failedCount}}" class="warn">（{{failedCount}} 段未贴路）</text></view>
-      <view class="tip">点击路线上的锚点可微调位置</view>
+      <view class="panel-title">
+        {{distanceText}}
+        <text wx:if="{{fidelityScore !== null}}" class="score {{fidelityScore >= 75 ? 'good' : (fidelityScore >= 60 ? 'mid' : 'low')}}">字形还原度 {{fidelityScore}} 分</text>
+        <text wx:if="{{failedCount}}" class="warn">（{{failedCount}} 段未贴路）</text>
+      </view>
+      <view class="tip">点击路线上的锚点可微调位置；还原度低可旋转字形对齐路网</view>
       <view class="btn-row">
         <view class="btn-ghost flex1" bindtap="backToAdjust">重新调整</view>
         <view class="btn-primary flex2" bindtap="openSaveDialog">保存路线</view>
