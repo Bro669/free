@@ -30,6 +30,20 @@
   align-items: center;
 }
 
+.route-thumb {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 16rpx;
+  background: #F4F7F5;
+  flex-shrink: 0;
+}
+
+.fid-badge {
+  margin-left: 12rpx;
+  color: #19C37D;
+  font-weight: 600;
+}
+
 .route-text {
   min-width: 120rpx;
   height: 96rpx;

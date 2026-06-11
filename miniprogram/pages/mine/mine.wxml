@@ -22,7 +22,8 @@
 
 <block wx:if="{{tab === 'routes'}}">
   <view class="card item" wx:for="{{routes}}" wx:key="_id" data-id="{{item._id}}" bindtap="openRoute">
-    <view class="item-badge">{{item.text}}</view>
+    <image wx:if="{{item.thumb}}" class="item-thumb" src="{{item.thumb}}" mode="aspectFill" />
+    <view wx:else class="item-badge">{{item.text}}</view>
     <view class="item-info">
       <view class="item-name">{{item.name}}<text class="private" wx:if="{{!item.isPublic}}">私密</text></view>
       <view class="item-meta">{{item.distanceText}} · {{item.dateText}}</view>

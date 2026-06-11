@@ -237,6 +237,32 @@ function near(a, b, eps) { return Math.abs(a - b) <= eps }
   check('fidelity 空输入安全', fidelity.score([], lineA) === 0)
 }
 
+// ---- fidelity 探针（自动寻位用） ----
+{
+  const fidelity = U('fidelity')
+  const LAT_M = 1 / 111320
+  const LNG_M = 1 / (111320 * Math.cos(31 * Math.PI / 180))
+  const P = (n, e) => ({ latitude: 31 + n * LAT_M, longitude: 121 + e * LNG_M })
+  const lines = [
+    [P(0, 0), P(2000, 0)],          // 长笔
+    [P(0, 100), P(900, 100)],       // 中笔
+    [P(0, 200), P(100, 200)]        // 短笔（resample 后只有首尾）
+  ]
+  const pairs = fidelity.probePairs(lines, 4)
+  check('probePairs 数量 ≤4 且 ≥2', pairs.length >= 2 && pairs.length <= 4, 'got ' + pairs.length)
+  const ok = pairs.every(([a, b]) => {
+    const d = U('geo').haversine(a, b)
+    return d > 50 && d <= 550   // 锚距 400m，末段合并最长约 1.3 倍
+  })
+  check('probePairs 段长在锚距量级', ok)
+  // 贴路结果完全沿直线 → 偏差 0；绕路 50% → 加惩罚
+  const [a, b] = pairs[0]
+  check('probeDeviation 直线为 0', fidelity.probeDeviation(a, b, [a, b]) < 1)
+  const detourPt = P(200, 150)
+  const dev = fidelity.probeDeviation(P(0, 0), P(400, 0), [P(0, 0), detourPt, P(400, 0)])
+  check('probeDeviation 绕路有惩罚', dev > 30, 'got ' + dev.toFixed(0))
+}
+
 // ---- gpx：坐标转换 + GPX 结构 ----
 {
   const geo = U('geo')

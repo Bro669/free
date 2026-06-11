@@ -7,10 +7,14 @@
 <view class="section-title">大家骑的字</view>
 
 <view class="card route-card" wx:for="{{routes}}" wx:key="_id" data-id="{{item._id}}" bindtap="openRoute">
-  <view class="route-text">{{item.text}}</view>
+  <image wx:if="{{item.thumb}}" class="route-thumb" src="{{item.thumb}}" mode="aspectFill" />
+  <view wx:else class="route-text">{{item.text}}</view>
   <view class="route-info">
     <view class="route-name">{{item.name}}</view>
-    <view class="route-meta">{{item.distanceText}} · {{item.dateText}}</view>
+    <view class="route-meta">
+      {{item.distanceText}} · {{item.dateText}}
+      <text wx:if="{{item.fidelity}}" class="fid-badge">还原度 {{item.fidelity}}</text>
+    </view>
   </view>
   <view class="arrow">›</view>
 </view>

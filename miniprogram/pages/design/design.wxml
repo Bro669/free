@@ -1,4 +1,6 @@
 <view class="page">
+  <!-- 缩略图离屏画布（保存路线时渲染形状 → 云存储） -->
+  <canvas type="2d" id="thumb" class="thumb-canvas" />
   <map
     id="map"
     class="map"
@@ -47,7 +49,8 @@
       </view>
       <view class="btn-row">
         <view class="btn-ghost flex1" bindtap="backToInput">重新输入</view>
-        <view class="btn-primary flex2" bindtap="snapRoads">贴合道路</view>
+        <view class="btn-ghost flex1" bindtap="autoPlace">✨ 自动找位置</view>
+        <view class="btn-primary flex1" bindtap="snapRoads">贴合道路</view>
       </view>
     </block>
 

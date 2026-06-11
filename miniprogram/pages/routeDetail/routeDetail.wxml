@@ -1,5 +1,6 @@
 <view class="page">
-  <map wx:if="{{route}}" class="map" polyline="{{polylines}}" include-points="{{includePoints}}"
+  <map wx:if="{{route}}" class="map" polyline="{{polylines}}" markers="{{markers}}"
+       include-points="{{includePoints}}"
        latitude="{{route.center.latitude}}" longitude="{{route.center.longitude}}" scale="12" />
 
   <view class="card" wx:if="{{route}}">

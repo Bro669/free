@@ -51,4 +51,32 @@ function score(linesA, linesB) {
   return Math.round(100 * Math.exp(-dev / 120))
 }
 
-module.exports = { score, meanDeviation }
+// 自动寻位的探针：从骑行笔画中选出至多 k 段有代表性的「直线段」（取最长几笔的
+// 中段相邻锚点对）。对每个候选位置只贴这几段来估算还原度，严控 API 用量。
+function probePairs(rideLines, k = 4) {
+  const spacing = 400
+  const ranked = rideLines
+    .filter(l => l && l.length >= 2)
+    .map(l => ({ line: l, len: geo.pathDistance(l) }))
+    .sort((a, b) => b.len - a.len)
+    .slice(0, k)
+  const pairs = []
+  for (const { line } of ranked) {
+    const anchors = geo.resample(line, spacing)
+    if (anchors.length < 2) continue
+    const mid = Math.floor((anchors.length - 1) / 2)
+    pairs.push([anchors[mid], anchors[Math.min(mid + 1, anchors.length - 1)]])
+  }
+  return pairs
+}
+
+// 单段探针偏差：贴路结果相对 a→b 直线的平均偏离 + 绕路惩罚
+function probeDeviation(a, b, snappedPoints) {
+  const direct = geo.haversine(a, b)
+  if (direct < 1) return 0
+  const dev = meanDeviation([[a, b]], [snappedPoints])
+  const detour = Math.max(0, geo.pathDistance(snappedPoints) / direct - 1)
+  return dev + detour * 120   // 绕路 100% 视同偏离 120m
+}
+
+module.exports = { score, meanDeviation, probePairs, probeDeviation }

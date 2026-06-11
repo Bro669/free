@@ -41,6 +41,7 @@ Page({
           _id: r._id,
           name: r.name,
           text: r.text,
+          thumb: r.thumb || '',
           isPublic: r.isPublic,
           distanceText: fmt.formatDistance(r.distance),
           dateText: fmt.formatDate(r.createdAt)

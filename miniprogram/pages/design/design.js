@@ -196,6 +196,58 @@ Page({
     this.reproject()
   },
 
+  // ===== 自动寻位：候选位置/角度 × 探针段快速评估，选还原度最佳的方案 =====
+  // 每个候选只贴 ≤4 段探针（10 候选 ≈ 40 次 API，约 10s），不动用全量贴路配额
+  async autoPlace() {
+    const config = require('../../config')
+    if (!config.TENCENT_MAP_KEY) {
+      wx.showToast({ title: '未配置地图 Key，无法评估', icon: 'none' })
+      return
+    }
+    if (!this.layoutResult) return
+    const base = this.data.center
+    const H = this.data.heightMeters
+    const rot = this.data.rotationDeg
+    const offM = H * 0.7
+    const offs = [[0, 0], [offM, offM], [offM, -offM], [-offM, offM], [-offM, -offM]]
+    const mPerDegLat = 111320
+    const mPerDegLng = mPerDegLat * Math.cos(base.latitude * Math.PI / 180)
+    const candidates = []
+    for (const [dn, de] of offs) {
+      const center = {
+        latitude: base.latitude + dn / mPerDegLat,
+        longitude: base.longitude + de / mPerDegLng
+      }
+      candidates.push({ center, rotationDeg: rot })
+      candidates.push({ center, rotationDeg: (rot + 90) % 360 })
+    }
+
+    let best = null
+    for (let i = 0; i < candidates.length; i++) {
+      wx.showLoading({ title: `评估方案 ${i + 1}/${candidates.length}`, mask: true })
+      const cand = candidates[i]
+      const projected = projection.project(this.layoutResult, {
+        center: cand.center, heightMeters: H, rotationDeg: cand.rotationDeg
+      })
+      const pairs = fidelity.probePairs(projected.filter(s => s.ride).map(s => s.points))
+      let dev = 0
+      for (const [a, b] of pairs) {
+        const seg = await qqmap.snapSegment(a, b)
+        dev += seg.snapped ? fidelity.probeDeviation(a, b, seg.points) : 300
+      }
+      dev = pairs.length ? dev / pairs.length : Infinity
+      if (!best || dev < best.dev) best = { ...cand, dev }
+    }
+    wx.hideLoading()
+    if (!best || !isFinite(best.dev)) {
+      wx.showToast({ title: '评估失败，请手动调整', icon: 'none' })
+      return
+    }
+    this.setData({ center: best.center, rotationDeg: best.rotationDeg })
+    this.reproject()
+    wx.showToast({ title: '已选用贴路效果最好的方案，可继续微调', icon: 'none', duration: 2500 })
+  },
+
   // ===== 贴合道路 =====
   async snapRoads() {
     if (!this.projected) return
@@ -335,6 +387,7 @@ Page({
     this.setData({ saving: true })
     try {
       const doc = this.buildRouteDoc(name)
+      doc.thumb = await this.makeThumb(doc)   // 失败返回 ''，不阻塞保存
       const db = wx.cloud.database()
       const res = await db.collection('routes').add({ data: doc })
       this.setData({ saving: false, saveDialogVisible: false })
@@ -344,6 +397,48 @@ Page({
       this.setData({ saving: false })
       wx.showToast({ title: '保存失败，请确认云环境与 routes 集合已创建', icon: 'none' })
     }
+  },
+
+  // 渲染路线形状缩略图并上传云存储，返回 fileID（任一步失败返回 ''）
+  makeThumb(doc) {
+    return new Promise(resolve => {
+      const done = v => resolve(v || '')
+      try {
+        const SIZE = 300
+        wx.createSelectorQuery().in(this)
+          .select('#thumb').fields({ node: true }).exec(res => {
+            if (!res[0] || !res[0].node) return done('')
+            const canvas = res[0].node
+            canvas.width = SIZE
+            canvas.height = SIZE
+            const ctx = canvas.getContext('2d')
+            ctx.fillStyle = '#F4F7F5'
+            ctx.fillRect(0, 0, SIZE, SIZE)
+            const poster = require('../../utils/poster')
+            const segments = doc.polyline.map(line =>
+              line.map(([lat, lng]) => ({ latitude: lat, longitude: lng })))
+            poster.drawTrack(ctx, segments, { x: 20, y: 20, w: SIZE - 40, h: SIZE - 40 }, [
+              { color: 'rgba(25,195,125,0.3)', width: 16 },
+              { color: '#19C37D', width: 8 }
+            ])
+            wx.canvasToTempFilePath({
+              canvas,
+              success: r => {
+                wx.cloud.uploadFile({
+                  cloudPath: `thumbs/${Date.now()}-${Math.floor(Math.random() * 1e6)}.png`,
+                  filePath: r.tempFilePath,
+                  success: u => done(u.fileID),
+                  fail: () => done('')
+                })
+              },
+              fail: () => done('')
+            })
+          })
+      } catch (e) {
+        console.warn('缩略图生成失败', e)
+        done('')
+      }
+    })
   },
 
   buildRouteDoc(name) {

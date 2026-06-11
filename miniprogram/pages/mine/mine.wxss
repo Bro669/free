@@ -99,6 +99,14 @@
   align-items: center;
 }
 
+.item-thumb {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 16rpx;
+  background: #F4F7F5;
+  flex-shrink: 0;
+}
+
 .item-badge {
   min-width: 110rpx;
   height: 88rpx;

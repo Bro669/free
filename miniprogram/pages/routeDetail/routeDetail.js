@@ -41,9 +41,20 @@ Page({
           dottedLine: true
         })
       })
+      // 起点标记：第一笔的第一个点（骑行从这里出发）
+      const start = route.polyline[0] && route.polyline[0][0]
+      const markers = start ? [{
+        id: 1,
+        latitude: start[0],
+        longitude: start[1],
+        width: 24,
+        height: 32,
+        callout: { content: '起点', display: 'ALWAYS', borderRadius: 6, padding: 4, fontSize: 12 }
+      }] : []
       this.setData({
         route,
         polylines,
+        markers,
         includePoints,
         distanceText: fmt.formatDistance(route.distance),
         dateText: fmt.formatDate(route.createdAt),
@@ -123,6 +134,15 @@ Page({
     return {
       title: route ? `我设计了一条「${route.text}」骑行路线，约 ${this.data.distanceText}` : '骑字',
       path: '/pages/routeDetail/routeDetail?id=' + this.routeId
+    }
+  },
+
+  onShareTimeline() {
+    const route = this.data.route
+    return {
+      title: route ? `在城市里骑出「${route.text}」——约 ${this.data.distanceText}` : '骑字',
+      query: 'id=' + this.routeId,
+      imageUrl: route && route.thumb ? route.thumb : undefined
     }
   }
 })

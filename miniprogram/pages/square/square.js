@@ -43,6 +43,8 @@ Page({
         _id: r._id,
         name: r.name,
         text: r.text,
+        thumb: r.thumb || '',
+        fidelity: r.fidelity || 0,
         distanceText: fmt.formatDistance(r.distance),
         dateText: fmt.formatDate(r.createdAt)
       }))
@@ -66,6 +68,10 @@ Page({
   },
 
   onShareAppMessage() {
+    return { title: '骑字——在城市里骑出你的名字' }
+  },
+
+  onShareTimeline() {
     return { title: '骑字——在城市里骑出你的名字' }
   }
 })

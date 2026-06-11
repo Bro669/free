@@ -196,5 +196,15 @@ Page({
       path: '/pages/square/square',
       imageUrl: this.data.posterPath || undefined
     }
+  },
+
+  onShareTimeline() {
+    const ride = this.data.ride
+    return {
+      title: ride && ride.text
+        ? `我在城市里骑出了「${ride.text}」${this.matchScore ? '，还原度 ' + this.matchScore + '%' : ''}`
+        : '骑字——在城市里骑出你的名字',
+      imageUrl: this.data.posterPath || undefined
+    }
   }
 })
