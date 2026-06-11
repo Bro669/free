@@ -12,7 +12,9 @@ Page({
     ride: null,
     posterPath: '',
     generating: false,
-    statsText: ''
+    statsText: '',
+    themes: poster.themeList(),
+    themeKey: 'classic'
   },
 
   onLoad(options) {
@@ -69,7 +71,7 @@ Page({
         durationText: fmt.formatDuration(ride.durationSec),
         speedText: fmt.formatSpeed(ride.avgSpeed),
         dateText: fmt.formatDate(ride.startedAt)
-      })
+      }, this.data.themeKey)
 
       wx.canvasToTempFilePath({
         canvas,
@@ -81,6 +83,13 @@ Page({
         }
       })
     })
+  },
+
+  selectTheme(e) {
+    const key = e.currentTarget.dataset.key
+    if (key === this.data.themeKey || this.data.generating) return
+    this.setData({ themeKey: key })
+    this.generatePoster()
   },
 
   previewPoster() {

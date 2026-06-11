@@ -8,6 +8,16 @@
     <view wx:elif="{{!ride}}" class="empty">没有可展示的骑行记录</view>
   </view>
 
+  <scroll-view class="theme-bar" scroll-x enhanced show-scrollbar="{{false}}" wx:if="{{ride}}">
+    <view
+      wx:for="{{themes}}"
+      wx:key="key"
+      class="theme-chip theme-{{item.key}} {{themeKey === item.key ? 'active' : ''}}"
+      data-key="{{item.key}}"
+      bindtap="selectTheme"
+    >{{item.name}}</view>
+  </scroll-view>
+
   <view class="actions" wx:if="{{posterPath}}">
     <view class="btn-primary" bindtap="saveToAlbum">保存到相册，发朋友圈</view>
     <view class="btn-row">

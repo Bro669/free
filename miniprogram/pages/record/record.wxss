@@ -27,6 +27,33 @@
   box-shadow: 0 12rpx 40rpx rgba(16, 36, 27, 0.25);
 }
 
+.theme-bar {
+  white-space: nowrap;
+  margin-top: 24rpx;
+}
+
+.theme-chip {
+  display: inline-block;
+  padding: 14rpx 36rpx;
+  margin-right: 16rpx;
+  border-radius: 40rpx;
+  font-size: 26rpx;
+  border: 3rpx solid transparent;
+  color: #fff;
+}
+
+.theme-chip.active {
+  border-color: #19C37D;
+  font-weight: 600;
+}
+
+/* 小色卡示意各主题质感 */
+.theme-classic { background: linear-gradient(160deg, #0C1F16, #16382A); }
+.theme-sand { background: linear-gradient(160deg, #EBDAB8, #D7BC8F); color: #5A3E1E; }
+.theme-neon { background: linear-gradient(160deg, #070B26, #1B0F3B); color: #8DFFEF; }
+.theme-blueprint { background: linear-gradient(160deg, #0E3A6E, #0B2C53); color: #9FD0FF; }
+.theme-minimal { background: #F2F2EE; color: #1E2722; border-color: #E0E5E2; }
+
 .actions {
   margin-top: 28rpx;
 }

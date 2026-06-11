@@ -7,7 +7,9 @@
 
 1. **设计**：输入文字（A-Z / 0-9，最多 6 字符）→ 字形轮廓出现在地图上 → 拖动 / 缩放（字高 500m–5km）/ 旋转对齐路网 → 「贴合道路」沿真实道路重新规划 → 点锚点微调 → 保存（可公开到广场）
 2. **骑行**：内置沿线导航——转向提示横幅（「120m 后左转」+ 震动）、偏航报警（偏离 45m 红色横幅 + 长震动）、推行衔接段提示、完成度百分比、地图自动跟随；GPS 实时记录绿色轨迹（支持暂停/继续、锁屏后台记录）
-3. **纪念**：自动生成轨迹海报（骑出的「字」+ 距离/时长/均速/日期），保存相册发朋友圈
+3. **纪念**：自动生成轨迹海报（骑出的「字」+ 距离/时长/均速/日期），**五种风格**
+   一键切换——经典 / 沙画（沙粒纹理+沟槽轨迹）/ 霓虹（星空+发光线）/ 蓝图（网格制图）/
+   极简，保存相册发朋友圈；预览见 docs/poster-preview.svg
 4. **广场**：浏览别人公开的字形路线，一键「复制去修改」搬到自己城市
 
 ## 项目结构
@@ -25,7 +27,7 @@ miniprogram/
     guidance.js            沿线导航：航向感知轨迹匹配 / 拐点提取 / 偏航检测
     tts.js                 语音播报（微信同声传译插件，未启用时静默降级）
     qqmap.js               腾讯骑行路线规划封装（限流队列/缓存/降级直连）
-    poster.js              canvas 2d 轨迹海报绘制
+    poster.js              canvas 2d 轨迹海报绘制（5 种主题：经典/沙画/霓虹/蓝图/极简）
     format.js              距离/时长/速度格式化
   pages/
     square/                tab·广场：公开路线流
@@ -37,7 +39,9 @@ miniprogram/
 scripts/
   selftest.js              纯函数回归自检：node scripts/selftest.js
   glyph-preview.js         生成字形预览 SVG → docs/glyphs-preview.svg
+  poster-preview.js        生成海报主题预览 SVG → docs/poster-preview.svg
 docs/glyphs-preview.svg    全部字形预览图
+docs/poster-preview.svg    五种海报风格预览图
 ```
 
 ## 跑起来（必做配置）

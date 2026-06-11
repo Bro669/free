@@ -206,16 +206,22 @@ function near(a, b, eps) { return Math.abs(a - b) <= eps }
     { latitude: 31.005, longitude: 121 },
     { latitude: 31.005, longitude: 121.005 }
   ]]
-  let threw = false
-  try {
-    poster.drawPoster(mockCtx, 750, 1334, {
-      segments, text: 'L', distanceKm: '1.1',
-      durationText: '5:00', speedText: '13.0', dateText: '2026.06.11'
-    })
-  } catch (e) { threw = true; console.error(e) }
-  check('poster 绘制不抛错', !threw)
-  check('poster 轨迹点都在画布内',
-    drawn.length > 0 && drawn.every(([x, y]) => x >= 0 && x <= 750 && y >= 0 && y <= 1334))
+  const themes = poster.themeList()
+  check('poster 主题包含沙画', themes.some(t => t.key === 'sand'))
+  check('poster 主题数量 ≥5', themes.length >= 5, 'got ' + themes.length)
+  for (const t of themes) {
+    drawn.length = 0
+    let threw = false
+    try {
+      poster.drawPoster(mockCtx, 750, 1334, {
+        segments, text: 'L', distanceKm: '1.1',
+        durationText: '5:00', speedText: '13.0', dateText: '2026.06.11'
+      }, t.key)
+    } catch (e) { threw = true; console.error(e) }
+    check(`poster [${t.key}] 绘制不抛错`, !threw)
+    check(`poster [${t.key}] 轨迹点都在画布内`,
+      drawn.length > 0 && drawn.every(([x, y]) => x >= 0 && x <= 750 && y >= 0 && y <= 1334))
+  }
 }
 
 // ---- format ----
