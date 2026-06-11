@@ -20,6 +20,7 @@ class SvgCtx {
     this.textAlign = 'left'
     this.lineJoin = 'miter'
     this.lineCap = 'butt'
+    this.globalAlpha = 1
     this._path = []
   }
   createLinearGradient(x0, y0, x1, y1) {
@@ -30,7 +31,8 @@ class SvgCtx {
   }
   _fill() { return typeof this.fillStyle === 'object' ? `url(#${this.fillStyle._id})` : this.fillStyle }
   fillRect(x, y, w, h) {
-    this.els.push(`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" fill="${this._fill()}"/>`)
+    const op = this.globalAlpha < 1 ? ` fill-opacity="${this.globalAlpha.toFixed(3)}"` : ''
+    this.els.push(`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" fill="${this._fill()}"${op}/>`)
   }
   beginPath() { this._path = [] }
   moveTo(x, y) { this._path.push(`M${x.toFixed(1)},${y.toFixed(1)}`) }

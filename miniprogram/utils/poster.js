@@ -1,5 +1,6 @@
 // 轨迹海报绘制：主题驱动，传入 canvas 2d ctx 与逻辑尺寸，纯绘制逻辑不依赖 wx API。
-// 每个主题定义背景渐变、可选程序化纹理、多遍轨迹描边（可带偏移做立体效果）与文字配色。
+// 每个主题定义背景渐变（支持多停靠点）、可选程序化纹理、轨迹画法
+// （多遍描边可带偏移做立体效果；或 trackStyle:'pixel' 渲染成像素块）与文字配色。
 const geo = require('./geo')
 
 // 确定性伪随机（LCG），保证同一轨迹每次生成的纹理一致
@@ -25,6 +26,89 @@ const THEMES = {
     passes: [
       { color: 'rgba(25,195,125,0.35)', width: 22 },
       { color: '#2BE08F', width: 10 }
+    ]
+  },
+  dopamine: {
+    name: '多巴胺',
+    bg: ['#FF5DA2', '#FF8A3D', '#FFD93D'],
+    texture: 'confetti',
+    title: 'rgba(255,255,255,0.85)',
+    textMain: '#FFFFFF',
+    accent: '#FFFFFF',
+    sub: 'rgba(255,255,255,0.8)',
+    faint: 'rgba(255,255,255,0.7)',
+    divider: 'rgba(255,255,255,0.4)',
+    footer: 'rgba(255,255,255,0.6)',
+    passes: [
+      { color: 'rgba(255,255,255,0.45)', width: 26 },
+      { color: 'rgba(94,53,177,0.55)', width: 14, dx: 3, dy: 3 },
+      { color: '#FFFFFF', width: 11 }
+    ]
+  },
+  vaporwave: {
+    name: '蒸汽波',
+    bg: ['#1B0B45', '#7B2FA0', '#FF6EC7'],
+    texture: 'scanlines',
+    title: 'rgba(125,249,255,0.7)',
+    textMain: '#FFFFFF',
+    accent: '#7DF9FF',
+    sub: 'rgba(255,255,255,0.6)',
+    faint: 'rgba(255,255,255,0.5)',
+    divider: 'rgba(125,249,255,0.25)',
+    footer: 'rgba(255,255,255,0.35)',
+    passes: [
+      { color: 'rgba(255,110,199,0.4)', width: 28 },
+      { color: 'rgba(125,249,255,0.35)', width: 16 },
+      { color: '#9FFCFF', width: 8 }
+    ]
+  },
+  pixel: {
+    name: '像素',
+    bg: ['#1B1036', '#2D1B5A'],
+    texture: 'stars',
+    trackStyle: 'pixel',
+    pixel: { shadow: 'rgba(0,0,0,0.45)', main: '#00E436', cells: 56 },
+    title: 'rgba(255,255,255,0.6)',
+    textMain: '#FFFFFF',
+    accent: '#00E436',
+    sub: 'rgba(255,255,255,0.55)',
+    faint: 'rgba(255,255,255,0.45)',
+    divider: 'rgba(255,255,255,0.18)',
+    footer: 'rgba(255,255,255,0.35)',
+    passes: []
+  },
+  acid: {
+    name: '酸性',
+    bg: ['#0B0B0B', '#16240E'],
+    texture: 'grain',
+    title: 'rgba(57,255,20,0.7)',
+    textMain: '#E8FFE0',
+    accent: '#39FF14',
+    sub: 'rgba(232,255,224,0.6)',
+    faint: 'rgba(232,255,224,0.45)',
+    divider: 'rgba(57,255,20,0.25)',
+    footer: 'rgba(232,255,224,0.35)',
+    passes: [
+      { color: 'rgba(57,255,20,0.22)', width: 32 },
+      { color: 'rgba(255,255,255,0.5)', width: 13, dx: -2.5, dy: -2.5 },
+      { color: '#39FF14', width: 9 }
+    ]
+  },
+  guochao: {
+    name: '国潮',
+    bg: ['#7E1212', '#A8201A', '#8E1616'],
+    texture: 'sparkle',
+    title: 'rgba(255,243,221,0.75)',
+    textMain: '#FFF3DD',
+    accent: '#FFD166',
+    sub: 'rgba(255,243,221,0.7)',
+    faint: 'rgba(255,243,221,0.55)',
+    divider: 'rgba(255,209,102,0.3)',
+    footer: 'rgba(255,243,221,0.45)',
+    passes: [
+      { color: 'rgba(255,209,102,0.3)', width: 26 },
+      { color: 'rgba(94,18,12,0.6)', width: 14, dx: 2.5, dy: 2.5 },
+      { color: '#FFD166', width: 10 }
     ]
   },
   sand: {
@@ -143,13 +227,70 @@ function textureGrid(ctx, w, h) {
   }
 }
 
-const TEXTURES = { sand: textureSand, stars: textureStars, grid: textureGrid }
+// 多巴胺彩纸屑：糖果色方块漫天撒
+function textureConfetti(ctx, w, h, rand) {
+  const palette = ['#FFFFFF', '#5DE1FF', '#B6FF5D', '#FFE16B', '#FF8FF0', '#7C6BFF']
+  for (let i = 0; i < 110; i++) {
+    const x = rand() * w
+    const y = rand() * h
+    const s = 5 + rand() * 12
+    const a = 0.3 + rand() * 0.5
+    ctx.fillStyle = palette[Math.floor(rand() * palette.length)]
+    ctx.globalAlpha = a
+    ctx.fillRect(x, y, s, s)
+  }
+  ctx.globalAlpha = 1
+}
+
+// 蒸汽波 CRT 扫描线 + 远处星点
+function textureScanlines(ctx, w, h, rand) {
+  ctx.fillStyle = 'rgba(255,255,255,0.045)'
+  for (let y = 0; y < h; y += 9) ctx.fillRect(0, y, w, 1.4)
+  for (let i = 0; i < 90; i++) {
+    const a = 0.2 + rand() * 0.5
+    ctx.fillStyle = `rgba(125,249,255,${a.toFixed(3)})`
+    ctx.fillRect(rand() * w, rand() * h * 0.5, 1.5, 1.5)
+  }
+}
+
+// 酸性噪点：荧光绿/白高频颗粒
+function textureGrain(ctx, w, h, rand) {
+  for (let i = 0; i < 3000; i++) {
+    const x = rand() * w
+    const y = rand() * h
+    const a = 0.04 + rand() * 0.12
+    ctx.fillStyle = rand() < 0.35 ? `rgba(57,255,20,${a.toFixed(3)})` : `rgba(255,255,255,${a.toFixed(3)})`
+    ctx.fillRect(x, y, 1 + rand(), 1 + rand())
+  }
+}
+
+// 国潮金粉
+function textureSparkle(ctx, w, h, rand) {
+  for (let i = 0; i < 320; i++) {
+    const x = rand() * w
+    const y = rand() * h
+    const r = 1 + rand() * 2.4
+    const a = 0.12 + rand() * 0.35
+    ctx.fillStyle = `rgba(255,215,128,${a.toFixed(3)})`
+    ctx.fillRect(x, y, r, r)
+  }
+}
+
+const TEXTURES = {
+  sand: textureSand,
+  stars: textureStars,
+  grid: textureGrid,
+  confetti: textureConfetti,
+  scanlines: textureScanlines,
+  grain: textureGrain,
+  sparkle: textureSparkle
+}
 
 // ===== 轨迹 =====
-// segments: [[{latitude, longitude}...]]，把轨迹画进 box（局部米坐标防形变）
-function drawTrack(ctx, segments, box, passes) {
+// 轨迹自适配：经纬度 → box 内画布坐标（局部米坐标防形变），返回逐段的画布点
+function fitTrack(segments, box) {
   const all = segments.flat()
-  if (all.length < 2) return
+  if (all.length < 2) return null
   const b = geo.bbox(all)
   const origin = {
     latitude: (b.minLat + b.maxLat) / 2,
@@ -169,9 +310,17 @@ function drawTrack(ctx, segments, box, passes) {
   const scale = Math.min(box.w * (1 - 2 * pad) / spanX, box.h * (1 - 2 * pad) / spanY)
   const offX = box.x + (box.w - spanX * scale) / 2
   const offY = box.y + (box.h - spanY * scale) / 2
-  const tx = p => offX + (p.x - minX) * scale
-  const ty = p => offY + (maxY - p.y) * scale   // y 北朝上 → canvas 向下翻转
+  // y 北朝上 → canvas 向下翻转
+  return local.map(seg => seg.map(p => ({
+    x: offX + (p.x - minX) * scale,
+    y: offY + (maxY - p.y) * scale
+  })))
+}
 
+// segments: [[{latitude, longitude}...]]，多遍描边画法
+function drawTrack(ctx, segments, box, passes) {
+  const fitted = fitTrack(segments, box)
+  if (!fitted) return
   ctx.lineJoin = 'round'
   ctx.lineCap = 'round'
   for (const pass of passes) {
@@ -179,25 +328,58 @@ function drawTrack(ctx, segments, box, passes) {
     const dy = pass.dy || 0
     ctx.strokeStyle = pass.color
     ctx.lineWidth = pass.width
-    for (const seg of local) {
+    for (const seg of fitted) {
       if (seg.length < 2) continue
       ctx.beginPath()
-      ctx.moveTo(tx(seg[0]) + dx, ty(seg[0]) + dy)
-      for (let i = 1; i < seg.length; i++) ctx.lineTo(tx(seg[i]) + dx, ty(seg[i]) + dy)
+      ctx.moveTo(seg[0].x + dx, seg[0].y + dy)
+      for (let i = 1; i < seg.length; i++) ctx.lineTo(seg[i].x + dx, seg[i].y + dy)
       ctx.stroke()
     }
   }
 }
 
-// data: { segments, text, distanceKm, durationText, speedText, dateText }
+// 像素画法：轨迹栅格化成 8-bit 方块（带投影一层）
+function drawTrackPixel(ctx, segments, box, style) {
+  const fitted = fitTrack(segments, box)
+  if (!fitted) return
+  const cell = box.w / (style.cells || 56)
+  const cells = new Set()
+  for (const seg of fitted) {
+    for (let i = 1; i < seg.length; i++) {
+      const a = seg[i - 1], b = seg[i]
+      const steps = Math.max(1, Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / (cell * 0.4)))
+      for (let t = 0; t <= steps; t++) {
+        const x = a.x + (b.x - a.x) * t / steps
+        const y = a.y + (b.y - a.y) * t / steps
+        cells.add(Math.floor(x / cell) + ',' + Math.floor(y / cell))
+      }
+    }
+  }
+  const gap = Math.max(1, cell * 0.12)
+  const size = cell - gap
+  // 先画投影再画主块
+  ctx.fillStyle = style.shadow
+  for (const key of cells) {
+    const [cx, cy] = key.split(',').map(Number)
+    ctx.fillRect(cx * cell + gap / 2 + cell * 0.25, cy * cell + gap / 2 + cell * 0.25, size, size)
+  }
+  ctx.fillStyle = style.main
+  for (const key of cells) {
+    const [cx, cy] = key.split(',').map(Number)
+    ctx.fillRect(cx * cell + gap / 2, cy * cell + gap / 2, size, size)
+  }
+}
+
+// data: { segments, text, distanceKm, durationText, speedText, dateText, quote }
 // w/h 为逻辑像素（调用方负责 ctx.scale(dpr)），themeKey 见 THEMES
 function drawPoster(ctx, w, h, data, themeKey) {
   const theme = THEMES[themeKey] || THEMES.classic
 
-  // 背景
+  // 背景（支持多停靠点渐变）
   const bg = ctx.createLinearGradient(0, 0, 0, h)
-  bg.addColorStop(0, theme.bg[0])
-  bg.addColorStop(1, theme.bg[1])
+  theme.bg.forEach((c, i) => {
+    bg.addColorStop(theme.bg.length === 1 ? 0 : i / (theme.bg.length - 1), c)
+  })
   ctx.fillStyle = bg
   ctx.fillRect(0, 0, w, h)
 
@@ -221,7 +403,12 @@ function drawPoster(ctx, w, h, data, themeKey) {
   }
 
   // 轨迹主体
-  drawTrack(ctx, data.segments, { x: w * 0.08, y: h * 0.2, w: w * 0.84, h: h * 0.42 }, theme.passes)
+  const box = { x: w * 0.08, y: h * 0.2, w: w * 0.84, h: h * 0.42 }
+  if (theme.trackStyle === 'pixel') {
+    drawTrackPixel(ctx, data.segments, box, theme.pixel)
+  } else {
+    drawTrack(ctx, data.segments, box, theme.passes)
+  }
 
   // 分隔线
   ctx.strokeStyle = theme.divider

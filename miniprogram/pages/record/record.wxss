@@ -72,6 +72,11 @@
 
 /* 小色卡示意各主题质感 */
 .theme-classic { background: linear-gradient(160deg, #0C1F16, #16382A); }
+.theme-dopamine { background: linear-gradient(160deg, #FF5DA2, #FF8A3D, #FFD93D); }
+.theme-vaporwave { background: linear-gradient(160deg, #1B0B45, #7B2FA0, #FF6EC7); color: #7DF9FF; }
+.theme-pixel { background: linear-gradient(160deg, #1B1036, #2D1B5A); color: #00E436; }
+.theme-acid { background: linear-gradient(160deg, #0B0B0B, #16240E); color: #39FF14; }
+.theme-guochao { background: linear-gradient(160deg, #7E1212, #A8201A); color: #FFD166; }
 .theme-sand { background: linear-gradient(160deg, #EBDAB8, #D7BC8F); color: #5A3E1E; }
 .theme-neon { background: linear-gradient(160deg, #070B26, #1B0F3B); color: #8DFFEF; }
 .theme-blueprint { background: linear-gradient(160deg, #0E3A6E, #0B2C53); color: #9FD0FF; }

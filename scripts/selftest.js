@@ -231,10 +231,12 @@ function near(a, b, eps) { return Math.abs(a - b) <= eps }
 {
   const poster = U('poster')
   const drawn = []
+  const rects = []
   const mockCtx = new Proxy({}, {
     get(t, prop) {
       if (prop === 'createLinearGradient') return () => ({ addColorStop() {} })
       if (prop === 'moveTo' || prop === 'lineTo') return (x, y) => drawn.push([x, y])
+      if (prop === 'fillRect') return (x, y) => rects.push([x, y])
       return () => {}
     },
     set() { return true }
@@ -245,10 +247,12 @@ function near(a, b, eps) { return Math.abs(a - b) <= eps }
     { latitude: 31.005, longitude: 121.005 }
   ]]
   const themes = poster.themeList()
-  check('poster 主题包含沙画', themes.some(t => t.key === 'sand'))
-  check('poster 主题数量 ≥5', themes.length >= 5, 'got ' + themes.length)
+  check('poster 主题包含沙画/多巴胺/蒸汽波/像素/国潮', ['sand', 'dopamine', 'vaporwave', 'pixel', 'guochao']
+    .every(k => themes.some(t => t.key === k)))
+  check('poster 主题数量 ≥10', themes.length >= 10, 'got ' + themes.length)
   for (const t of themes) {
     drawn.length = 0
+    rects.length = 0
     let threw = false
     try {
       poster.drawPoster(mockCtx, 750, 1334, {
@@ -258,8 +262,17 @@ function near(a, b, eps) { return Math.abs(a - b) <= eps }
       }, t.key)
     } catch (e) { threw = true; console.error(e) }
     check(`poster [${t.key}] 绘制不抛错`, !threw)
-    check(`poster [${t.key}] 轨迹点都在画布内`,
-      drawn.length > 0 && drawn.every(([x, y]) => x >= 0 && x <= 750 && y >= 0 && y <= 1334))
+    // 像素主题轨迹走 fillRect，其余走 moveTo/lineTo
+    const isPixel = poster.THEMES[t.key].trackStyle === 'pixel'
+    if (isPixel) {
+      // 背景 1 个 + 纹理若干 + 轨迹方块（含投影两遍）→ 显著多于纹理本身
+      check(`poster [${t.key}] 像素轨迹有方块`, rects.length > 250, 'got ' + rects.length)
+      check(`poster [${t.key}] 方块原点在画布内`,
+        rects.every(([x, y]) => x >= -5 && x <= 755 && y >= -5 && y <= 1339))
+    } else {
+      check(`poster [${t.key}] 轨迹点都在画布内`,
+        drawn.length > 0 && drawn.every(([x, y]) => x >= 0 && x <= 750 && y >= 0 && y <= 1334))
+    }
   }
 }
 
