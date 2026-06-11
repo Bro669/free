@@ -33,8 +33,10 @@ Page({
     this.setData({ loading: true })
     try {
       const db = wx.cloud.database()
+      // field 投影：列表不拉 polyline/anchors 等大数组，省流量提速
       const res = await db.collection('routes')
         .where({ isPublic: true })
+        .field({ name: true, text: true, distance: true, createdAt: true, thumb: true, fidelity: true })
         .orderBy('createdAt', 'desc')
         .skip(this.data.routes.length)
         .limit(PAGE_SIZE)

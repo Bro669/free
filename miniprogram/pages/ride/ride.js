@@ -10,6 +10,9 @@ const app = getApp()
 
 const TURN_ALERT_DIST = 60      // 距转弯多少米开始震动提醒
 const FOLLOW_INTERVAL = 3000    // 地图跟随节流（ms）
+const BACKUP_KEY = 'ride_backup'
+const BACKUP_INTERVAL = 15000   // 骑行状态落盘间隔（防小程序被杀丢轨迹）
+const BACKUP_MAX_AGE = 12 * 3600 * 1000
 
 const DIR_TEXT = { left: '左转', right: '右转', uturn: '掉头' }
 const DIR_ARROW = { left: '⬅', right: '➡', uturn: '↩' }
@@ -52,6 +55,7 @@ Page({
     this.spokeFinished = false
     this.mapCtx = wx.createMapContext('map')
     this.setData({ voiceAvailable: tts.isAvailable() })
+    this.checkBackup()
     if (this.routeId) this.loadRoute()
     wx.getLocation({
       type: 'gcj02',
@@ -62,7 +66,55 @@ Page({
   onUnload() {
     this.stopLocation()
     if (this.timer) clearInterval(this.timer)
+    if (this.backupTimer) clearInterval(this.backupTimer)
+    // 用户主动退出视为放弃本次骑行；崩溃/被杀不会走到这里，备份得以保留
+    wx.removeStorageSync(BACKUP_KEY)
     wx.setKeepScreenOn({ keepScreenOn: false })
+  },
+
+  // ===== 断点恢复：骑行中定期落盘，被杀后重进可继续 =====
+  saveBackup() {
+    try {
+      wx.setStorageSync(BACKUP_KEY, {
+        routeId: this.routeId,
+        segments: this.segments.map(seg =>
+          seg.length > 400 ? geo.simplify(seg, 8) : seg),
+        distance: this.distance,
+        movingMs: this.movingMs +
+          (this.data.state === 'riding' ? Date.now() - this.resumedAt : 0),
+        startedAt: this.startedAt,
+        ts: Date.now()
+      })
+    } catch (e) { /* 存储满不影响骑行 */ }
+  },
+
+  checkBackup() {
+    const bak = wx.getStorageSync(BACKUP_KEY)
+    if (!bak || !bak.startedAt || Date.now() - bak.ts > BACKUP_MAX_AGE) {
+      if (bak) wx.removeStorageSync(BACKUP_KEY)
+      return
+    }
+    wx.showModal({
+      title: '发现未完成的骑行',
+      content: `已记录 ${(bak.distance / 1000).toFixed(1)} km，要继续这次骑行吗？`,
+      confirmText: '继续骑',
+      cancelText: '放弃',
+      success: m => {
+        if (!m.confirm) {
+          wx.removeStorageSync(BACKUP_KEY)
+          return
+        }
+        this.routeId = bak.routeId || this.routeId
+        if (bak.routeId && !this.route) this.loadRoute()
+        this.segments = bak.segments.concat([[]])   // 恢复后开新段
+        this.distance = bak.distance
+        this.movingMs = bak.movingMs
+        this.startedAt = bak.startedAt
+        this.renderTrack()
+        this.refreshStats()
+        this.start()
+      }
+    })
   },
 
   async loadRoute() {
@@ -161,12 +213,15 @@ Page({
   },
 
   beginRecording(backgroundOk) {
-    this.startedAt = Date.now()
+    if (!this.startedAt) this.startedAt = Date.now()   // 断点恢复时保留原开始时间
     this.resumedAt = Date.now()
     this.locationHandler = loc => this.onLocation(loc)
     wx.onLocationChange(this.locationHandler)
     wx.setKeepScreenOn({ keepScreenOn: true })
     this.timer = setInterval(() => this.refreshStats(), 1000)
+    this.backupTimer = setInterval(() => {
+      if (this.data.state === 'riding' || this.data.state === 'paused') this.saveBackup()
+    }, BACKUP_INTERVAL)
     this.setData({ state: 'riding', backgroundOk })
     if (this.tracker) tts.speak('开始骑行，请沿路线出发')
   },
@@ -326,6 +381,8 @@ Page({
     if (this.data.state === 'riding') this.movingMs += Date.now() - this.resumedAt
     this.stopLocation()
     if (this.timer) clearInterval(this.timer)
+    if (this.backupTimer) clearInterval(this.backupTimer)
+    wx.removeStorageSync(BACKUP_KEY)
     this.setData({ state: 'paused' })
 
     const durationSec = Math.round(this.movingMs / 1000)

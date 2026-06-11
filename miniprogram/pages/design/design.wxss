@@ -17,6 +17,15 @@
   width: 100%;
 }
 
+.gesture-layer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+}
+
 .crosshair {
   position: absolute;
   left: 50%;

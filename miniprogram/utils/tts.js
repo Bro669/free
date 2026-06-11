@@ -13,6 +13,9 @@ let audio = null
 let enabled = true
 let lastText = ''
 let lastAt = 0
+let playing = false
+const queue = []                        // 待播 src 队列（不打断当前播报）
+const QUEUE_MAX = 2
 const cache = new Map()                 // text -> { src, expireAt }
 const CACHE_TTL = 5 * 60 * 1000         // 插件返回的音频地址短期有效
 const REPEAT_GAP = 8000                 // 相同文案最小重播间隔
@@ -21,17 +24,37 @@ function isAvailable() { return !!plugin }
 
 function setEnabled(v) {
   enabled = !!v
-  if (!enabled && audio) audio.stop()
+  if (!enabled) {
+    queue.length = 0
+    playing = false
+    if (audio) audio.stop()
+  }
+}
+
+function ensureAudio() {
+  if (audio) return audio
+  audio = wx.createInnerAudioContext()
+  audio.obeyMuteSwitch = false          // 导航播报在 iOS 静音键下也要出声
+  const next = () => {
+    playing = false
+    if (queue.length) play(queue.shift())
+  }
+  audio.onEnded(next)
+  audio.onError(next)
+  return audio
 }
 
 function play(src) {
-  if (!audio) {
-    audio = wx.createInnerAudioContext()
-    audio.obeyMuteSwitch = false        // 导航播报在 iOS 静音键下也要出声
+  // 排队而非打断：连续到达的提示依次播完（队列超限丢最旧的）
+  if (playing) {
+    queue.push(src)
+    if (queue.length > QUEUE_MAX) queue.shift()
+    return
   }
-  audio.stop()
-  audio.src = src
-  audio.play()
+  playing = true
+  const a = ensureAudio()
+  a.src = src
+  a.play()
 }
 
 function speak(text) {

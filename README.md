@@ -67,7 +67,8 @@ docs/poster-preview.svg    五种海报风格预览图
    的 `CLOUD_ENV`；右键 `cloudfunctions/login` 与 `cloudfunctions/getHanzi` →
    上传并部署（云端安装依赖）。getHanzi 负责汉字笔画数据（来源 jsdelivr/unpkg 的
    hanzi-writer-data），不部署则只支持 A-Z/0-9。
-3. **云数据库**：在云开发控制台创建集合 `routes` 和 `rides`，权限设置：
+3. **云数据库**：集合 `routes`/`rides` 会在首次调用 login 云函数时自动创建，
+   但**安全规则需手动配置**：
    - `routes` → 自定义安全规则：
      ```json
      {

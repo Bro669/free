@@ -32,9 +32,14 @@ Page({
       const db = wx.cloud.database()
       // 云数据库默认规则下 where({_openid}) 即「仅自己的文档」
       const openid = app.globalData.openid
+      // field 投影：列表不拉 polyline/track 等大数组
       const [routesRes, ridesRes] = await Promise.all([
-        db.collection('routes').where({ _openid: openid }).orderBy('createdAt', 'desc').limit(50).get(),
-        db.collection('rides').where({ _openid: openid }).orderBy('startedAt', 'desc').limit(50).get()
+        db.collection('routes').where({ _openid: openid })
+          .field({ name: true, text: true, thumb: true, isPublic: true, distance: true, createdAt: true })
+          .orderBy('createdAt', 'desc').limit(50).get(),
+        db.collection('rides').where({ _openid: openid })
+          .field({ text: true, distance: true, durationSec: true, startedAt: true })
+          .orderBy('startedAt', 'desc').limit(50).get()
       ])
       this.setData({
         routes: routesRes.data.map(r => ({

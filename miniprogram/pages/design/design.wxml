@@ -14,7 +14,15 @@
     bindmarkertap="onMarkerTap"
   >
     <cover-view wx:if="{{mode === 'editAnchor'}}" class="crosshair">✛</cover-view>
-    <cover-view wx:if="{{mode === 'adjust' && moveMode}}" class="move-hint">拖动地图移动文字</cover-view>
+    <view
+      wx:if="{{mode === 'adjust' && moveMode}}"
+      class="gesture-layer"
+      catchtouchstart="onGestureStart"
+      catchtouchmove="onGestureMove"
+      catchtouchend="onGestureEnd"
+      catchtouchcancel="onGestureEnd"
+    />
+    <cover-view wx:if="{{mode === 'adjust' && moveMode}}" class="move-hint">单指拖移 · 双指缩放旋转</cover-view>
   </map>
 
   <view class="panel">
@@ -43,7 +51,7 @@
                 activeColor="#19C37D" bindchanging="onRotationChange" bindchange="onRotationChange" />
       </view>
       <view class="row">
-        <text class="label">移动文字</text>
+        <text class="label">手势调字</text>
         <switch checked="{{moveMode}}" color="#19C37D" bindchange="toggleMove" />
         <text class="dist">{{distanceText}}</text>
       </view>

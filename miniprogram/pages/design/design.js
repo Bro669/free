@@ -158,18 +158,99 @@ Page({
     this.setData({ markers: [], failedCount: 0, snapProgress: '', fidelityScore: null })
   },
 
+  // 调整参数节流合并后重投影（滑杆 changing 与手势 move 都是高频事件）
+  scheduleAdjust(partial) {
+    this._pendingAdjust = Object.assign(this._pendingAdjust || {}, partial)
+    if (this._adjustTimer) return
+    this._adjustTimer = setTimeout(() => {
+      this._adjustTimer = null
+      const p = this._pendingAdjust
+      this._pendingAdjust = null
+      this.setData(p)
+      this.reproject()
+    }, 50)
+  },
+
   onHeightChange(e) {
-    this.setData({ heightMeters: e.detail.value })
-    this.reproject()
+    this.scheduleAdjust({ heightMeters: e.detail.value })
   },
 
   onRotationChange(e) {
-    this.setData({ rotationDeg: e.detail.value })
-    this.reproject()
+    this.scheduleAdjust({ rotationDeg: e.detail.value })
   },
 
   toggleMove(e) {
     this.setData({ moveMode: e.detail.value })
+    if (e.detail.value) this.updateMetersPerPx()
+  },
+
+  // ===== 手势编辑：单指拖移字形，双指捏合缩放 + 旋转 =====
+  // 同层渲染下用透明 view 盖住地图捕获触摸，避开与 map 自身手势的冲突
+  updateMetersPerPx() {
+    this.mapCtx.getScale({
+      success: r => {
+        const lat = this.data.center.latitude * Math.PI / 180
+        // Web 墨卡托：zoom z 时每逻辑像素的米数
+        this.metersPerPx = 40075016.686 * Math.cos(lat) / Math.pow(2, r.scale + 8)
+      }
+    })
+  },
+
+  snapshotGesture(touches) {
+    this.gesture = {
+      touches: touches.map(p => ({ x: p.clientX, y: p.clientY })),
+      center: { ...this.data.center },
+      H: this.data.heightMeters,
+      rot: this.data.rotationDeg
+    }
+  },
+
+  onGestureStart(e) {
+    this.snapshotGesture(e.touches)
+    this.updateMetersPerPx()
+  },
+
+  onGestureMove(e) {
+    if (!this.gesture) return
+    const g = this.gesture
+    const t = e.touches
+    if (t.length === 1 && g.touches.length === 1) {
+      // 单指拖移
+      const mpp = this.metersPerPx || 19
+      const dxM = (t[0].clientX - g.touches[0].x) * mpp
+      const dyM = (t[0].clientY - g.touches[0].y) * mpp
+      const mPerDegLat = 111320
+      const mPerDegLng = mPerDegLat * Math.cos(g.center.latitude * Math.PI / 180)
+      this.scheduleAdjust({
+        center: {
+          latitude: g.center.latitude - dyM / mPerDegLat,
+          longitude: g.center.longitude + dxM / mPerDegLng
+        }
+      })
+    } else if (t.length >= 2) {
+      if (g.touches.length < 2) {
+        // 第二指刚落下，重置基准
+        this.snapshotGesture(t)
+        return
+      }
+      const dist = pts => Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y)
+      const ang = pts => Math.atan2(pts[1].y - pts[0].y, pts[1].x - pts[0].x)
+      const now = t.map(p => ({ x: p.clientX, y: p.clientY }))
+      const ratio = dist(now) / Math.max(dist(g.touches), 1)
+      const dDeg = (ang(now) - ang(g.touches)) * 180 / Math.PI
+      this.scheduleAdjust({
+        heightMeters: Math.max(500, Math.min(5000, Math.round(g.H * ratio / 10) * 10)),
+        rotationDeg: Math.round(((g.rot + dDeg) % 360 + 360) % 360)
+      })
+    }
+  },
+
+  onGestureEnd(e) {
+    if (e.touches && e.touches.length > 0) {
+      this.snapshotGesture(e.touches)   // 双指→单指等情况，以剩余触点为新基准
+    } else {
+      this.gesture = null
+    }
   },
 
   onRegionChange(e) {
