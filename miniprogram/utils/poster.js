@@ -40,9 +40,9 @@ const THEMES = {
     footer: 'rgba(90,62,30,0.4)',
     // 沙槽效果：柔和散开 → 高光上沿 → 深色凹痕主线（错位制造立体感）
     passes: [
-      { color: 'rgba(122,82,38,0.22)', width: 28 },
-      { color: 'rgba(255,246,220,0.85)', width: 14, dx: -2.5, dy: -2.5 },
-      { color: '#6B4A22', width: 11, dx: 1.5, dy: 1.5 }
+      { color: 'rgba(122,82,38,0.3)', width: 34 },
+      { color: 'rgba(255,248,225,0.95)', width: 16, dx: -3.5, dy: -3.5 },
+      { color: '#5E3F1B', width: 12, dx: 2, dy: 2 }
     ]
   },
   neon: {
@@ -102,23 +102,23 @@ function themeList() {
 // ===== 程序化纹理 =====
 function textureSand(ctx, w, h, rand) {
   // 沙粒：深浅两色细点铺满画面
-  for (let i = 0; i < 2600; i++) {
+  for (let i = 0; i < 3600; i++) {
     const x = rand() * w
     const y = rand() * h
-    const r = 0.6 + rand() * 1.2
+    const r = 0.8 + rand() * 1.8
     const dark = rand() < 0.5
-    const a = 0.04 + rand() * 0.1
-    ctx.fillStyle = dark ? `rgba(110,80,42,${a.toFixed(3)})` : `rgba(255,255,255,${a.toFixed(3)})`
+    const a = 0.08 + rand() * 0.16
+    ctx.fillStyle = dark ? `rgba(104,74,38,${a.toFixed(3)})` : `rgba(255,255,255,${a.toFixed(3)})`
     ctx.fillRect(x, y, r, r)
   }
 }
 
 function textureStars(ctx, w, h, rand) {
-  for (let i = 0; i < 140; i++) {
+  for (let i = 0; i < 220; i++) {
     const x = rand() * w
     const y = rand() * h
-    const r = 0.8 + rand() * 1.6
-    const a = 0.15 + rand() * 0.55
+    const r = 1 + rand() * 2
+    const a = 0.25 + rand() * 0.6
     ctx.fillStyle = `rgba(255,255,255,${a.toFixed(3)})`
     ctx.fillRect(x, y, r, r)
   }
