@@ -1,1 +1,92 @@
-<view class="empty">设计路线（建设中）</view>
+<view class="page">
+  <map
+    id="map"
+    class="map"
+    latitude="{{center.latitude}}"
+    longitude="{{center.longitude}}"
+    scale="13"
+    polyline="{{polylines}}"
+    markers="{{markers}}"
+    show-location="{{true}}"
+    bindregionchange="onRegionChange"
+    bindmarkertap="onMarkerTap"
+  >
+    <cover-view wx:if="{{mode === 'editAnchor'}}" class="crosshair">✛</cover-view>
+    <cover-view wx:if="{{mode === 'adjust' && moveMode}}" class="move-hint">拖动地图移动文字</cover-view>
+  </map>
+
+  <view class="panel">
+    <!-- 输入 -->
+    <block wx:if="{{mode === 'input'}}">
+      <view class="panel-title">想骑出什么字？</view>
+      <input class="text-input" value="{{text}}" maxlength="6" placeholder="A-Z、0-9，最多 6 个字符"
+             bindinput="onTextInput" confirm-type="done" bindconfirm="generate" />
+      <view class="btn-primary {{text ? '' : 'disabled'}}" bindtap="generate">生成路线轮廓</view>
+      <view class="tip">输入名字缩写、年份、爱の表白……都行</view>
+    </block>
+
+    <!-- 调整 -->
+    <block wx:elif="{{mode === 'adjust'}}">
+      <view class="row">
+        <text class="label">字高 {{heightMeters}} m</text>
+        <slider class="slider" min="500" max="5000" step="100" value="{{heightMeters}}"
+                activeColor="#19C37D" bindchanging="onHeightChange" bindchange="onHeightChange" />
+      </view>
+      <view class="row">
+        <text class="label">旋转 {{rotationDeg}}°</text>
+        <slider class="slider" min="0" max="359" step="1" value="{{rotationDeg}}"
+                activeColor="#19C37D" bindchanging="onRotationChange" bindchange="onRotationChange" />
+      </view>
+      <view class="row">
+        <text class="label">移动文字</text>
+        <switch checked="{{moveMode}}" color="#19C37D" bindchange="toggleMove" />
+        <text class="dist">{{distanceText}}</text>
+      </view>
+      <view class="btn-row">
+        <view class="btn-ghost flex1" bindtap="backToInput">重新输入</view>
+        <view class="btn-primary flex2" bindtap="snapRoads">贴合道路</view>
+      </view>
+    </block>
+
+    <!-- 贴路中 -->
+    <block wx:elif="{{mode === 'snapping'}}">
+      <view class="panel-title">正在沿真实道路规划… {{snapProgress}}</view>
+      <view class="tip">绿色实线 = 可骑路线；灰色虚线 = 推行衔接段</view>
+    </block>
+
+    <!-- 贴路完成 -->
+    <block wx:elif="{{mode === 'snapped'}}">
+      <view class="panel-title">{{distanceText}}<text wx:if="{{failedCount}}" class="warn">（{{failedCount}} 段未贴路）</text></view>
+      <view class="tip">点击路线上的锚点可微调位置</view>
+      <view class="btn-row">
+        <view class="btn-ghost flex1" bindtap="backToAdjust">重新调整</view>
+        <view class="btn-primary flex2" bindtap="openSaveDialog">保存路线</view>
+      </view>
+    </block>
+
+    <!-- 微调锚点 -->
+    <block wx:elif="{{mode === 'editAnchor'}}">
+      <view class="panel-title">拖动地图，把 ✛ 对准锚点的新位置</view>
+      <view class="btn-row">
+        <view class="btn-ghost flex1" bindtap="cancelEditAnchor">取消</view>
+        <view class="btn-primary flex2" bindtap="confirmEditAnchor">确定位置</view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 保存弹层 -->
+  <view class="mask" wx:if="{{saveDialogVisible}}" bindtap="closeSaveDialog">
+    <view class="dialog" catchtap="">
+      <view class="dialog-title">保存路线</view>
+      <input class="text-input" value="{{routeName}}" maxlength="20" placeholder="路线名称" bindinput="onNameInput" />
+      <view class="row">
+        <text class="label">公开到广场</text>
+        <switch checked="{{isPublic}}" color="#19C37D" bindchange="onPublicChange" />
+      </view>
+      <view class="btn-row">
+        <view class="btn-ghost flex1" bindtap="closeSaveDialog">取消</view>
+        <view class="btn-primary flex2 {{saving ? 'disabled' : ''}}" bindtap="saveRoute">{{saving ? '保存中…' : '保存'}}</view>
+      </view>
+    </view>
+  </view>
+</view>
