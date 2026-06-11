@@ -16,6 +16,9 @@
   </map>
 
   <view class="dashboard">
+    <view class="voice-toggle" wx:if="{{voiceAvailable}}" bindtap="toggleVoice">
+      {{voiceOn ? '🔊 语音播报开' : '🔇 语音播报关'}}
+    </view>
     <view class="stats">
       <view class="stat">
         <view class="stat-num">{{distanceText}}</view>

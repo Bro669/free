@@ -4,6 +4,7 @@
 const geo = require('../../utils/geo')
 const fmt = require('../../utils/format')
 const guidance = require('../../utils/guidance')
+const tts = require('../../utils/tts')
 
 const app = getApp()
 
@@ -26,6 +27,8 @@ Page({
     progressText: '--',
     hasGuide: false,
     nav: null,                 // { arrow, text, cls }
+    voiceAvailable: false,
+    voiceOn: true,
     backgroundOk: false
   },
 
@@ -44,7 +47,11 @@ Page({
     this.alertedTurnIdx = -1
     this.wasOffRoute = false
     this.lastFollowAt = 0
+    this.turnSpoken = {}       // turnIdx -> 已播报阶段（1=远距 2=近距）
+    this.lastRideFlag = null   // 上一次匹配所在段类型（骑行/推行）
+    this.spokeFinished = false
     this.mapCtx = wx.createMapContext('map')
+    this.setData({ voiceAvailable: tts.isAvailable() })
     if (this.routeId) this.loadRoute()
     wx.getLocation({
       type: 'gcj02',
@@ -152,6 +159,13 @@ Page({
     wx.setKeepScreenOn({ keepScreenOn: true })
     this.timer = setInterval(() => this.refreshStats(), 1000)
     this.setData({ state: 'riding', backgroundOk })
+    if (this.tracker) tts.speak('开始骑行，请沿路线出发')
+  },
+
+  toggleVoice() {
+    const voiceOn = !this.data.voiceOn
+    tts.setEnabled(voiceOn)
+    this.setData({ voiceOn })
   },
 
   stopLocation() {
@@ -214,12 +228,45 @@ Page({
     } else {
       nav = { arrow: '⬆', text: '沿路线直行', cls: '' }
     }
+    this.announce(st)
     this.wasOffRoute = st.offRoute
+    this.lastRideFlag = st.ride
 
     const progressText = Math.min(100, Math.round(st.progress * 100)) + '%'
     const prev = this.data.nav
     if (!prev || prev.text !== nav.text || this.data.progressText !== progressText) {
       this.setData({ nav, progressText })
+    }
+  },
+
+  // 语音播报：转弯两档（200m/60m）、偏航进出、推行切换、完成，各自只播一次
+  announce(st) {
+    if (this.data.state !== 'riding') return
+    if (st.finished) {
+      if (!this.spokeFinished) {
+        this.spokeFinished = true
+        tts.speak('恭喜，路线已完成，可以结束骑行生成海报了')
+      }
+      return
+    }
+    if (st.offRoute) {
+      if (!this.wasOffRoute) tts.speak('已偏离路线，请返回')
+      return
+    }
+    if (this.wasOffRoute) tts.speak('已回到路线')
+    if (this.lastRideFlag !== null && st.ride !== this.lastRideFlag) {
+      tts.speak(st.ride ? '衔接完成，继续骑行' : '本笔画完成，请推行至下一笔起点')
+    }
+    if (st.ride && st.nextTurn) {
+      const t = st.nextTurn
+      const stage = this.turnSpoken[t.idx] || 0
+      if (t.dist < TURN_ALERT_DIST && stage < 2) {
+        this.turnSpoken[t.idx] = 2
+        tts.speak('前方' + DIR_TEXT[t.dir])
+      } else if (t.dist < 220 && stage < 1) {
+        this.turnSpoken[t.idx] = 1
+        tts.speak('两百米后' + DIR_TEXT[t.dir])
+      }
     }
   },
 

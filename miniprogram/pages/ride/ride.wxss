@@ -45,6 +45,13 @@
   box-shadow: 0 -8rpx 24rpx rgba(16, 36, 27, 0.08);
 }
 
+.voice-toggle {
+  text-align: right;
+  font-size: 24rpx;
+  color: #8A938E;
+  margin-bottom: 12rpx;
+}
+
 .stats {
   display: flex;
   margin-bottom: 28rpx;
