@@ -6,6 +6,7 @@
     longitude="{{center.longitude}}"
     scale="14"
     polyline="{{polylines}}"
+    markers="{{markers}}"
     include-points="{{state === 'ready' ? includePoints : []}}"
     show-location="{{true}}"
   >

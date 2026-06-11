@@ -83,7 +83,16 @@ Page({
         })
       })
       this.routePolylines = polylines
-      this.setData({ polylines, includePoints })
+      const start = this.route.polyline[0] && this.route.polyline[0][0]
+      const markers = start ? [{
+        id: 1,
+        latitude: start[0],
+        longitude: start[1],
+        width: 24,
+        height: 32,
+        callout: { content: '起点', display: 'ALWAYS', borderRadius: 6, padding: 4, fontSize: 12 }
+      }] : []
+      this.setData({ polylines, includePoints, markers })
       this.buildGuidance()
     } catch (err) {
       console.error('加载路线失败', err)
