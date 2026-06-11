@@ -1,0 +1,58 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.map {
+  flex: 1;
+  width: 100%;
+}
+
+.dashboard {
+  background: #fff;
+  border-radius: 32rpx 32rpx 0 0;
+  padding: 32rpx 32rpx calc(32rpx + env(safe-area-inset-bottom));
+  box-shadow: 0 -8rpx 24rpx rgba(16, 36, 27, 0.08);
+}
+
+.stats {
+  display: flex;
+  margin-bottom: 28rpx;
+}
+
+.stat {
+  flex: 1;
+  text-align: center;
+}
+
+.stat-num {
+  font-size: 48rpx;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-label {
+  font-size: 22rpx;
+  color: #8A938E;
+  margin-top: 4rpx;
+}
+
+.big { font-size: 36rpx; }
+
+.stop { background: #FF5A5F; }
+
+.btn-row {
+  display: flex;
+  gap: 20rpx;
+}
+
+.flex1 { flex: 1; }
+
+.tip {
+  color: #8A938E;
+  font-size: 22rpx;
+  margin-top: 20rpx;
+  text-align: center;
+  line-height: 1.6;
+}

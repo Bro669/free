@@ -1,1 +1,47 @@
-<view class="empty">骑行中（建设中）</view>
+<view class="page">
+  <map
+    id="map"
+    class="map"
+    latitude="{{center.latitude}}"
+    longitude="{{center.longitude}}"
+    scale="14"
+    polyline="{{polylines}}"
+    include-points="{{state === 'ready' ? includePoints : []}}"
+    show-location="{{true}}"
+  />
+
+  <view class="dashboard">
+    <view class="stats">
+      <view class="stat">
+        <view class="stat-num">{{distanceText}}</view>
+        <view class="stat-label">距离</view>
+      </view>
+      <view class="stat">
+        <view class="stat-num">{{durationText}}</view>
+        <view class="stat-label">时长</view>
+      </view>
+      <view class="stat">
+        <view class="stat-num">{{speedText}}</view>
+        <view class="stat-label">均速 km/h</view>
+      </view>
+    </view>
+
+    <block wx:if="{{state === 'ready'}}">
+      <view class="btn-primary big" bindtap="start">开始骑行</view>
+      <view class="tip">灰线是目标路线，沿着它骑出你的字；定位弹窗中选「使用期间和离开后」可锁屏记录</view>
+    </block>
+    <block wx:elif="{{state === 'riding'}}">
+      <view class="btn-row">
+        <view class="btn-ghost flex1" bindtap="pause">暂停</view>
+        <view class="btn-primary flex1 stop" bindtap="finish">结束</view>
+      </view>
+      <view class="tip" wx:if="{{!backgroundOk}}">仅前台记录中，请勿锁屏或切走</view>
+    </block>
+    <block wx:elif="{{state === 'paused'}}">
+      <view class="btn-row">
+        <view class="btn-primary flex1" bindtap="resume">继续</view>
+        <view class="btn-ghost flex1" bindtap="finish">结束</view>
+      </view>
+    </block>
+  </view>
+</view>
