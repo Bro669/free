@@ -1,6 +1,0 @@
-<view class="page container" wx:if="{{article}}">
-  <view class="ad__title">{{article.title}}</view>
-  <view class="ad__meta">{{article.author}} · {{article.time}}</view>
-  <view class="divider"></view>
-  <view class="ad__content">{{article.content}}</view>
-</view>

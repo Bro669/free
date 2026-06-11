@@ -1,8 +1,0 @@
-.ad__title { font-size: 38rpx; font-weight: 700; line-height: 56rpx; }
-.ad__meta { font-size: 24rpx; color: var(--color-text-placeholder); margin-top: 20rpx; }
-.ad__content {
-  font-size: 30rpx;
-  line-height: 56rpx;
-  color: var(--color-text-secondary);
-  white-space: pre-wrap;
-}
