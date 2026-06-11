@@ -1,8 +1,17 @@
 // 骑行中：目标路线叠加 + GPS 轨迹记录（精度/漂移/抖动三重过滤），暂停分段
+// 沿线导航：字形路线不能交给外部导航（会重新规划毁掉字形），
+// 由 guidance.js 做轨迹匹配，给出转向提示/偏航报警/完成进度。
 const geo = require('../../utils/geo')
 const fmt = require('../../utils/format')
+const guidance = require('../../utils/guidance')
 
 const app = getApp()
+
+const TURN_ALERT_DIST = 60      // 距转弯多少米开始震动提醒
+const FOLLOW_INTERVAL = 3000    // 地图跟随节流（ms）
+
+const DIR_TEXT = { left: '左转', right: '右转', uturn: '掉头' }
+const DIR_ARROW = { left: '⬅', right: '➡', uturn: '↩' }
 
 Page({
   data: {
@@ -14,6 +23,9 @@ Page({
     distanceText: '0 m',
     durationText: '0:00',
     speedText: '0.0',
+    progressText: '--',
+    hasGuide: false,
+    nav: null,                 // { arrow, text, cls }
     backgroundOk: false
   },
 
@@ -28,6 +40,11 @@ Page({
     this.resumedAt = 0
     this.startedAt = 0
     this.timer = null
+    this.tracker = null        // 沿线导航匹配器
+    this.alertedTurnIdx = -1
+    this.wasOffRoute = false
+    this.lastFollowAt = 0
+    this.mapCtx = wx.createMapContext('map')
     if (this.routeId) this.loadRoute()
     wx.getLocation({
       type: 'gcj02',
@@ -60,10 +77,25 @@ Page({
       })
       this.routePolylines = polylines
       this.setData({ polylines, includePoints })
+      this.buildGuidance()
     } catch (err) {
       console.error('加载路线失败', err)
       wx.showToast({ title: '路线加载失败，仍可自由骑行', icon: 'none' })
     }
+  },
+
+  // 按骑行顺序重组路线（笔画与衔接段在设计时交替生成：笔0 接0 笔1 接1 …）
+  buildGuidance() {
+    const toPts = line => line.map(([lat, lng]) => ({ latitude: lat, longitude: lng }))
+    const conns = this.route.connectors || []
+    const sections = []
+    this.route.polyline.forEach((line, i) => {
+      sections.push({ points: toPts(line), ride: true })
+      if (conns[i]) sections.push({ points: toPts(conns[i]), ride: false })
+    })
+    this.guide = guidance.buildGuide(sections)
+    this.tracker = guidance.createTracker(this.guide)
+    this.setData({ hasGuide: true })
   },
 
   // ===== 定位授权与开关 =====
@@ -141,6 +173,7 @@ Page({
     }
     const verdict = geo.classifyTrackPoint(this.lastPoint, point)
     if (verdict === 'inaccurate' || verdict === 'jump') return
+    this.updateGuidance(point)
     if (verdict === 'still') {
       if (this.lastPoint) this.lastPoint.timestamp = point.timestamp
       return
@@ -149,6 +182,45 @@ Page({
     this.lastPoint = point
     this.segments[this.segments.length - 1].push(point)
     this.renderTrack()
+  },
+
+  // ===== 沿线导航 =====
+  updateGuidance(point) {
+    // 地图跟随（节流）
+    const now = Date.now()
+    if (now - this.lastFollowAt > FOLLOW_INTERVAL) {
+      this.lastFollowAt = now
+      this.mapCtx.moveToLocation({ latitude: point.latitude, longitude: point.longitude })
+    }
+    if (!this.tracker) return
+    const st = this.tracker.update(point)
+    if (!st) return
+
+    let nav
+    if (st.finished) {
+      nav = { arrow: '🏁', text: '路线已完成！结束骑行生成海报吧', cls: 'done' }
+    } else if (st.offRoute) {
+      nav = { arrow: '⚠', text: `偏离路线 ${Math.round(st.distFromPath)}m，请返回`, cls: 'off' }
+      if (!this.wasOffRoute) wx.vibrateLong()
+    } else if (!st.ride) {
+      nav = { arrow: '🚶', text: '推行衔接段，前往下一笔', cls: 'walk' }
+    } else if (st.nextTurn && st.nextTurn.dist < 800) {
+      const t = st.nextTurn
+      nav = { arrow: DIR_ARROW[t.dir], text: `${Math.round(t.dist)}m 后${DIR_TEXT[t.dir]}`, cls: '' }
+      if (t.dist < TURN_ALERT_DIST && this.alertedTurnIdx !== t.idx) {
+        this.alertedTurnIdx = t.idx
+        wx.vibrateShort({ type: 'medium' })
+      }
+    } else {
+      nav = { arrow: '⬆', text: '沿路线直行', cls: '' }
+    }
+    this.wasOffRoute = st.offRoute
+
+    const progressText = Math.min(100, Math.round(st.progress * 100)) + '%'
+    const prev = this.data.nav
+    if (!prev || prev.text !== nav.text || this.data.progressText !== progressText) {
+      this.setData({ nav, progressText })
+    }
   },
 
   renderTrack() {

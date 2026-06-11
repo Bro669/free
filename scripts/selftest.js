@@ -132,6 +132,63 @@ function near(a, b, eps) { return Math.abs(a - b) <= eps }
   check('decode 负差分', near(pts[2].latitude, 39.982, 1e-9) && near(pts[2].longitude, 116.301, 1e-9))
 }
 
+// ---- guidance：转向检测 / 折返进度匹配 / 偏航滞回 ----
+{
+  const guidance = U('guidance')
+  const LAT_M = 1 / 111320                       // 1 米对应的纬度
+  const LNG_M = 1 / (111320 * Math.cos(31 * Math.PI / 180))
+  const P = (n, e) => ({ latitude: 31 + n * LAT_M, longitude: 121 + e * LNG_M })  // 北 n 米、东 e 米
+
+  // L 形：向北 500m 再向东 500m → 一个右转 ≈90°
+  const lGuide = guidance.buildGuide([{ points: [P(0, 0), P(500, 0), P(500, 500)], ride: true }])
+  check('guidance L 形检测到 1 个拐点', lGuide.turns.length === 1, 'got ' + lGuide.turns.length)
+  check('guidance 北→东为右转', lGuide.turns[0] && lGuide.turns[0].dir === 'right')
+  check('guidance 拐点角度 ≈90°', lGuide.turns[0] && near(Math.abs(lGuide.turns[0].deg), 90, 2))
+
+  // 向北 400m 再原路折返 → 掉头；且折返时进度必须继续增长（窗口匹配不回跳）
+  const back = guidance.buildGuide([{ points: [P(0, 0), P(400, 0), P(0, 0)], ride: true }])
+  check('guidance 折返检测为掉头', back.turns.length === 1 && back.turns[0].dir === 'uturn')
+  const tracker = guidance.createTracker(back)
+  let monotonic = true
+  let prev = -1
+  // 模拟骑行：北上 0→390，再南下 390→10（同一条线，折返）
+  const sim = []
+  for (let d = 0; d <= 390; d += 30) sim.push(P(d, 3))      // 偏东 3m 模拟 GPS 抖动
+  for (let d = 360; d >= 10; d -= 30) sim.push(P(d, -3))
+  for (const pos of sim) {
+    const st = tracker.update(pos)
+    if (st.distAlong < prev - 15) monotonic = false          // 容许投影抖动 15m
+    prev = st.distAlong
+  }
+  check('guidance 折返路线进度不回跳', monotonic)
+  check('guidance 折返末段进度过 90%', prev > back.total * 0.9, 'got ' + (prev / back.total).toFixed(2))
+
+  // 偏航：偏离 60m 触发，回到 20m 解除
+  const t2 = guidance.createTracker(lGuide)
+  t2.update(P(100, 0))
+  check('guidance 在线上不偏航', t2.update(P(120, 10)).offRoute === false)
+  check('guidance 偏 60m 报偏航', t2.update(P(150, 60)).offRoute === true)
+  check('guidance 偏 35m 仍保持偏航（滞回）', t2.update(P(170, 35)).offRoute === true)
+  check('guidance 回到 20m 解除偏航', t2.update(P(190, 20)).offRoute === false)
+
+  // 下一个转弯距离
+  const t3 = guidance.createTracker(lGuide)
+  const st3 = t3.update(P(300, 0))
+  check('guidance 下一转弯距离 ≈200m', st3.nextTurn && near(st3.nextTurn.dist, 200, 10),
+    st3.nextTurn ? 'got ' + st3.nextTurn.dist.toFixed(0) : 'null')
+
+  // 推行衔接段不出转向提示
+  const mixed = guidance.buildGuide([
+    { points: [P(0, 0), P(300, 0)], ride: true },
+    { points: [P(300, 0), P(300, 200)], ride: false },
+    { points: [P(300, 200), P(600, 200)], ride: true }
+  ])
+  check('guidance 推行段两端不计转向', mixed.turns.length === 0, 'got ' + mixed.turns.length)
+  const t4 = guidance.createTracker(mixed)
+  const st4 = t4.update(P(300, 100))
+  check('guidance 推行段 ride=false', st4.ride === false)
+}
+
 // ---- poster：mock ctx 验证绘制不抛错且轨迹落在画布内 ----
 {
   const poster = U('poster')

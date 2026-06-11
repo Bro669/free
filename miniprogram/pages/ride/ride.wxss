@@ -9,6 +9,35 @@
   width: 100%;
 }
 
+.nav-banner {
+  position: absolute;
+  top: 24rpx;
+  left: 24rpx;
+  right: 24rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: rgba(16, 36, 27, 0.88);
+  border-radius: 20rpx;
+  padding: 22rpx 28rpx;
+}
+
+.nav-banner.off { background: rgba(200, 48, 48, 0.92); }
+.nav-banner.walk { background: rgba(90, 100, 95, 0.9); }
+.nav-banner.done { background: rgba(14, 159, 102, 0.92); }
+
+.nav-arrow {
+  font-size: 52rpx;
+  color: #fff;
+  margin-right: 24rpx;
+}
+
+.nav-text {
+  color: #fff;
+  font-size: 34rpx;
+  font-weight: 600;
+}
+
 .dashboard {
   background: #fff;
   border-radius: 32rpx 32rpx 0 0;

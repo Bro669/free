@@ -8,7 +8,12 @@
     polyline="{{polylines}}"
     include-points="{{state === 'ready' ? includePoints : []}}"
     show-location="{{true}}"
-  />
+  >
+    <cover-view wx:if="{{state !== 'ready' && nav}}" class="nav-banner {{nav.cls}}">
+      <cover-view class="nav-arrow">{{nav.arrow}}</cover-view>
+      <cover-view class="nav-text">{{nav.text}}</cover-view>
+    </cover-view>
+  </map>
 
   <view class="dashboard">
     <view class="stats">
@@ -23,6 +28,10 @@
       <view class="stat">
         <view class="stat-num">{{speedText}}</view>
         <view class="stat-label">均速 km/h</view>
+      </view>
+      <view class="stat" wx:if="{{hasGuide}}">
+        <view class="stat-num">{{progressText}}</view>
+        <view class="stat-label">完成</view>
       </view>
     </view>
 
